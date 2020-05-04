@@ -1,0 +1,71 @@
+.am-mat-menu-button {
+    position: relative;
+    display: block;
+    padding: 0;
+    padding-left: 1.07142857143em;
+    height: 3em;
+    box-sizing: border-box;
+    align-items: center;
+    border: none;
+    outline: none;
+    background-color: white;
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    border-top: 1px solid #ddd;
+    -webkit-box-shadow: 0px 1px 1px 0px #ddd;
+    -moz-box-shadow: 0px 1px 1px 0px #ddd;
+    box-shadow: 0px 1px 1px 0px #ddd;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.am-mat-menu-button:not(.am-status-close) .am-mat-menu-button-toggle-icon-ctn,
+.am-mat-menu-button:not(.am-status-open) .am-mat-menu-button-toggle-icon-ctn {
+    visibility: hidden;
+}
+
+.am-mat-menu-button-icon-ctn {
+    height: 2em;
+    width: 2em;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.am-mat-menu-button-icon-ctn>img {
+    display: inline-block;
+    font-size: inherit;
+    width: 2em;
+    height: 2em;
+}
+
+.am-mat-menu-button-icon-ctn>span {
+    font-size: 2em;
+    line-height: 1;
+}
+
+.am-mat-menu-button-text {
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 1.07142857143em;
+    font-size: inherit;
+}
+
+.am-mat-menu-button-toggle-icon-ctn {
+    position: absolute;
+    right: 1.07142857143em;
+    top: 0.5em;
+    bottom: 0.5em;
+    width: 2em;
+    text-align: center;
+}
+
+.am-mat-menu-button-toggle-icon-ctn>span {
+    font-size: 1.5em;
+    line-height: 1.3333333;
+    color: rgb(191, 191, 191);
+}
+
+.am-mat-menu-button-toggle-icon-ctn>span:before {
+    transition: transform 0.2s;
+}
