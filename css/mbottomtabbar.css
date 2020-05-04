@@ -1,0 +1,51 @@
+.as-m-bottom-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    background-color: rgb(247, 246, 246);
+    -webkit-box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.52);
+    -moz-box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.52);
+    box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.25);
+}
+
+.as-m-bottom-tabbar-line {
+    transition: left;
+    left: 40%;
+    width: 20%;
+    top: 0;
+    position: absolute;
+    border-top: 2px solid rgb(47, 147, 246);
+    box-sizing: border-box;
+    transition: left cubic-bezier(.47, 0, .4, 1) 0.2s;
+}
+
+.as-m-bottom-tabbar-content {
+    width: 100%;
+    display: table;
+    /* table-layout: fixed; */
+}
+
+.as-m-bottom-tabbar-content-row {
+    display: table-row;
+}
+
+
+.as-m-bottom-tabbar-item {
+    display: table-cell;
+    text-align: center;
+    color: rgb(96, 96, 96);
+    transition: color cubic-bezier(.47, 0, .4, 1) 0.2s;
+}
+
+.as-m-bottom-tabbar-item.as-active {
+    color: rgb(47, 147, 246);
+
+}
+
+
+.as-m-bottom-tabbar-item>span {
+    font-size: 2em;
+    line-height: 1.5;
+}

@@ -1,0 +1,47 @@
+{
+    "name": "absol-workcalendar",
+    "version": "0.0.1",
+    "description": "WorkCalendar base on absol.js",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "dev": "webpack-dev-server --config webpack.config.js --publicx absol.cf:9000",
+        "dist": "webpack --config webpack.config.js --progress --profile --colors --mode production "
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/duthienkt/absol-workcalendar.git"
+    },
+    "keywords": [
+        "html",
+        "xml",
+        "framework",
+        "html5 components"
+    ],
+    "author": "Pham Quoc Du Thien",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/duthienkt/absol-workcalendar/issues"
+    },
+    "homepage": "https://github.com/duthienkt/absol-workcalendar",
+    "dependencies": {
+        "absol": "github:duthienkt/absol",
+        "absol-acomp": "github:duthienkt/absol-acomp"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.4.5",
+        "@babel/preset-env": "^7.4.5",
+        "babel-loader": "^8.0.6",
+        "babel-minify-webpack-plugin": "^0.3.1",
+        "css-loader": "^2.1.1",
+        "raw-loader": "^2.0.0",
+        "style-loader": "^0.23.1",
+        "uglifyjs-webpack-plugin": "^2.1.2",
+        "webpack": "^4.30.0",
+        "webpack-cli": "^3.3.0",
+        "webpack-dev-server": "^3.4.1"
+    },
+    "private": true
+}
