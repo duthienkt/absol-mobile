@@ -110,7 +110,6 @@ MBottomTabbar.property.value = {
             this.$activeItem.removeClass('am-active');
         }
         this.$activeItem = this.$itemDict[value];
-        console.log(this.$itemDict, this.$activeItem);
         if (this.$activeItem) {
             this.$activeItem.addClass('am-active');
         }
