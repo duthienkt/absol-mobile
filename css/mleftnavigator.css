@@ -1,6 +1,6 @@
-.as-m-navigator {}
+.am-navigator {}
 
-.as-m-navigator-content {
+.am-navigator-content {
     right: 100%;
     top: 0;
     bottom: 0;
@@ -10,12 +10,12 @@
     overflow-y: scroll;
 }
 
-.as-m-navigator-content:empty {
+.am-navigator-content:empty {
     background-color: gray;
     width: 60vw;
 }
 
-.as-m-navigator-modal {
+.am-navigator-modal {
     position: fixed;
     left: 0;
     top: 0;
@@ -25,19 +25,19 @@
     opacity: 0.001;
 }
 
-.as-m-navigator.as-dragging {
+.am-navigator.am-dragging {
     touch-action: none;
     user-select: none;
 }
 
 
-.as-m-navigator.as-dragging .as-m-navigator-modal,
-.as-m-navigator.as-open .as-m-navigator-modal {
+.am-navigator.am-dragging .am-navigator-modal,
+.am-navigator.am-open .am-navigator-modal {
     width: 100%;
     background-color: rgb(169, 160, 170);
     z-index: 1000;
 }
 
-.as-m-navigator.as-open .as-m-navigator-modal {
+.am-navigator.am-open .am-navigator-modal {
     opacity: 0.5;
 }

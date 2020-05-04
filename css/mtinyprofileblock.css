@@ -1,4 +1,4 @@
-.as-m-tiny-profile-block {
+.am-tiny-profile-block {
     /* padding-left: 0.71428571428em;
     padding-top: 0.71428571428em;
     padding-bottom: 0.71428571428em;
@@ -15,7 +15,7 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.as-m-tiny-profile-block-avatar {
+.am-tiny-profile-block-avatar {
     display: inline-block;
     vertical-align: middle;
     width: 4em;
@@ -25,18 +25,18 @@
     background-size: cover;
 }
 
-.as-m-tiny-profile-block-text-ctn {
+.am-tiny-profile-block-text-ctn {
     display: inline-block;
     vertical-align: middle;
     padding-left: 1.42857143em;
 }
 
 
-.as-m-tiny-profile-block-name {
+.am-tiny-profile-block-name {
     font-size: 1.5em;
     font-weight: 400;
 }
 
-.as-m-tiny-profile-block-desc {
+.am-tiny-profile-block-desc {
     font-size: 0.8em;
 }

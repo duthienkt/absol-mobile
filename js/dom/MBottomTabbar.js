@@ -6,9 +6,9 @@ var $ = Core.$;
 
 function MBottomTabbar() {
     this._items = [];
-    this.$row = $('.as-m-bottom-tabbar-content-row', this);
+    this.$row = $('.am-bottom-tabbar-content-row', this);
     this.$itemDict = {};
-    this.$line = $('.as-m-bottom-tabbar-line', this);
+    this.$line = $('.am-bottom-tabbar-line', this);
     this.$attachhook = _('attachhook').addTo(this);
     this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
     this.$attachhook.on('error', function () {
@@ -19,13 +19,13 @@ function MBottomTabbar() {
 
 MBottomTabbar.render = function () {
     return _({
-        class: 'as-m-bottom-tabbar',
+        class: 'am-bottom-tabbar',
         extendEvent: 'change',
         child: [
-            '.as-m-bottom-tabbar-line',
+            '.am-bottom-tabbar-line',
             {
-                class: 'as-m-bottom-tabbar-content',
-                child: '.as-m-bottom-tabbar-content-row'
+                class: 'am-bottom-tabbar-content',
+                child: '.am-bottom-tabbar-content-row'
             }]
     });
 };
@@ -57,7 +57,7 @@ MBottomTabbar.prototype.updateLinePosition = function () {
 MBottomTabbar.prototype._makeItem = function (data) {
     var thisbt = this;
     var itemElt = _({
-        class: 'as-m-bottom-tabbar-item',
+        class: 'am-bottom-tabbar-item',
         child: data.icon
     });
 
@@ -107,12 +107,12 @@ MBottomTabbar.property.value = {
         this._value = value;
         
         if (this.$activeItem) {
-            this.$activeItem.removeClass('as-active');
+            this.$activeItem.removeClass('am-active');
         }
         this.$activeItem = this.$itemDict[value];
         console.log(this.$itemDict, this.$activeItem);
         if (this.$activeItem) {
-            this.$activeItem.addClass('as-active');
+            this.$activeItem.addClass('am-active');
         }
         this.updateLinePosition();
     },

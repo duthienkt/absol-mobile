@@ -1,33 +1,32 @@
 import '../../css/mtinyprofileblock.css';
 import Core from './Core';
-import Dom from 'absol/src/HTML5/Dom';
 var _ = Core._;
 var $ = Core.$;
 
 function MTinyProfileBlock() {
     this._avatarScr = '';
-    this.$name = $('.as-m-tiny-profile-block-name', this);
-    this.$desc = $('.as-m-tiny-profile-block-desc', this);
-    this.$avatar = $('.as-m-tiny-profile-block-avatar', this);
+    this.$name = $('.am-tiny-profile-block-name', this);
+    this.$desc = $('.am-tiny-profile-block-desc', this);
+    this.$avatar = $('.am-tiny-profile-block-avatar', this);
 }
 
 MTinyProfileBlock.render = function () {
     return _({
-        class: 'as-m-tiny-profile-block',
+        class: 'am-tiny-profile-block',
         extendEvent: 'change',
         child: [
             {
-                class: 'as-m-tiny-profile-block-avatar'
+                class: 'am-tiny-profile-block-avatar'
             },
             {
-                class: 'as-m-tiny-profile-block-text-ctn',
+                class: 'am-tiny-profile-block-text-ctn',
                 child: [
                     {
-                        class: 'as-m-tiny-profile-block-name',
+                        class: 'am-tiny-profile-block-name',
                         child: { text: 'Pham Quoc Du Thien' }
                     },
                     {
-                        class: 'as-m-tiny-profile-block-desc',
+                        class: 'am-tiny-profile-block-desc',
                         child: { text: 'View your profile' }
                     }
                 ]

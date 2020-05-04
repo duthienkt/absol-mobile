@@ -7,8 +7,8 @@ function MLeftNavigator() {
     this.on('dragstart', this.eventHandler.modalDragStart)
         .on('drag', this.eventHandler.modalDrag)
         .on('dragend', this.eventHandler.modalDragEnd);
-    this.$content = $('.as-m-navigator-content', this);
-    this.$modal = $('.as-m-navigator-modal', this);
+    this.$content = $('.am-navigator-content', this);
+    this.$modal = $('.am-navigator-modal', this);
     this._contentWidth = 0;
 
     this._speedTimeout = -1;
@@ -21,10 +21,10 @@ function MLeftNavigator() {
 MLeftNavigator.render = function () {
     return _({
         tag: 'hanger',
-        class: 'as-m-navigator',
+        class: 'am-navigator',
         child: [
-            '.as-m-navigator-modal',
-            '.as-m-navigator-content'
+            '.am-navigator-modal',
+            '.am-navigator-content'
         ],
         props: {
             hangOn: 9
@@ -55,7 +55,7 @@ MLeftNavigator.prototype.open = function (v0) {
     this.$content.addStyle('right', 'calc(100% - ' + ctBound.width + 'px)');
     this.$modal.addStyle('opacity', '0.5');
 
-    this.addClass('as-open');
+    this.addClass('am-open');
     var thisnm = this;
     this._state = -1;
     thisnm.$modal.on('click', thisnm.eventHandler.clickModal);
@@ -90,7 +90,7 @@ MLeftNavigator.prototype.close = function (v0) {
         thisnm._state = -1;
         thisnm.$content.removeStyle('transition');
         thisnm.$modal.removeStyle('transition');
-        thisnm.removeClass('as-open');
+        thisnm.removeClass('am-open');
     }, dt * 1000 + 1);
 };
 
@@ -112,7 +112,7 @@ MLeftNavigator.eventHandler.modalDragStart = function (event) {
     var moveVec = event.currentPoint.sub(event.startingPoint);
 
     if (Math.abs(moveVec.x) > Math.abs(moveVec.y)) {
-        this.addClass('as-dragging');
+        this.addClass('am-dragging');
         event.preventDefault();
         this._preventDrag = false;
     }
@@ -178,7 +178,7 @@ MLeftNavigator.eventHandler.modalDragEnd = function () {
         this._preventDrag = false;
     }
     else {
-        this.removeClass('as-dragging');
+        this.removeClass('am-dragging');
         this._state = 0;//animating state
         var ctBound = this.$content.getBoundingClientRect();
         if (this._dragSpeed > -200 || (ctBound.right > ctBound.width / 2 && this._dragSpeed >= 0)) {

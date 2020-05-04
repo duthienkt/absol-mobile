@@ -1,9 +1,9 @@
-.as-m-navigator-menu {
+.am-navigator-menu {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
 }
 
-.as-m-navigator-menu-header {
+.am-navigator-menu-header {
     background-image: url(http://absol.cf/assets/background/188-1881044_dual-android-navigation-drawer-background.jpg);
     min-width: 12em;
     background-size: cover;
@@ -15,18 +15,18 @@
     padding-right: 1.42857143em;
 }
 
-.as-m-navigator-menu .as-m-navigator-content {
+.am-navigator-menu .am-navigator-content {
     background-color: white;
     overflow-y: auto;
 }
 
-.as-m-navigator-menu-avatar-ctn {
+.am-navigator-menu-avatar-ctn {
     padding-top: 0.71428571428em;
     padding-bottom: 0.71428571428em;
 }
 
 
-.as-m-navigator-menu-avatar {
+.am-navigator-menu-avatar {
     width: 5em;
     height: 5em;
     border-radius: 50%;
@@ -34,16 +34,16 @@
     background-size: cover;
 }
 
-.as-m-navigator-menu-full-name {
+.am-navigator-menu-full-name {
     font-size: 1.14285714286em;
     font-weight: bold;
     white-space: nowrap;
 }
 
-.as-m-navigator-menu-email {}
+.am-navigator-menu-email {}
 
 
-.as-m-navigator-menu-group-name {
+.am-navigator-menu-group-name {
     padding-left: 0.71428571428em;
     line-height: 2.5;
     color: rgb(104, 104, 105);
@@ -52,20 +52,20 @@
 
 
 
-.as-m-navigator-menu-item {
+.am-navigator-menu-item {
     position: relative;
     height: 2.5em;
     padding-left: 2.92857143em;
 }
 
-.as-m-navigator-menu-item:active{
+.am-navigator-menu-item:active{
     background-color: rgba(169, 169, 169, 0.3 );
 }
 
 
 
 
- .as-m-navigator-menu-item-icon-ctn {
+ .am-navigator-menu-item-icon-ctn {
     position: absolute;
     left: 0.71428571428em;
     top: 0.5em;
@@ -74,16 +74,16 @@
     height: 1.5em;
 }
 
-.as-m-navigator-menu-item-icon-ctn span {
+.am-navigator-menu-item-icon-ctn span {
     font-size: 1.5em;
     line-height: 1;
 }
 
-.as-m-navigator-menu-item-text {
+.am-navigator-menu-item-text {
     font-size: inherit;
     line-height: 2.5;
 }
 
-.as-m-navigator-menu-group:not(:last-child) {
+.am-navigator-menu-group:not(:last-child) {
     border-bottom: 1px solid #ddd;
 }
