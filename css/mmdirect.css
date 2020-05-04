@@ -1,0 +1,17 @@
+.am-mdi-rect {
+    border-radius: 0.2em;
+    font-size: inherit;
+    height: 2em;
+    width: 2em;
+    text-align: center;
+    background-color: rgb(2, 121, 251);
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.am-mdi-rect-icon{
+    font-size: 1.5em;
+    line-height: 1.333333;
+    color: white;
+    display: inline-block;
+}
