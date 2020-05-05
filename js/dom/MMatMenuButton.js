@@ -15,6 +15,8 @@ function MMatMenuButton() {
         props: { iconName: "home" }
     };
     this._status = 'none';
+    this._level = 0;
+    this.$level = $('.am-mat-menu-button-level', this);
 }
 
 MMatMenuButton.render = function () {
@@ -22,6 +24,9 @@ MMatMenuButton.render = function () {
         tag: 'button',
         class: 'am-mat-menu-button',
         child: [
+            {
+                class: 'am-mat-menu-button-level',
+            },
             {
                 class: 'am-mat-menu-button-icon-ctn',
             },
@@ -45,10 +50,23 @@ MMatMenuButton.property = {};
 /**
  * @type {MMatMenuButton}
 */
+MMatMenuButton.property.level = {
+    set: function (value) {
+        value = Math.max(0, value || 0);
+        this.$level.innerHTML = '&nbsp;'.repeat(value * 4);
+    },
+    get: function () {
+        return this._level;
+    }
+}
+
+/**
+ * @type {MMatMenuButton}
+*/
 MMatMenuButton.property.status = {
     set: function (value) {
         this.removeClass('am-status-open')
-            .removeClass('am-status-close')
+            .removeClass('am-status-close');
         if (value == 'open') {
             this.$toggleIcon.addClass('mdi-rotate-90');
             this.addClass('am-status-open');
