@@ -1,17 +1,12 @@
 .am-tiny-profile-block {
-    /* padding-left: 0.71428571428em;
-    padding-top: 0.71428571428em;
-    padding-bottom: 0.71428571428em;
-    padding-right: 1.42857143em;
-     */
     height: 5.42857143em;
     background-color: white;
     position: relative;
     box-sizing: border-box;
-    font-size: 14px;
-    padding-top: 0.71428571428em;
-    padding-bottom: 0.71428571428em;
-    padding-left: 1.42857143em;
+    font-size: 16px;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
+    padding-left: 0.125em;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -28,7 +23,7 @@
 .am-tiny-profile-block-text-ctn {
     display: inline-block;
     vertical-align: middle;
-    padding-left: 1.42857143em;
+    padding-left: 0.125em;
 }
 
 

@@ -1,6 +1,6 @@
 .am-navigator-menu {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .am-navigator-menu-header {
@@ -9,10 +9,10 @@
     background-size: cover;
     color: white;
     box-sizing: border-box;
-    padding-left: 0.71428571428em;
-    padding-top: 0.71428571428em;
-    padding-bottom: 0.71428571428em;
-    padding-right: 1.42857143em;
+    padding-left: 0.625em;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
+    padding-right: 0.125em;
 }
 
 .am-navigator-menu .am-navigator-content {
@@ -21,8 +21,8 @@
 }
 
 .am-navigator-menu-avatar-ctn {
-    padding-top: 0.71428571428em;
-    padding-bottom: 0.71428571428em;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
 }
 
 
@@ -44,7 +44,7 @@
 
 
 .am-navigator-menu-group-name {
-    padding-left: 0.71428571428em;
+    padding-left: 0.625em;
     line-height: 2.5;
     color: rgb(104, 104, 105);
     font-weight: bold;
@@ -67,7 +67,7 @@
 
  .am-navigator-menu-item-icon-ctn {
     position: absolute;
-    left: 0.71428571428em;
+    left: 0.625em;
     top: 0.5em;
     bottom: 0.5em;
     width: 1.5em;
