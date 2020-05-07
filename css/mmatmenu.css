@@ -8,21 +8,23 @@
     align-items: center;
     border: none;
     outline: none;
-    background-color: white;
     text-align: left;
     font-family: Arial, Helvetica, sans-serif;
     border-top: 1px solid #ddd;
-    -webkit-box-shadow: 0px 1px 1px 0px #ddd;
-    -moz-box-shadow: 0px 1px 1px 0px #ddd;
-    box-shadow: 0px 1px 1px 0px #ddd;
+
     user-select: none;
     -webkit-user-select: none;
+    background-color: transparent;
 }
 
 .am-mat-menu-button-level {
     display: inline-block;
     vertical-align: middle;
     white-space: pre;
+}
+
+.am-mat-menu-button:not(.am-status-close):not(.am-status-open):active {
+    background-color: rgb(169, 169, 169, 0.1);
 }
 
 
@@ -98,4 +100,9 @@
 
 
 
-.am-mat-menu-item.am-status-open {}
+.am-mat-menu {
+    background-color: white;
+    -webkit-box-shadow: 0px 1px 1px 0px #ddd;
+    -moz-box-shadow: 0px 1px 1px 0px #ddd;
+    box-shadow: 0px 1px 1px 0px #ddd;
+}

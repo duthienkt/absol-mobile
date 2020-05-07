@@ -41,7 +41,6 @@ MMatMenuButton.render = function () {
             }
         ]
     });
-
 };
 
 
@@ -112,7 +111,6 @@ MMatMenuButton.property.text = {
     },
     get: function () {
         return this.$text.firstChild.data;
-
     }
 };
 
