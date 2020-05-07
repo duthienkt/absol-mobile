@@ -3,7 +3,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    font-size: 14px;
+    font-size: 16px;
     background-color: rgb(247, 246, 246);
     -webkit-box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.52);
     -moz-box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.52);
@@ -37,6 +37,7 @@
     text-align: center;
     color: rgb(96, 96, 96);
     transition: color cubic-bezier(.47, 0, .4, 1) 0.2s;
+    position: relative;
 }
 
 .am-bottom-tabbar-item.am-active {
@@ -48,4 +49,28 @@
 .am-bottom-tabbar-item>span {
     font-size: 2em;
     line-height: 1.5;
+}
+
+.am-bottom-tabbar-item-counter {
+    height: 1.4em;
+    left: calc(50% + 0.33em);
+    top: calc(50% - 1em);
+    font-size: 0.8em;
+    position: absolute;
+    min-width: 1.0em;
+    border-radius: 0.7em;
+    z-index: 1;
+    background-color: black;
+    text-align: center;
+    background-color: rgb(38, 86, 243);
+    line-height: 1.4em;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    box-sizing: content-box;
+}
+
+.am-bottom-tabbar-item-counter:empty {
+    display: none;
 }

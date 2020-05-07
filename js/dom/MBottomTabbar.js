@@ -31,7 +31,7 @@ MBottomTabbar.render = function () {
 };
 
 MBottomTabbar.prototype.updateSize = function () {
-   this.updateLinePosition();
+    this.updateLinePosition();
 };
 
 MBottomTabbar.prototype.notifyChange = function () {
@@ -48,7 +48,7 @@ MBottomTabbar.prototype.updateLinePosition = function () {
             left: iBound.left - bound.left + 'px'
         });
     }
-    else{
+    else {
         this.$line.addStyle('width', '0');
     }
 
@@ -58,8 +58,40 @@ MBottomTabbar.prototype._makeItem = function (data) {
     var thisbt = this;
     var itemElt = _({
         class: 'am-bottom-tabbar-item',
-        child: data.icon
+        child: [
+            data.icon,
+            '.am-bottom-tabbar-item-counter'
+        ]
     });
+    var counterElt = $('.am-bottom-tabbar-item-counter', itemElt);
+    var counter = data.counter;
+    if (!data.__bindCounter__) {
+        Object.defineProperties(data, {
+            __dataBinding__: {
+                value: true,
+                writable: false
+            },
+            counter: {
+                set: function (value) {
+                    if (value > 0) {
+                        if (value > 9) {
+                            counterElt.innerHTML = '9+';
+                        }
+                        else {
+                            counterElt.innerHTML = value;
+                        }
+                    }
+                    else {
+                        counterElt.innerHTML = "";
+                    }
+                },
+                get: function () {
+
+                }
+            }
+        });
+    }
+    data.counter = counter;
 
     itemElt.on('click', function () {
         if (thisbt._value !== data.value) {
@@ -85,11 +117,11 @@ MBottomTabbar.property.items = {
         for (var i = 0; i < items.length; ++i) {
             this.$itemDict[items[i].value] = this._makeItem(items[i]).addTo(this.$row);
         }
-        if (items  && items.length >0){
-            if (this.$itemDict[this._value]){
+        if (items && items.length > 0) {
+            if (this.$itemDict[this._value]) {
                 this.value = this._value;
             }
-            else{
+            else {
                 this.value = items[0].value;
             }
         }
@@ -105,7 +137,7 @@ MBottomTabbar.property.items = {
 MBottomTabbar.property.value = {
     set: function (value) {
         this._value = value;
-        
+
         if (this.$activeItem) {
             this.$activeItem.removeClass('am-active');
         }
