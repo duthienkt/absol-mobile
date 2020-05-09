@@ -73,20 +73,27 @@ MBottomTabbar.prototype._makeItem = function (data) {
             },
             counter: {
                 set: function (value) {
-                    if (value > 0) {
+                    if (value >= 0) {
                         if (value > 9) {
                             counterElt.innerHTML = '9+';
                         }
-                        else {
+                        else if (value > 0) {
                             counterElt.innerHTML = value;
+                        }
+                        else {
+                            counterElt.innerHTML = '';
                         }
                     }
                     else {
-                        counterElt.innerHTML = "";
+                        if (value)
+                            counterElt.innerHTML = value + "";
+                        else
+                            counterElt.innerHTML = '';
                     }
+                    this._counter = value;
                 },
                 get: function () {
-
+                    return this._counter;
                 }
             }
         });
