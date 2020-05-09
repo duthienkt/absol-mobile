@@ -1,7 +1,6 @@
 import '../../css/mobileapp.css';
 import GrandContext from 'absol/src/AppPattern/GrandContext';
 import Core from '../dom/Core';
-import Dom from 'absol/src/HTML5/Dom';
 
 var _ = Core._;
 var $ = Core.$;
@@ -13,13 +12,13 @@ function MTabApplication(props) {
     this.tabActivities = [];
     this.currentActivity = null;
     Object.assign(this, props);
-    
+
 }
 
 Object.defineProperties(MTabApplication.prototype, Object.getOwnPropertyDescriptors(GrandContext.prototype));
 
 MTabApplication.prototype.createView = function () {
-
+    var app = this;
     this.$activity = this.tabActivities.map(function (act) {
         return act.getView();
     });
@@ -37,20 +36,24 @@ MTabApplication.prototype.createView = function () {
                     items: this.activityTabIcons.map(function (icon, i) {
                         return {
                             icon: icon,
-                            value: i
+                            value: i,
+                            counter: app.tabActivities.counter
                         }
                     })
+                },
+                on: {
+                    change: this.ev_tabChange.bind(this)
                 }
             },
             {
                 tag: 'frameview',
-                class: 'am-app-frameview',
+                class: 'am-application-frameview',
                 child: this.$activity
             }
         ]
     });
 
-    this.$frameview = $('.am-app-frameview', this.$view);
+    this.$frameview = $('.am-application-frameview ', this.$view);
     this.$tabbar = $('.am-application-tabbar', this.$view);
 };
 
@@ -64,7 +67,7 @@ MTabApplication.prototype.getView = function () {
 
 
 MTabApplication.prototype.showTabbar = function (flag) {
-    var current = this.$view.containsClass('.am-show-tabbar');
+    var current = this.$view.containsClass('am-show-tabbar');
     if (current == flag) return;
     if (flag) {
         this.$view.addClass('am-show-tabbar');
@@ -78,6 +81,10 @@ MTabApplication.prototype.showTabbar = function (flag) {
 
 
 MTabApplication.prototype.start = function () {
+    var app = this;
+    this.tabActivities.forEach(function(act){
+        act.attach(app);
+    });
     this.getView().addTo(document.body);
     GrandContext.prototype.start.apply(this, arguments);
     this.startActivity("start", this.initActivity || this.tabActivities[0]);
@@ -99,6 +106,9 @@ MTabApplication.prototype.activityReturn = function (session, act, result) {
     if (this.onActivityReturn) {
         this.onActivityReturn(session, act, result);
     }
+    var tabIndex = this.tabActivities.indexOf(act);
+    if (tabIndex < 0)
+        act.getView().selfRemove();
 };
 
 MTabApplication.prototype.viewActivity = function (act) {
@@ -114,15 +124,37 @@ MTabApplication.prototype.viewActivity = function (act) {
         if (activityView.isDescendantOf(this.$frameview)) {
             activityView.requestActive();
         }
-        else{
+        else {
             this.$frameview.addChild(activityView);
+            activityView.requestActive();
         }
     }
 };
 
+MTabApplication.prototype.updateActivityCounter = function(act){
+    var tabIndex = this.tabActivities.indexOf(act);
+    if (tabIndex >= 0) {
+        this.$tabbar.items[tabIndex].counter = act.counter;
+    }
+};
 
-MTabApplication.prototype.ev_tabChange = function(){
+MTabApplication.prototype.activeTabActivityByIndex = function (index) {
+    var act = this.tabActivities[index];
+    if (this.currentActivity == act) return;
+    if (this.currentActivity) {
+        this.currentActivity.pause();
+    }
+    this.viewActivity(act);
+    act.arguments = null;
+    act.result = null;
+    act.session = null;
+    act.caller = this;
+    this.currentActivity = act;
+    act.start();//may be resume
+};
 
+MTabApplication.prototype.ev_tabChange = function () {
+    this.activeTabActivityByIndex(this.$tabbar.value);
 };
 
 export default MTabApplication;
