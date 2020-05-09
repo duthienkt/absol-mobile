@@ -17,3 +17,7 @@
 .am-application.am-show-tabbar .am-application-tabbar {
     display: block;
 }
+
+.am-application.am-show-tabbar .am-application-frameview{
+    height: calc(100% - 3em);
+}
