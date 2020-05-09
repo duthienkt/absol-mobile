@@ -73,7 +73,10 @@ MHeaderBar.prototype.showActionBtn = function (flag) {
         this.$leftBtn = _({
             tag: 'button',
             class: 'am-header-bar-left-btn',
-            child: 'span.mdi.mdi-chevron-left'
+            child: 'span.mdi.mdi-chevron-left',
+            on: {
+                click: this.notifyAction.bind(this)
+            }
         });
     }
     if (flag) {
@@ -119,7 +122,7 @@ MHeaderBar.property.quickmenu = {
         }
         if (value) {
             this.showQuickMenu(true);
-        var button = this.$quickmenuBtn;
+            var button = this.$quickmenuBtn;
             var onClose = value.onClose;
             var onOpen = value.onOpen;
             value.onOpen = function () {
