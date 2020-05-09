@@ -155,8 +155,6 @@ MHeaderBar.property.title = {
         if (value) {
             value = value + '';
             this.showTitle(true);
-            console.log(this.$title.firstChild);
-
             this.$title.firstChild.data = value;
         }
         else {
