@@ -118,6 +118,7 @@ MBottomTabbar.property = {};
 MBottomTabbar.property.items = {
     set: function (items) {
         items = items || [];
+        this._items = items;
         this.$row.clearChild();
         this.$itemDict = {};
         this.$activeItem = null;
