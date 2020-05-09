@@ -1,0 +1,89 @@
+.am-conversation {
+    position: relative;
+    height: 5em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.am-conversation-avatar {
+    position: absolute;
+    left: 0.625em;
+    top: calc(50% - 1.725em);
+    height: 3.5em;
+    width: 3.5em;
+    /* background-image: url(); */
+    background-color: green;
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.am-conversation-bottom-line {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 5em;
+    border-bottom: 0.5px solid #dddddd;
+}
+
+.am-conversation-body {
+    position: absolute;
+    left: 5em;
+    overflow: hidden;
+    right: 3em;
+    padding-top: 0.5em;
+}
+
+.am-conversation-name {
+    line-height: 2;
+}
+
+.am-conversation-short-content {
+    text-overflow: ellipsis;
+    max-width: 100%;
+    height: 2em;
+    line-height: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 0.825em;
+}
+
+.am-conversation-time-ctn {
+    position: absolute;
+    right: 0.625em;
+    top: 0.825em;
+}
+
+.am-conversation-time {
+    font-size: 0.75em;
+}
+
+
+
+.am-conversation-counter {
+    height: 1.4em;
+    right: 0.78125em;
+    top: 3.3em;
+    font-size: 0.8em;
+    position: absolute;
+    min-width: 1.0em;
+    border-radius: 0.7em;
+    z-index: 1;
+    background-color: black;
+    text-align: center;
+    background-color: rgb(254, 80, 81);
+    line-height: 1.4em;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    box-sizing: content-box;
+}
+
+
+.am-conversation-counter:empty {
+    display: none;
+}
+
+.am-conversation.am-status-unread .am-conversation-name,
+.am-conversation.am-status-unread .am-conversation-short-content {
+    font-weight: bold;
+}
