@@ -23,7 +23,6 @@ MTabActivity.prototype.setCounter = function(value){
      * @type {import('./MTabApplication').default}
      */
     var app = this.getContext("APP");
-    app.viewActivity(this);
     if (app){
         app.updateActivityCounter(this);
     }
