@@ -74,8 +74,9 @@ MActivity.prototype.activityReturn = function (session, act, result) {
     if (this.onActivityReturn) {
         this.onActivityReturn(session, act, result);
     }
-    this.caller.viewToApp();
-    this.caller.resume();
+    
+    this.viewToApp();
+    this.resume();
 };
 
 export default MActivity;
