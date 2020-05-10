@@ -30,6 +30,7 @@
     vertical-align: middle;
     color: white;
     outline: none;
+    font-size: inherit;
 }
 
 .am-header-bar-left-btn span {
@@ -47,7 +48,13 @@ button.am-header-bar-action:active {
     vertical-align: middle;
 }
 
-.am-header-bar-title {
+.am-header-bar-title-ctn:first-child{
+    padding-left: 1.25em;
+    box-sizing: border-box;
+}
+
+
+ .am-header-bar-title {
     font-size: 1.2em;
     color: white;
 }
