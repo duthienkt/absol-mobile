@@ -1,7 +1,7 @@
 {
-    "name": "absol-workcalendar",
+    "name": "absol-mobile",
     "version": "0.0.1",
-    "description": "WorkCalendar base on absol.js",
+    "description": "Mobile base on absol.js",
     "main": "index.js",
     "directories": {
         "test": "test"
@@ -23,9 +23,9 @@
     "author": "Pham Quoc Du Thien",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/duthienkt/absol-workcalendar/issues"
+        "url": "https://github.com/duthienkt/absol-mobile/issues"
     },
-    "homepage": "https://github.com/duthienkt/absol-workcalendar",
+    "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
         "absol": "github:duthienkt/absol",
         "absol-acomp": "github:duthienkt/absol-acomp"
