@@ -2,6 +2,7 @@ import '../../css/mmatmenu.css';
 import Core from './Core';
 import OOP from 'absol/src/HTML5/OOP';
 import './MMatMenuItem';
+import MMatMenuItem from './MMatMenuItem';
 var _ = Core._;
 var $ = Core.$;
 
@@ -11,8 +12,14 @@ function MMatMenu() {
 
 MMatMenu.render = function () {
     return _({
+        extendEvent: ['press'],
         class: 'am-mat-menu'
     });
+};
+
+
+MMatMenu.prototype.notifyPress = function (args) {
+    this.emit('press', Object.assign({ target: this, type: 'press' }, args || {}), this);
 };
 
 
@@ -28,7 +35,10 @@ MMatMenu.property.items = {
             item = items[i];
             itemElt = _({
                 tag: 'mmatmenuitem',
-                props: Object.assign({}, item)
+                props: Object.assign({}, item),
+                on:{
+                    press: this.eventHandler.itemPress
+                }
             });
             this.addChild(itemElt);
         }
@@ -42,6 +52,16 @@ MMatMenu.property.items = {
             }
         })
     }
+};
+
+/***
+ * @type {MMatMenuItem}
+ */
+MMatMenu.eventHandler = {};
+
+
+MMatMenu.eventHandler.itemPress = function (event) {
+    this.notifyPress(event);
 };
 
 Core.install('mmatmenu', MMatMenu);

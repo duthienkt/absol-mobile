@@ -10,12 +10,14 @@ function MMatMenuItem() {
     /**
      * @type {import('./MMatMenu').default}
      */
-    this.$matmenu = $('mmatmenu', this);
+    this.$matmenu = $('mmatmenu', this)
+        .on('press', this.eventHandler.itemPress);
     this.$dropdown = $('.am-mat-menu-dropdown', this);
 }
 
 MMatMenuItem.render = function () {
     return _({
+        extendEvent: ['press'],
         class: 'am-mat-menu-item',
         child: [
             {
@@ -24,7 +26,7 @@ MMatMenuItem.render = function () {
             {
                 class: 'am-mat-menu-dropdown',
                 child: {
-                    tag: 'mmatmenu',
+                    tag: 'mmatmenu'
                 }
             }
         ]
@@ -62,6 +64,10 @@ MMatMenuItem.prototype.toggleChild = function () {
     }
 };
 
+MMatMenuItem.prototype.notifyPress = function (args) {
+    this.emit('press', Object.assign({ target: this, type: 'press', item: this, menuItem: this }, args || {}), this);
+};
+
 
 MMatMenuItem.property = {};
 
@@ -88,7 +94,7 @@ MMatMenuItem.property.level = {
         }
     },
     get: function () {
-        return this.$node.level 
+        return this.$node.level
     }
 };
 
@@ -101,10 +107,15 @@ MMatMenuItem.eventHandler = {};
 MMatMenuItem.eventHandler.clickNode = function (event) {
     if (this.$node.status == 'none') {
         //todo
+        this.notifyPress();
     }
     else {
         this.toggleChild();
     }
+};
+
+MMatMenuItem.eventHandler.itemPress = function (event) {
+    this.notifyPress(event);
 };
 
 Core.install('mmatmenuitem', MMatMenuItem);
