@@ -4,7 +4,7 @@ var _ = Core._;
 var $ = Core.$;
 
 function MTinyProfileBlock() {
-    this._avatarScr = '';
+    this._avatarSrc = '';
     this.$name = $('.am-tiny-profile-block-name', this);
     this.$desc = $('.am-tiny-profile-block-desc', this);
     this.$avatar = $('.am-tiny-profile-block-avatar', this);
@@ -69,11 +69,11 @@ MTinyProfileBlock.property.name = {
 MTinyProfileBlock.property.avatarSrc = {
     set: function (value) {
         value = value +'';
-        this._avatarScr = value;
+        this._avatarSrc = value;
         this.$avatar.addStyle('background-image', 'url(' + value + ')')
     },
     get: function () {
-        return this._avatarScr;
+        return this._avatarSrc;
     }
 };
 
