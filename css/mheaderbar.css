@@ -18,7 +18,8 @@
 }
 
 
-.am-header-bar-left-btn {
+.am-header-bar-left-btn,
+button.am-header-bar-command {
     display: inline-block;
     text-align: center;
     border: none;
@@ -33,13 +34,20 @@
     font-size: inherit;
 }
 
-.am-header-bar-left-btn span {
+.am-header-bar-left-btn span,
+button.am-header-bar-command span {
     font-size: 2em;
 }
 
+button.am-header-bar-command:not(:last-child){
+    margin-right: 0.6256em;
+}
 
-.am-header-bar-left-btn:active,
-button.am-header-bar-action:active {
+
+
+ .am-header-bar-left-btn:active,
+button.am-header-bar-action:active,
+button.am-header-bar-command:active {
     color: rgb(220, 220, 222);
 }
 
@@ -48,13 +56,13 @@ button.am-header-bar-action:active {
     vertical-align: middle;
 }
 
-.am-header-bar-title-ctn:first-child{
+.am-header-bar-title-ctn:first-child {
     padding-left: 1.25em;
     box-sizing: border-box;
 }
 
 
- .am-header-bar-title {
+.am-header-bar-title {
     font-size: 1.2em;
     color: white;
 }

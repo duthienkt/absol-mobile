@@ -9,6 +9,7 @@ function MHeaderBar() {
     this._title = null;
     this._titleDesc = null;
     this._actionIcon = null;
+    this._commands = [];
 
     this._quickmenuHolder = null;
     this._quickmenu = null;
@@ -17,6 +18,7 @@ function MHeaderBar() {
     this.$titleCtn = null;
     this.$title = null;
     this.$titleDesc = null;
+    this.$commands = [];
 }
 
 MHeaderBar.render = function () {
@@ -37,8 +39,8 @@ MHeaderBar.prototype.notifyAction = function () {
 };
 
 
-MHeaderBar.prototype.notifyCommand = function (commandName) {
-    this.emit('command', { type: 'command', target: this, commandName: commandName }, this);
+MHeaderBar.prototype.notifyCommand = function (commandItem) {
+    this.emit('command', { type: 'command', target: this, commandName: commandItem.name, commandItem }, this);
 };
 
 
@@ -109,6 +111,19 @@ MHeaderBar.prototype.showQuickMenu = function (flag) {
 
 };
 
+
+
+MHeaderBar.prototype._makeCommandBtn = function (item) {
+    return _({
+        tag: 'button',
+        class: 'am-header-bar-command',
+        child: item.icon || [],
+        on: {
+            click: this.notifyCommand.bind(this, item)
+        }
+    });
+};
+
 MHeaderBar.property = {};
 
 /**
@@ -133,6 +148,11 @@ MHeaderBar.property.quickmenu = {
                 button.removeClass('am-status-active');
                 onClose && onClose.apply(this, arguments);
             };
+            if (!value.getAnchor) {
+                value.getAnchor = function () {
+                    return [2];
+                }
+            }
             this._quickmenuHolder = QuickMenu.toggleWhenClick(this.$quickmenuBtn, value);
         }
         else {
@@ -211,6 +231,44 @@ MHeaderBar.property.actionIcon = {
     }
 };
 
+
+
+/**
+ * @type {MHeaderBar}
+ */
+MHeaderBar.property.commands = {
+    set: function (value) {
+        console.log(value);
+
+        this.$commands.forEach(function (e) {
+            e.selftRemove();
+        });
+        this.$commands = [];
+        var commandBtn;
+        if (value) {
+            var firstChild = this.$right.firstChild;
+            if (firstChild) {
+                for (var i = 0; i < value.length; ++i) {
+                    commandBtn = this._makeCommandBtn(value[i]);
+                    this.$right.addChildBefore(commandBtn, firstChild)
+                }
+            }
+            else {
+                for (var i = 0; i < value.length; ++i) {
+                    commandBtn = this._makeCommandBtn(value[i]);
+                    this.$right.addChild(commandBtn);
+                }
+            }
+        }
+        else {
+            this._commands = [];
+        }
+        this._commands = value;
+    },
+    get: function () {
+        return this._commands;
+    }
+};
 
 
 Core.install('mheaderbar', MHeaderBar);
