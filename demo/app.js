@@ -170,7 +170,49 @@ ChatAct.prototype.createView = function () {
             tag: 'mheaderbar',
             props: {
                 actionIcon: 'span.mdi.mdi-magnify',//icon bên trái
-                title: "Chat"//tiêu đề
+                title: "Chat",//tiêu đề
+                commands: [
+                    {
+                        icon: 'span.mdi.mdi-message-plus-outline'
+                    }
+                ],
+                quickmenu: {
+                    getMenuProps: function(){
+                        return {
+                            items:[
+                                {
+                                    icon:'span.mdi.mdi-account-multiple-plus-outline',
+                                    text: "Tạo nhóm",
+                                    cmd:'make_group'
+                                },
+                                {
+                                    icon:'span.mdi.mdi-check',
+                                    text: "Đánh dấu tất cả đã đọc",
+                                    cmd:'make_all_read'
+                                }, 
+                                "===========",
+
+                                {
+                                    icon: 'span.mdi.mdi-history',
+                                    text: "Lịch sử trò chuyện",
+                                    cmd: 'history'
+                                },
+                                {
+                                    icon: 'span.mdi.mdi-email-newsletter',
+                                    text: "Xem tin nhắn mới",
+                                    cmd: 'history'
+                                },
+                                {
+                                    icon: 'span.mdi.mdi-email-open-multiple-outline',
+                                    text: "Tất cả tin nhắn",
+                                    cmd: 'history'
+                                }
+                            ]
+                        };
+                    },
+                    
+                    onSelect:this.ev_quickmenuSelect.bind(this)
+                }
             },
             on: {
                 action: this.startSearchActivity.bind(this)
@@ -205,7 +247,9 @@ ChatAct.prototype.loadAllConversation = function () {
                 shortContent: absol.string.randomParagraph(300),
                 time: '2 ngày',
                 counter: unread ? 'N' : '',
-                unread: unread
+                unread: unread,
+                avatarSrc: i%4 == 0?'https://avatars2.githubusercontent.com/u/9133017?s=460&v=4': null,
+                onlineStatus: ['none', 'online', 'offline'][i%3]
             }
         });
         this.$body.addChild(conversationElt);
@@ -218,6 +262,10 @@ ChatAct.prototype.startSearchActivity = function () {
     this.startActivity('search', this.searchAct, null);
 };
 
+
+ChatAct.prototype.ev_quickmenuSelect = function(item){
+
+};
 
 function ConversationSearchAct() {
     MActivity.call(this);// ativity này không có trên tabbar, chỉ là activity bình thường 
@@ -377,7 +425,7 @@ MenuAct.prototype.createView = function () {
     })
 };
 
-MenuAct.prototype.ev_pressMenuItem = function(event){
+MenuAct.prototype.ev_pressMenuItem = function (event) {
     console.log(event.menuItem.text);//có thể lấy 1 số thuộc tính khác
 };
 
