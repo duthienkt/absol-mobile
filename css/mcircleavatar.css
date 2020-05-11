@@ -1,0 +1,36 @@
+.am-circle-avatar {
+    position: relative;
+    height: 3em;
+    width: 3em;
+}
+
+.am-circle-avatar-img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: darkcyan;
+    background-size: cover;
+}
+
+.am-circle-avatar-dot {
+    height: 1em;
+    width: 1em;
+    border-width: 0.125em;
+    border-color: white;
+    border-style: solid;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    border-radius: 50%;
+    background-color: rgb(244, 67, 54);
+}
+
+.am-circle-avatar.am-status-none .am-circle-avatar-dot {
+    display: none;
+}
+
+.am-circle-avatar.am-status-online .am-circle-avatar-dot{
+    background-color: rgb(50, 162, 77);
+}
