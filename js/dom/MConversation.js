@@ -15,7 +15,9 @@ function MConversation() {
     this.$time = $('span.am-conversation-time', this);
     this.$counter = $('.am-conversation-counter', this);
     this.$avatar = $('.am-conversation-avatar', this);
-    OOP.drillProperty(this, this.$counter, 'counter', 'innerHTML')
+    OOP.drillProperty(this, this.$counter, 'counter', 'innerHTML');
+    OOP.drillProperty(this, this.$avatar, 'avatarSrc', 'src');
+    OOP.drillProperty(this, this.$avatar, 'onlineStatus', 'status');
 }
 
 MConversation.render = function () {
@@ -23,7 +25,8 @@ MConversation.render = function () {
         class: 'am-conversation',
         child: [
             {
-                class: 'am-conversation-avatar'
+                class:'am-conversation-avatar-ctn',
+                child: 'mcircleavatar.am-conversation-avatar'
             },
             {
                 class: 'am-conversation-body',
@@ -116,22 +119,6 @@ MConversation.property.unread = {
     }
 };
 
-
-MConversation.property.avatarScr = {
-    set: function (value) {
-        if (value) {
-            this.$avatar.addStyle('background-image', 'url(' + value + ')');
-        }
-        else {
-            value = null;
-            this.$avatar.removeStyle('background-image');
-        }
-        this._avatarSrc = value;
-    },
-    get: function () {
-        return this._avatarSrc;
-    }
-};
 
 Core.install('MConversation'.toLowerCase(), MConversation);
 
