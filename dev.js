@@ -33,7 +33,7 @@ Object.assign(absol, {
     MActivity: MActivity
 });
 
-if (BrowserDetector) Dom.documentReady.then(function () {
+if (BrowserDetector.isMobile) Dom.documentReady.then(function () {
     document.body.classList.add('am-mobile-theme');
 });
 
