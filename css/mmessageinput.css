@@ -1,0 +1,99 @@
+.am-message-input {
+    position: relative;
+    box-sizing: border-box;
+    padding-top: 0.3125em;
+    padding-bottom: 0.3125em;
+}
+
+.am-message-input:not(.am-mode-text) .am-message-input-plugin-send,
+.am-message-input.am-mode-text .am-message-input-plugin-camera {
+    display: none;
+}
+
+
+.am-message-input-plugin-btn {
+    font-size: inherit;
+    width: 2.5em;
+    height: 2.5em;
+    padding: 0;
+    border: none;
+    color: rgb(122, 122, 122);
+    background-color: transparent;
+    outline: none;
+}
+
+.am-message-input-plugin-btn:active {
+    background-color: rgba(169, 169, 169, 0.2);
+}
+
+
+
+.am-message-input-plugin-btn span {
+    font-size: 1.5em;
+}
+
+
+.am-message-input-right {
+    position: absolute;
+    bottom: 0.3125em;
+    right: 0;
+    z-index: 0;
+}
+
+.am-message-input-left,
+.am-message-input-pre-ctn {
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+    z-index: 2;
+}
+
+.am-message-input-pre-ctn {
+    width: calc(100% - 10em);
+    min-height: 2.5em;
+    border-radius: 1.25em;
+    box-sizing: border-box;
+    background-color: rgb(235, 235, 235);
+    transition: width 0.1s;
+
+}
+
+.am-message-input.am-mode-text .am-message-input-pre-ctn {
+    width: calc(100% - 5em);
+}
+
+
+.am-message-input-pre-ctn::before {
+    display: inline-block;
+    content: "";
+    height: 2.5em;
+    vertical-align: middle;
+}
+
+
+.am-message-input-pre {
+    display: inline-block;
+    width: calc(100% - 2px);
+    box-sizing: border-box;
+    padding-top: 0.3125em;
+    padding-bottom: 0.3125em;
+    padding-right: 0.625em;
+    padding-left: 0.625em;
+    font-size: inherit;
+    outline: none;
+    vertical-align: middle;
+}
+
+.am-message-input-camera-caller,
+.am-message-input-camera-microphone {
+    display: none;
+}
+
+.am-message-input-emoji-picker-ctn {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
