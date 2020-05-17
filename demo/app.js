@@ -145,6 +145,15 @@ DashboardAct.prototype.createView = function () {
                             console.log(item);
                         }
                     }
+                },
+                on:{
+                    click: function(event){
+                       if (!absol.EventEmitter.hitElement(this.$right, event)){
+                           //làm gì đó
+                           console.log("OK");
+                           
+                       }
+                    }
                 }
             }
         ]
