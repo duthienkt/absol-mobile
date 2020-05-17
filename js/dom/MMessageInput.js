@@ -10,7 +10,8 @@ var $ = Core.$;
 
 function MMessageInput() {
     this._latBound = { width: 0, height: 0 };
-    this._mode = null;
+    this._state = null;
+    this._mode = 'new';
     this.$preInput = $('preinput', this)
         .attr('type', 'url')
         .on('change', this.eventHandler.preInputChange)
@@ -23,11 +24,17 @@ function MMessageInput() {
         .on('click', this.eventHandler.clickImageBtn);
     this.$sendBtn = $('.am-message-input-plugin-send', this)
         .on('click', this.eventHandler.clickSendBtn);
+    this.$cancelBtn = $('.am-message-input-plugin-cancel', this)
+        .on('click', this.eventHandler.clickCancelBtn);
 
     this.$emojiBtn = $('.am-message-input-plugin-emoji', this)
         .on('click', this.eventHandler.clickEmojiBtn);
+
+    this.$attachhook = _('attachhook').addTo(this).on('error', this.notifySizeChange.bind(this));
+
     this.files = [];
     this.images = [];
+    this._editingText = null;
 }
 
 MMessageInput.tag = 'mmessageinput';
@@ -60,6 +67,11 @@ MMessageInput.render = function (data) {
                         tag: 'button',
                         class: ['am-message-input-plugin-btn', 'am-message-input-plugin-send'],
                         child: 'span.mdi.mdi-send'
+                    },
+                    {
+                        tag: 'button',
+                        class: ['am-message-input-plugin-btn', 'am-message-input-plugin-cancel'],
+                        child: 'span.mdi.mdi-close'
                     }
                 ]
             },
@@ -73,7 +85,7 @@ MMessageInput.render = function (data) {
             },
             {
                 class: 'am-message-input-pre-ctn',
-                child: 'preinput.am-message-input-pre'
+                child: 'preinput.am-message-input-pre.absol-bscroller'
             }
         ]
     });
@@ -89,18 +101,14 @@ MMessageInput.prepare = function () {
 };
 
 
-// ['notifyChange', 'notifySend', 'notifyCancel'].forEach(function (key) {
-//     MMessageInput.prototype[key] = MessageInput.prototype[key];
-// });
 
-
-MMessageInput.prototype._activeMode = function (mode) {
-    if (this._mode == mode) return;
-    if (this._mode)
-        this.removeClass('am-mode-' + this._mode);
-    this._mode = mode;
-    if (this._mode)
-        this.addClass('am-mode-' + this._mode);
+MMessageInput.prototype._activeState = function (mode) {
+    if (this._state == mode) return;
+    if (this._state)
+        this.removeClass('am-state-' + this._state);
+    this._state = mode;
+    if (this._state)
+        this.addClass('am-state-' + this._state);
 };
 
 
@@ -179,7 +187,7 @@ MMessageInput.prototype.notifySendImages = function () {
     this.emit('sendimage', eventData, this);
     this.notifySend();
     if (!eventData.prevented)
-       this.images.value = '';
+        this.images = [];
 };
 
 MMessageInput.prototype.notifySendFiles = function () {
@@ -195,7 +203,7 @@ MMessageInput.prototype.notifySendFiles = function () {
     this.emit('sendfile', eventData, this);
     this.notifySend();
     if (!eventData.prevented)
-       this.files.value = '';
+        this.files = [];
 };
 
 MMessageInput.prototype.notifyChange = function (text) {
@@ -212,11 +220,39 @@ MMessageInput.property.text = {
         value = value || '';
         this.eventHandler.preInputChange({ value: value });
         this.$preInput.value = value;
+        if (this._state == 'edit') {
+            this.removeClass('am-edited');
+            this._editingText = value;
+        }
     },
     get: function () {
         return this.$preInput.value;
     }
 };
+
+
+
+/**
+ * @type {MMessageInput}
+ */
+MMessageInput.property.mode = {
+    set: function (value) {
+        if (value == 'edit') {
+            this.addClass('am-mode-edit');
+            this._editingText = this.text;
+            this.removeClass('am-edited');
+        }
+        else {
+            value = 'new';
+            this.removeClass('am-mode-edit');
+        }
+        this._mode = value;
+    },
+    get: function () {
+        return this._mode;
+    }
+};
+
 
 /**
  * @type {MMessageInput}
@@ -226,13 +262,23 @@ MMessageInput.eventHandler = {};
 MMessageInput.eventHandler.preInputChange = function (event) {
     var value = event.value;
     if (value.length > 0) {
-        this._activeMode('text');
+        if (this._mode == 'edit') {
+            if (this._editingText == value)
+                this.removeClass('am-edited');
+            else
+                this.addClass('am-edited');
+        }
+        this._activeState('text');
     }
     else {
-        this._activeMode(null);
+        if (this._mode == 'edit') {
+            this.removeClass('am-edited');
+        }
+        this._activeState(null);
     }
     this.notifySizeChange();
-    this.notifyChange(value);
+    if (event)
+        this.notifyChange(value);
 };
 
 
@@ -284,10 +330,15 @@ MMessageInput.eventHandler.clickSendBtn = function (event) {
 };
 
 
-
 MMessageInput.prototype.notifySend = function () {
     this.emit('send', {
         name: 'send', target: this, clearAllContent: this.clearAllContent.bind(this)
+    }, this);
+};
+
+MMessageInput.prototype.notifyCancel = function () {
+    this.emit('cancel', {
+        name: 'cancel', target: this, clearAllContent: this.clearAllContent.bind(this)
     }, this);
 };
 
@@ -313,11 +364,11 @@ MMessageInput.eventHandler.clickFileBtn = function (event) {
                     otherFiles.push(file);
                 }
             }
-            if (imageFiles.length >0){
+            if (imageFiles.length > 0) {
                 thisMi.images = imageFiles;
                 thisMi.notifySendImages();
             }
-            if (otherFiles.length >0){
+            if (otherFiles.length > 0) {
                 thisMi.files = otherFiles;
                 thisMi.notifySendFiles();
             }
@@ -360,6 +411,10 @@ MMessageInput.eventHandler.clickEmojiBtn = function () {
     this.toggleEmoji();
 };
 
+MMessageInput.eventHandler.clickCancelBtn = function () {
+    this.notifyCancel();
+};
+
 
 
 
@@ -385,6 +440,9 @@ MMessageInput.eventHandler.pickEmoji = function (event) {
     this.notifySizeChange();
     this.$preInput.focus();//older firefox version will be lost focus
 };
+
+
+
 
 Core.install(MMessageInput);
 export default MMessageInput;

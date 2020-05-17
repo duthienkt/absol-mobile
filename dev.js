@@ -15,6 +15,7 @@ import MConversation from './js/dom/MConversation';
 import MTabApplication from './js/mobile_app/MTabApplication';
 import MTabActivity from './js/mobile_app/MTabActivity';
 import MActivity from './js/mobile_app/MActivity';
+import MMessageInput from './js/dom/MMessageInput';
 absol.coreDom.install({
     mnavigatormenu: MNavigatorMenu,
     mbottomtabbar: MBottomTabbar,
@@ -26,6 +27,8 @@ absol.coreDom.install({
     mheaderbar: MHeaderBar,
     mconversation: MConversation
 });
+
+absol.coreDom.install([MMessageInput]);
 
 Object.assign(absol, {
     MTabApplication: MTabApplication,
