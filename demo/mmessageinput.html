@@ -22,7 +22,7 @@
             z-index: 1;
         }
 
-        .message-ctn {
+        .card-chatbox-message-me-ctn {
             position: fixed;
             left: 0;
             right: 0;
@@ -33,21 +33,40 @@
             overflow-y: auto;
         }
 
-        .message {
-            max-width: 70%;
+        .card-chatbox-message-me {
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid black;
             white-space: pre-wrap;
-            -webkit-user-modify: read-write;
             overflow-wrap: break-word;
-            -webkit-line-break: after-white-space;
+            /* -webkit-line-break: after-white-space; */
+            display: inline-block;
         }
 
-        .message>img {
+        .card-chatbox-message-me img.as-emoji,
+        .card-chatbox-message-other img.as-emoji {
+            display: inline;
+            height: 1.2em;
+            width: 1.2em;
+            vertical-align: middle;
+        }
+
+        .card-chatbox-message-me>img,
+        .card-chatbox-message-other>img {
             max-width: 50vw;
             max-height: 50vh;
+        }
+
+        .card-chatbox-message-me>canvas,
+        .card-chatbox-message-other>canvas {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+        }
+
+        .card-chatbox-message-line {
+            padding: 20px;
         }
     </style>
 </head>
@@ -63,20 +82,23 @@
         var _ = absol._;
         var $ = absol.$;
         absol.ContextCaptor.auto();
+        // var fileIconsSync = absol.XHR.getRequest(catalogiUrl).then(function (result) {
+        //     return JSON.parse(result);
+        // });
 
         var messageCtn = $('.message-ctn');
         function makeMessage(text) {
+            var messageChild = absol.parseMessage(text);
             var messageElt = _({
-                class: 'message',
+                class: 'card-chatbox-message-me',
                 extendEvent: 'contextmenu',
-                child: { text: text },
+                child: messageChild,
                 on: {
                     contextmenu: function (event) {
                         event.showContextMenu({
                             items: [
                                 { icon: 'span.mdi.mdi-file-document-edit-outline', text: "Sửa", cmd: 'edit' }
                             ],
-
                         }, function (event) {
                             var cmd = event.menuItem.cmd;
                             switch (cmd) {
@@ -85,8 +107,7 @@
                                     mInput.mode = 'edit';
                                     mInput.on('send', sendCallback);
                                     mInput.on('cancel', cancelCalback);
-
-                                    ; break;
+                                    break;
                                 case 'del': break;
                             }
                             console.log(event.menuItem);
@@ -107,8 +128,8 @@
                 messageElt.firstChild.data = text;
                 cancelCalback();
             }
-
-            messageCtn.addChild(messageElt);
+            var lineElt = _('.card-chatbox-message-line').addChild(messageElt)
+            messageCtn.addChild(lineElt);
             messageCtn.scrollTop = messageCtn.scrollHeight;
             return messageElt;
         }
@@ -116,8 +137,10 @@
 
         function makeImage(src) {
             return _({
-                class: 'message',
-                child: { tag: 'img', props: { src: src } },
+                class: 'card-chatbox-message-line', child: {
+                    class: 'card-chatbox-message-me',
+                    child: { tag: 'img', props: { src: src } },
+                }
             }).addTo(messageCtn);
         }
 
@@ -137,7 +160,7 @@
                             makeMessage(text);
                         }
                         if (images && images.length > 0) {
-                            images.forEach(function(image) {
+                            images.forEach(function (image) {
                                 var src = URL.createObjectURL(image);
                                 makeImage(src);
                             });
