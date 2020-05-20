@@ -21,6 +21,7 @@ function MHeaderBar() {
     this.$commands = [];
 }
 
+MHeaderBar.tag = 'MHeaderBar'.toLowerCase();
 MHeaderBar.render = function () {
     return _({
         extendEvent: ['action', 'command'],
@@ -271,6 +272,6 @@ MHeaderBar.property.commands = {
 };
 
 
-Core.install('mheaderbar', MHeaderBar);
+Core.install(MHeaderBar);
 
 export default MHeaderBar;

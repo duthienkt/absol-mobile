@@ -16,6 +16,7 @@ import MTabApplication from './js/mobile_app/MTabApplication';
 import MTabActivity from './js/mobile_app/MTabActivity';
 import MActivity from './js/mobile_app/MActivity';
 import MMessageInput from './js/dom/MMessageInput';
+
 absol.coreDom.install({
     mnavigatormenu: MNavigatorMenu,
     mbottomtabbar: MBottomTabbar,

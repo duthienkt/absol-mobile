@@ -10,6 +10,7 @@ function MTinyProfileBlock() {
     this.$avatar = $('.am-tiny-profile-block-avatar', this);
 }
 
+MTinyProfileBlock.tag = 'MTinyProfileBlock'.toLowerCase();
 MTinyProfileBlock.render = function () {
     return _({
         class: 'am-tiny-profile-block',
@@ -68,7 +69,7 @@ MTinyProfileBlock.property.name = {
  */
 MTinyProfileBlock.property.avatarSrc = {
     set: function (value) {
-        value = value +'';
+        value = value + '';
         this._avatarSrc = value;
         this.$avatar.addStyle('background-image', 'url(' + value + ')')
     },
@@ -79,6 +80,6 @@ MTinyProfileBlock.property.avatarSrc = {
 
 
 
-Core.install('MTinyProfileBlock'.toLowerCase(), MTinyProfileBlock);
+Core.install(MTinyProfileBlock);
 
 export default MTinyProfileBlock;

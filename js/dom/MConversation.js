@@ -20,12 +20,13 @@ function MConversation() {
     OOP.drillProperty(this, this.$avatar, 'onlineStatus', 'status');
 }
 
+MConversation.tag = 'MConversation'.toLowerCase();
 MConversation.render = function () {
     return _({
         class: 'am-conversation',
         child: [
             {
-                class:'am-conversation-avatar-ctn',
+                class: 'am-conversation-avatar-ctn',
                 child: 'mcircleavatar.am-conversation-avatar'
             },
             {
@@ -120,7 +121,7 @@ MConversation.property.unread = {
 };
 
 
-Core.install('MConversation'.toLowerCase(), MConversation);
+Core.install(MConversation);
 
 
 export default MConversation;

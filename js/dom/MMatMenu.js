@@ -10,6 +10,7 @@ function MMatMenu() {
 
 }
 
+MMatMenu.tag = 'MMatMenu'.toLowerCase();
 MMatMenu.render = function () {
     return _({
         extendEvent: ['press'],
@@ -36,7 +37,7 @@ MMatMenu.property.items = {
             itemElt = _({
                 tag: 'mmatmenuitem',
                 props: Object.assign({}, item),
-                on:{
+                on: {
                     press: this.eventHandler.itemPress
                 }
             });
@@ -64,6 +65,6 @@ MMatMenu.eventHandler.itemPress = function (event) {
     this.notifyPress(event);
 };
 
-Core.install('mmatmenu', MMatMenu);
+Core.install(MMatMenu);
 
 export default MMatMenu;

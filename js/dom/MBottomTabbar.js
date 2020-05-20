@@ -17,6 +17,8 @@ function MBottomTabbar() {
     this.$activeItem = null;
 }
 
+
+MBottomTabbar.tag = 'MBottomTabbar'.toLowerCase();
 MBottomTabbar.render = function () {
     return _({
         class: 'am-bottom-tabbar',
@@ -161,6 +163,6 @@ MBottomTabbar.property.value = {
 }
 
 
-Core.install('MBottomTabbar'.toLowerCase(), MBottomTabbar);
+Core.install(MBottomTabbar);
 
 export default MBottomTabbar;

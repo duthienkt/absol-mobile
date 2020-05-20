@@ -19,6 +19,7 @@ function MMatMenuButton() {
     this.$level = $('.am-mat-menu-button-level', this);
 }
 
+MMatMenuButton.tag = 'MMatMenuButton'.toLowerCase();
 MMatMenuButton.render = function () {
     return _({
         tag: 'button',
@@ -115,6 +116,6 @@ MMatMenuButton.property.text = {
 };
 
 
-Core.install('mmatmenubutton', MMatMenuButton);
+Core.install(MMatMenuButton);
 
 export default MMatMenuButton;

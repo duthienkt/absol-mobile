@@ -15,6 +15,7 @@ function MMatMenuItem() {
     this.$dropdown = $('.am-mat-menu-dropdown', this);
 }
 
+MMatMenuItem.tag = 'MMatMenuItem'.toLowerCase();
 MMatMenuItem.render = function () {
     return _({
         extendEvent: ['press'],
@@ -118,6 +119,6 @@ MMatMenuItem.eventHandler.itemPress = function (event) {
     this.notifyPress(event);
 };
 
-Core.install('mmatmenuitem', MMatMenuItem);
+Core.install(MMatMenuItem);
 
 export default MMatMenuItem;

@@ -53,7 +53,7 @@ function MNavigatorMenu() {
     });
 }
 
-
+MNavigatorMenu.tag = 'MNavigatorMenu'.toLowerCase();
 MNavigatorMenu.render = function () {
     return _({
         tag: 'mleftnavigator',
@@ -198,6 +198,6 @@ MNavigatorMenu.property.avatarSrc = {
 }
 
 
-Core.install('mnavigatormenu', MNavigatorMenu);
+Core.install(MNavigatorMenu);
 
 export default MNavigatorMenu;

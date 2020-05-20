@@ -9,6 +9,7 @@ function MMdiRect() {
     this._iconName = undefined;
 }
 
+MMdiRect.tag = 'MMdiRect'.toLowerCase();
 MMdiRect.render = function () {
     return _({
         class: 'am-mdi-rect',
@@ -51,6 +52,6 @@ MMdiRect.attribute.iconName = {
     }
 };
 
-Core.install('mmdirect', MMdiRect);
+Core.install(MMdiRect);
 
 export default MMdiRect;

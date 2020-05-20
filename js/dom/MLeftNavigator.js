@@ -18,6 +18,7 @@ function MLeftNavigator() {
     this._preventDrag = false;
 }
 
+MLeftNavigator.tag = 'MLeftNavigator'.toLowerCase();
 MLeftNavigator.render = function () {
     return _({
         tag: 'hanger',
@@ -195,8 +196,6 @@ MLeftNavigator.eventHandler.modalDragEnd = function () {
 };
 
 
-
-
-Core.install('mleftnavigator', MLeftNavigator);
+Core.install(MLeftNavigator);
 
 export default MLeftNavigator;
