@@ -2,7 +2,7 @@
     "name": "absol-mobile",
     "version": "0.0.1",
     "description": "Mobile base on absol.js",
-    "main": "index.js",
+    "main": "dev.js",
     "directories": {
         "test": "test"
     },
@@ -27,8 +27,8 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "github:duthienkt/absol",
-        "absol-acomp": "github:duthienkt/absol-acomp"
+        "absol": "^1.13.0",
+        "absol-acomp": "^0.9.2"
     },
     "devDependencies": {
         "@babel/core": "^7.4.5",
@@ -42,6 +42,5 @@
         "webpack": "^4.30.0",
         "webpack-cli": "^3.3.0",
         "webpack-dev-server": "^3.4.1"
-    },
-    "private": true
+    }
 }
