@@ -1,6 +1,6 @@
 {
     "name": "absol-mobile",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Mobile base on absol.js",
     "main": "dev.js",
     "directories": {
@@ -27,20 +27,20 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "^1.13.0",
-        "absol-acomp": "^0.9.2"
+        "absol": "^1.13.1",
+        "absol-acomp": "^0.9.11"
     },
     "devDependencies": {
-        "@babel/core": "^7.4.5",
-        "@babel/preset-env": "^7.4.5",
-        "babel-loader": "^8.0.6",
+        "@babel/core": "^7.10.2",
+        "@babel/preset-env": "^7.10.2",
+        "babel-loader": "^8.1.0",
         "babel-minify-webpack-plugin": "^0.3.1",
         "css-loader": "^2.1.1",
         "raw-loader": "^2.0.0",
         "style-loader": "^0.23.1",
-        "uglifyjs-webpack-plugin": "^2.1.2",
-        "webpack": "^4.30.0",
-        "webpack-cli": "^3.3.0",
-        "webpack-dev-server": "^3.4.1"
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.11.0"
     }
 }
