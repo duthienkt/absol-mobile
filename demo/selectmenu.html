@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>SelectMenu</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+
+    <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css">
+    <link rel="stylesheet" href="https://absol.cf/css/materialdesignicons/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://absol.cf/hightlight/highlight.pack.js"></script>
+    <script src="../dist/absol-mobile.js?"></script>
+    <script>
+        var $ = absol.$;
+        var _ = absol._;
+    </script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<div class="demo">
+
+</div>
+<script>
+    function genItems(n, withDesc) {
+        return Array(n).fill(null).map(function (u, i) {
+            return {
+                text: '[' + i + ']' + absol.string.randomPhrase(0),
+                value: i,
+                desc: withDesc ? absol.string.randomPhrase(30) : null
+            }
+        });
+    }
+
+    var demoDiv = $('.demo');
+
+    var demoData = [
+        {
+            items: genItems(6000, true),
+            value: 1,
+            enableSearch: true,
+            exampleDesc: "Rất rất nhiều item(6000), có chú thích, có tìm kiếm"
+        },
+        {
+            items: genItems(1000, false),
+            value: 1,
+            enableSearch: true,
+            exampleDesc: "Rất nhiều item(1000), có tìm kiếm"
+        },
+        {
+            items: genItems(1000, false),
+            value: 100,
+            enableSearch: true,
+            exampleDesc: "Rất nhiều item(1000)"
+        },
+        {
+            items: genItems(30, false),
+            value: 20,
+            enableSearch: false,
+            exampleDesc: "Không nhiều item(30), không search"
+        },
+        {
+            items: [
+                {text: "Nam", value: 1},
+                {text: "Nữ", value: 0},
+                {text: "Bí mật", value: 2}
+            ],
+            value: 1,
+            enableSearch: false,
+            exampleDesc: "Ít item"
+        }
+    ]
+
+    demoData.forEach(
+        function (data) {
+            var desc = _({
+                tag: 'h3',
+                child: {text: data.exampleDesc}
+            }).addTo(demoDiv);
+            var now = new Date().getTime();
+            /***
+             * @type {MSelectMenu}
+             */
+            var sm = _({
+                tag: 'mselectmenu',
+                props: {
+                    items: data.items,
+                    value: data.value,
+                    enableSearch: data.enableSearch
+                },
+                on: {
+                    change: function () {
+                        valueText.firstChild.data = 'value = ' + this.value
+                    }
+                }
+            }).addTo(demoDiv);
+            var w = sm.getRecommendWith();
+            sm.addStyle({
+                width: w + 'px',
+                maxWidth: '90vw'
+            });
+            var renderTime = new Date().getTime() - now;
+
+            var valueText = _({
+                child: {text: 'value = ' + data.value}
+            }).addTo(demoDiv);
+            var renderTimeText = _({
+                child: {text: 'render: ' + renderTime + "(ms)"}
+            }).addTo(demoDiv);
+            var statusText = _({
+                style: {color: 'red'},
+                child: {text: 'status: LOADING'}
+            }).addTo(demoDiv);
+            sm.$selectlist.on('finishasync', function () {
+                statusText.addStyle('color', 'blue');
+                statusText.firstChild.data = 'status: COMPLETE';
+            });
+        }
+    )
+
+
+</script>
+
+</body>
+
+</html>

@@ -136,13 +136,13 @@ DashboardAct.prototype.createView = function () {
                                 items: [
                                     { text: 'Xóa', icon: 'span.mdi.mdi-delete' },
                                     { text: 'Di chuyển', icon: 'span..mdi.mdi-file-move-outline' },
-                                    { text: 'Lưu trữ', icon: 'span.mdi.mdi-content-save-outline' }
+                                    { text: 'Lưu trữ', icon: 'span.mdi.mdi-content-save-outline',
+                                    cmd: function () {
+
+                                    }}
 
                                 ]
                             }
-                        },
-                        onSelect: function (item) {
-                            console.log(item);
                         }
                     }
                 },
@@ -273,7 +273,7 @@ ChatAct.prototype.startSearchActivity = function () {
 
 
 ChatAct.prototype.ev_quickmenuSelect = function(item){
-
+    console.log(item.cmd)
 };
 
 function ConversationSearchAct() {
