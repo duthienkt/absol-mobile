@@ -265,12 +265,8 @@ MSelectMenu.prototype._updatePopupPosition = function () {
         else{
             this.$modal.addStyle('padding-top','20px')
         }
-
-        console.log(listBound);
     }
-
-}
-;
+};
 
 MSelectMenu.prototype.scrollToSelectedItem = function () {
     var self = this;
@@ -394,7 +390,6 @@ MSelectMenu.eventHandler.attached = function () {
     Dom.addToResizeSystem(this.$attachhook);
     this.stopListenRemovable();
     this.startListenRemovable();
-    this._requestResource();
     if (!this._resourceReady) {
         this._requestResource();
         this._resourceReady = true;

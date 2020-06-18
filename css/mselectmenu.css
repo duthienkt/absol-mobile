@@ -78,14 +78,13 @@
 }
 
 .am-selectmenu-scroller {
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
     box-sizing: border-box;
 }
 
-.am-selectmenu-popup-box.am-enable-search .am-selectmenu-scroller {
-    max-height: calc(100vh - 100px - 2em);
-    box-sizing: border-box;
+.am-selectlist.am-selectmeu-list{
+    min-width: 30vw;
 }
 
 .am-selectlist.am-selectmeu-list.as-searching{

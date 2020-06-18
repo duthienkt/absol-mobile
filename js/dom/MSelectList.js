@@ -78,6 +78,7 @@ function MSelectList() {
 
     this._itemSession = 0;
     this._finished = true;
+    this._resourceReady = true;
 
 };
 
