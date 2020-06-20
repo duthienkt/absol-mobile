@@ -5,6 +5,7 @@ import {nonAccentVietnamese} from "absol/src/String/stringFormat";
 import Dom from "absol/src/HTML5/Dom";
 import Core from "./Core";
 import SelectMenu from 'absol-acomp/js/SelectMenu';
+import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
 /*global absol*/
 var _ = Core._;
 var $ = Core.$;
@@ -78,12 +79,6 @@ function MSelectMenu() {
     this.$removableTrackElts = [];
     this.$attachhook = $('attachhook', this)
         .on('error', this.eventHandler.attached);
-
-    // this.sync = new Promise(function (rs) {
-    //     $('attachhook', this).once('error', function () {
-    //         rs();
-    //     });
-    // });
 
     this._selectListScrollSession = null;
 };
@@ -443,9 +438,6 @@ MSelectMenu.eventHandler.selectlistPressItem = function (event) {
 
 MSelectMenu.eventHandler.searchModify = function (event) {
     var filterText = this.$searchTextInput.value.replace(/((\&nbsp)|(\s))+/g, ' ').trim();
-    var filterLC = filterText.toLowerCase();
-    var filterNA = nonAccentVietnamese(filterText);
-    var filterNALC = filterNA.toLowerCase();
     if (filterText.length == 0) {
         this._resourceReady = true;
         this.$selectlist.items = this.items;
@@ -462,71 +454,14 @@ MSelectMenu.eventHandler.searchModify = function (event) {
         }
         var view = [];
         if (!this._searchCache[filterText]) {
-            if (filterText.length == 1) {
-                view = this.items.map(function (item) {
-                    var res = {item: item, text: typeof item === 'string' ? item : item.text};
-                    return res;
-                }).map(function (it) {
-                    it.score = 0;
-                    var text = it.text.replace(/((\&nbsp)|(\s))+/g, ' ').trim();
-                    it.textNA = it.textNA || nonAccentVietnamese(text);
-                    it.score += text.toLowerCase().indexOf(filterLC) >= 0 ? 100 : 0;
-                    text = it.textNA;
-                    it.score += text.toLowerCase().indexOf(filterLC) >= 0 ? 100 : 0;
-                    return it;
-                });
-
-                view.sort(function (a, b) {
-                    if (b.score - a.score == 0) {
-                        if (b.textNA > a.textNA) return -1;
-                        return 1;
-                    }
-                    return b.score - a.score;
-                });
-                view = view.filter(function (x) {
-                    return x.score > 0;
-                })
-            } else {
-                var its = this.items.map(function (item) {
-                    var res = {item: item, text: typeof item === 'string' ? item : item.text};
-                    var text = res.text.replace(/((\&nbsp)|(\s))+/g, ' ').trim();
-                    res.score = 0;
-                    var textNA = nonAccentVietnamese(text);
-                    res.textNA = textNA;
-                    res.score += (phraseMatch(text, filterText)
-                        + phraseMatch(textNA, filterNA)) / 2;
-                    if (text == filterText) res.score += 1000;
-                    if (textNA.replace(/s/g, '').toLowerCase() == filterNALC.replace(/s/g, ''))
-                        res.score += 300;
-                    if (textNA.replace(/s/g, '').toLowerCase().indexOf(filterNALC.replace(/s/g, '')) > -1)
-                        res.score += 100;
-                    return res;
-                });
-                if (its.length == 0) return;
-
-                its.sort(function (a, b) {
-                    if (b.score - a.score == 0) {
-                        if (b.textNA > a.textNA) return -1;
-                        return 1;
-                    }
-                    return b.score - a.score;
-                });
-                var view = its.filter(function (x) {
-                    return x.score > 0.5;
-                });
-                if (view.length == 0) {
-                    var bestScore = its[0].score;
-                    view = its.filter(function (it) {
-                        return it.score + 0.001 >= bestScore;
-                    });
-                }
-                if (view[0].score == 0) view = [];
+            if (this._items.length > 0 && !this._items[0].__nvnText__) {
+                prepareSearchForList(this._items);
             }
-            view = view.map(function (e) {
-                return e.item;
-            });
+
+            view = searchListByText(filterText, this._items);
             this._searchCache[filterText] = view;
-        } else {
+        }
+        else {
             view = this._searchCache[filterText];
         }
         this.$selectlist.items = view;
