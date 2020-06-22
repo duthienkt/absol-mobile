@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SelectMenu</title>
+    <title>SelectTreeMenu</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
 
     <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css">
@@ -2297,12 +2297,23 @@
     var recommendWidth = st2.getRecommendWith();
     st2.addStyle({
         width: recommendWidth+ 'px',
-        height: '40px'
+        height: '40px',
+        maxWidth:'calc(100vw - 60px)'
     });
     absol.$('#selectmenu-place-holder-2').addChild(st2);
 
 </script>
-<script src="https://absol.cf/absol/demo/autohightlighting.js"></script>
+<script>
+    if (!absol.BrowserDetector.isMobile){
+        absol._({
+            tag:'script',
+            props:{
+                src:'https://absol.cf/absol/demo/autohightlighting.js'
+            }
+        }).addTo(document.body);
+    }
+</script>
+
 </body>
 
 </html>
