@@ -11,6 +11,7 @@ import MMessageInput from './MMessageInput';
 import MSelectListItem from './MSelectListItem';
 import MSelectList from './MSelectList';
 import MSelectMenu from './MSelectMenu';
+import MSelectTreeMenu from "./MSelectTreeMenu";
 
 export default function install(core) {
     core.install([
@@ -20,6 +21,6 @@ export default function install(core) {
         MConversation,
         MSelectListItem,
         MSelectList,
-        MSelectMenu
+        MSelectMenu, MSelectTreeMenu
     ]);
 }
