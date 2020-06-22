@@ -53,7 +53,6 @@ function MSelectTreeMenu() {
     this.$popupHeader = $('.am-selectmenu-popup-box-header', this.$modal);
     this.$closeBtn = $('.am-selectmenu-popup-box-close-btn', this.$modal)
         .on('click', this.eventHandler.clickCloseBtn);
-    console.log(this.eventHandler.clickCloseBtn)
     /**
      * @type {import('absol-acomp/js/BScroller').default}
      */
