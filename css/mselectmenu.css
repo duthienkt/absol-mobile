@@ -21,6 +21,7 @@
     box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     background-color: #ffffff;
     border-radius: 0.5em;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .am-selectmenu-popup-box-header{
@@ -106,6 +107,11 @@
     background: white;
     overflow: hidden;
     box-sizing: border-box;
+    padding-right: 35px;
+}
+
+.am-selectmenu.disabled .absol-selectmenu-btn{
+   background-color: #ebebe4;
 }
 
 .am-selectmenu .absol-selectmenu-btn{
@@ -123,7 +129,7 @@
 .am-selectmenu-holder-item{
     display: inline-table;
     vertical-align: middle;
-    width: calc(100% - 35px);
+    width: 100%;
     table-layout: auto;
 }
 

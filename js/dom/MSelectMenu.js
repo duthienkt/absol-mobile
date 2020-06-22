@@ -69,7 +69,7 @@ function MSelectMenu() {
     }, true);
     this._fixPopupWidth = false;
     this._lastValue = "NOTHING_VALUE";
-    // this._resourceReady = true;
+    this._resourceReady = true;
 
 
     this.on('click', this.eventHandler.click, true);
@@ -344,35 +344,8 @@ MSelectMenu.property.isFocus = {
     }
 };
 
-
-// MSelectMenu.property.disabled = {
-//     set: function (value) {
-//         if (value) {
-//             this.addClass('disabled');
-//         }
-//         else {
-//             this.removeClass('disabled');
-//         }
-//     },
-//     get: function () {
-//         return this.containsClass('disabled');
-//     }
-// };
-
-
-// MSelectMenu.property.hidden = {
-//     set: function (value) {
-//         if (value) {
-//             this.addClass('hidden');
-//         }
-//         else {
-//             this.removeClass('hidden');
-//         }
-//     },
-//     get: function () {
-//         return this.addClass('hidden');
-//     }
-// };
+MSelectMenu.property.disabled = SelectMenu.property.disabled;
+MSelectMenu.property.hidden =  SelectMenu.property.hidden;
 
 /**
  * @type {MSelectMenu}
