@@ -12,6 +12,7 @@ import MSelectListItem from './MSelectListItem';
 import MSelectList from './MSelectList';
 import MSelectMenu from './MSelectMenu';
 import MSelectTreeMenu from "./MSelectTreeMenu";
+import MSelectBox from "./MSelectBox";
 
 export default function install(core) {
     core.install([
@@ -21,6 +22,7 @@ export default function install(core) {
         MConversation,
         MSelectListItem,
         MSelectList,
-        MSelectMenu, MSelectTreeMenu
+        MSelectMenu, MSelectTreeMenu,
+        MSelectBox
     ]);
 }

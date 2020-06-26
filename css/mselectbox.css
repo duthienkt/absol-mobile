@@ -1,0 +1,7 @@
+.am-select-box{
+
+}
+
+.am-select-box-modal .am-selectlist-item.selected{
+    display: none;
+}
