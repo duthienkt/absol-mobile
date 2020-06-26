@@ -1,6 +1,6 @@
 {
     "name": "absol-mobile",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Mobile base on absol.js",
     "main": "dev.js",
     "directories": {
@@ -27,7 +27,7 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "^1.13.1",
+        "absol": "^1.13.3",
         "absol-acomp": "^0.9.12"
     },
     "devDependencies": {
