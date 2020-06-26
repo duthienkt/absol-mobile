@@ -66,20 +66,6 @@ MSelectListItem.property.level = {
 };
 
 
-// MSelectListItem.property.lastInGroup = {
-//     set: function (value) {
-//         if (value) {
-//             this.addClass('as-last-in-group');
-//         }
-//         else {
-//             this.removeClass('as-last-in-group');
-//         }
-//     },
-//     get: function () {
-//         return this.containsClass('as-last-in-group');
-//     }
-// };
-
 Core.install(MSelectListItem);
 
 export default MSelectListItem;

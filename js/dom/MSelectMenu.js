@@ -14,7 +14,10 @@ var $ = Core.$;
 function MSelectMenu() {
     var thisSM = this;
     this._isFocus = false;
+
     this.selectListBound = {width: 0};
+    this._itemsByValue = {};
+
     this.$holderItem = $('.am-selectmenu-holder-item', this);
 
     this.$modal = _({
@@ -57,10 +60,9 @@ function MSelectMenu() {
     this.$vscroller = $('bscroller.am-selectmenu-scroller', this.$modal);
     this.$selectlist = $('mselectlist.am-selectmeu-list', this.$modal)
         .on('valuevisibilityasync', this.eventHandler.listValueVisibility);
-    //     .on('sizechangeasync', this.eventHandler.listSizeChangeAsync)
 
 
-    // this._itemsByValue = {};
+
     this.$searchTextInput.on('stoptyping', this.eventHandler.searchModify);
     this._searchCache = {};
     this.$selectlist.on('pressitem', this.eventHandler.selectlistPressItem, true);
@@ -330,7 +332,7 @@ MSelectMenu.property.isFocus = {
             this.$modal.remove();
             this._updatePopupPosition();
             setTimeout(function () {
-                if (self.$searchTextInput.value != 0) {
+                if (self.$searchTextInput.value.length != 0) {
                     self.$searchTextInput.value = '';
                     self.$selectlist.items = self.items;
                     self._resourceReady = true;
