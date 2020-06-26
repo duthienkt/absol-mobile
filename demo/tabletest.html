@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SelectBox</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+
+    <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css">
+    <link rel="stylesheet" href="https://absol.cf/css/materialdesignicons/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://absol.cf/hightlight/highlight.pack.js"></script>
+    <script src="../dist/absol-mobile.js?"></script>
+    <script>
+        var $ = absol.$;
+        var _ = absol._;
+    </script>
+    <style>
+        .table {
+            font-family: Arial, Helvetica, sans-serif;
+            display: table;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .tr {
+            display: table-row;
+        }
+
+        .td {
+            border: 1px solid black;
+            display: table-cell;
+            padding: 5px;
+        }
+
+        .item-text {
+
+        }
+
+        .item-desc {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div id="info">
+    <div><label>Create : </label><span id="ctime"></span></div>
+    <div><label>Render : </label><span id="rtime"></span></div>
+    <button onclick="test()">Test</button>
+</div>
+<div id="demo">
+
+</div>
+<script>
+    function genItems(n, withDesc) {
+        return Array(n).fill(null).map(function (u, i) {
+            return {
+                text: '[' + i + ']' + absol.string.randomPhrase(0),
+                value: i,
+                desc: withDesc ? absol.string.randomPhrase(30) : null
+            }
+        });
+    }
+
+    var demoDiv = $('.demo');
+    var items = genItems(6000, true);
+
+    function createRow(item) {
+        return _({
+            class: 'tr',
+            child: [
+                {
+                    class: ['td', 'item-text'],
+                    child: {
+                        tag: 'span',
+                        child: { text: item.text }
+                    }
+                },
+                {
+                    class: ['td', 'item-desc'],
+                    child: {
+                        text: item.desc
+                    }
+                }
+            ]
+        })
+    }
+
+    var demoDiv = $('#demo');
+    var ctime = $('#ctime');
+    var rtime = $('#rtime');
+
+    function test() {
+        demoDiv.clearChild();
+        var table = _('.table');
+        var now = new Date();
+        for (var i = 0; i < items.length; ++i) {
+            table.addChild(createRow(items[i]));
+        }
+        var cTimeValue = new Date().getTime() - now.getTime();
+        ctime.innerHTML = cTimeValue + 'ms';
+
+        demoDiv.addChild(table);
+        var bound = table.getBoundingClientRect();
+        // hàm này chỉ trả về kết quả khi thực sự được vẽ ra
+        var rTimeValue = new Date().getTime() - now.getTime() - cTimeValue;
+        rtime.innerHTML = rTimeValue + 'ms';
+
+    }
+
+</script>
+</body>
+</html>
