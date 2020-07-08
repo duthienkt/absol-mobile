@@ -192,13 +192,13 @@ MSelectTreeMenu.property.isFocus = {
             var isAttached = false;
             setTimeout(function () {
                 if (isAttached) return;
-                $('body').on('mousedown', this.eventHandler.bodyClick);
+                $('body').on('click', this.eventHandler.bodyClick);
                 isAttached = true;
             }.bind(this), 1000);
             $('body').once('click', function () {
                 setTimeout(function () {
                     if (isAttached) return;
-                    $('body').on('mousedown', this.eventHandler.bodyClick);
+                    $('body').on('click', this.eventHandler.bodyClick);
                     isAttached = true;
                 }.bind(this), 10);
             }.bind(this));
@@ -215,7 +215,7 @@ MSelectTreeMenu.property.isFocus = {
             this.$modal.removeStyle('visibility');
         }
         else {
-            $('body').off('mousedown', this.eventHandler.bodyClick);
+            $('body').off('click', this.eventHandler.bodyClick);
             this.$modal.remove();
             this._updatePopupPosition();
             setTimeout(function () {

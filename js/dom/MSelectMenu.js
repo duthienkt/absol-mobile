@@ -307,13 +307,13 @@ MSelectMenu.property.isFocus = {
             var isAttached = false;
             setTimeout(function () {
                 if (isAttached) return;
-                $('body').on('mousedown', self.eventHandler.bodyClick);
+                $('body').on('click', self.eventHandler.bodyClick);
                 isAttached = true;
             }, 1000);
             $('body').once('click', function () {
                 setTimeout(function () {
                     if (isAttached) return;
-                    $('body').on('mousedown', self.eventHandler.bodyClick);
+                    $('body').on('click', self.eventHandler.bodyClick);
                     isAttached = true;
                 }, 10);
             });
@@ -328,7 +328,7 @@ MSelectMenu.property.isFocus = {
             this.scrollToSelectedItem();
             this.$modal.removeStyle('visibility');
         } else {
-            $('body').off('mousedown', this.eventHandler.bodyClick);
+            $('body').off('click', this.eventHandler.bodyClick);
             this.$modal.remove();
             this._updatePopupPosition();
             setTimeout(function () {
