@@ -389,9 +389,11 @@ MSelectBox.eventHandler.click = function (event) {
 };
 
 
-MSelectBox.eventHandler.clickBody = function (event) {
-    if (!EventEmitter.hitElement(this.$anchor, event) && event.target != this) {
-        this.isFocus = false;
+MSelectBox.eventHandler.bodyClick = function (event) {
+    if (!EventEmitter.hitElement(this, event) && !EventEmitter.hitElement(this.$popupBox, event)) {
+        setTimeout(function () {
+            this.isFocus = false;
+        }.bind(this), 5);
     }
 };
 
