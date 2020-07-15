@@ -13,6 +13,7 @@ import MSelectList from './MSelectList';
 import MSelectMenu from './MSelectMenu';
 import MSelectTreeMenu from "./MSelectTreeMenu";
 import MSelectBox from "./MSelectBox";
+import MBlinkModal from "./MBlinkModal";
 
 export default function install(core) {
     core.install([
@@ -23,6 +24,7 @@ export default function install(core) {
         MSelectListItem,
         MSelectList,
         MSelectMenu, MSelectTreeMenu,
-        MSelectBox
+        MSelectBox,
+        MBlinkModal
     ]);
 }

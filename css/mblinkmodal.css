@@ -1,0 +1,34 @@
+.am-blink-modal {
+    left: 10px;
+    right: 10px;
+    position: fixed;
+    --hide-top: -1000px;
+    --show-top: 10px;
+    top: var(--hide-top);
+    z-index: -10000000;
+    border-radius: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 25px;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.am-blink-modal.am-animation {
+    z-index: 10000000;
+    visibility: visible;
+    opacity: 1;
+    transition: top cubic-bezier(.59, .01, .2, .99) 0.2s;
+}
+
+
+.am-blink-modal.am-show {
+    top: var(--show-top);
+}
+
+
+
+
+
+
