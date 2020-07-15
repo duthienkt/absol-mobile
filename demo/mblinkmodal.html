@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+    <meta charset="UTF-8">
+    <title>MBlinkModal</title>
+    <script src="../dist/absol-mobile.js?"></script>
+    <style>
+        :root {
+            background-image: url(https://absol.cf/share/sebastian.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        body {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<script>
+    setTimeout(function () {
+        var $ = absol.$;
+        var _ = absol._;
+        var myBlinkModalInstance = absol.require('mblinkmodal').newInstance({
+            child: [
+                '<h6>The standard Lorem Ipsum passage, used since the 1500s</h6>',
+                "<span>Lorem ipsum dolor sit amet, consectetur adipiscing elit ,sed do eiusmod tempor incididunt ut " +
+                "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
+                "ut aliquip ex ea commodo consequat.</span>"
+            ],
+            on: {
+                click: function () {
+                    myBlinkModalInstance.close();
+                }
+            },
+            duration: 5000
+        });
+    }, 1000)
+
+
+
+</script>
+
+</body>
+</html>
