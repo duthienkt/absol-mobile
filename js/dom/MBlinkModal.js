@@ -77,7 +77,6 @@ MBlinkModal.newInstance = function (instanceData) {
 
     function waitToShow() {
         setTimeout(function () {
-            console.log(state)
             if (state !== 1) return;
             state = 2;
             modal.show = true;

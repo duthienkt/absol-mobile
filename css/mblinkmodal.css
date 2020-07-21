@@ -8,8 +8,12 @@
     z-index: -10000000;
     border-radius: 10px;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(1.5rem);
+    -webkit-backdrop-filter: blur(1.5rem);
+    background-color: rgba(228, 228, 228, 0.6);
+    -webkit-box-shadow: 10px 9px 29px -2px rgba(0,0,0,0.3);
+    -moz-box-shadow: 10px 9px 29px -2px rgba(0,0,0,0.3);
+    box-shadow: 10px 9px 29px -2px rgba(0,0,0,0.3);
     padding: 25px;
     visibility: hidden;
     opacity: 0;
