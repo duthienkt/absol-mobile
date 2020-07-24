@@ -150,4 +150,5 @@ input[type="number"].am-list-popup-paging-offset {
 
 .am-list-modal  .am-selectlist{
     max-width: calc(100vw - 50px);
+    min-width: 100%;
 }
