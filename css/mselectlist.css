@@ -37,3 +37,13 @@
     padding-left: 5px;
     padding-right: 10px;
 }
+
+
+.am-selectlist{
+    --text-width: auto;
+}
+
+
+.am-selectlist .am-selectlist-item-text-ctn{
+    width: var(--text-width);
+}

@@ -10,7 +10,7 @@ var $ = Core.$;
 export function measureListSize(items) {
     var descWidth = measureMaxDescriptionWidth(items);
     var textWidth = measureMaxTextWidth(items);
-    var width = descWidth + 20 + textWidth + 12 + 14;//padding, margin
+    var width = descWidth + 20 + textWidth + 12 + 15;//padding, margin
     return {
         width: width,
         descWidth: descWidth,
