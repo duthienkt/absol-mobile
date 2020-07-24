@@ -9,6 +9,10 @@ import {measureListSize, releaseItem, requireItem} from "./MSelectList";
 var _ = Core._;
 var $ = Core.$;
 
+export var VALUE_DISPLAY_HIDDEN = -1;
+export var VALUE_DISPLAY_NORMAL = 1;
+
+
 function MListModal() {
     this.estimateSize = { width: 0 };
     this.$attachhook = _('attachhook').addTo(this);
@@ -53,8 +57,10 @@ function MListModal() {
     this._itemHolderByValue = {};
     this._values = [];
     this._valueDict = {};
+    this._preDisplayItems = [];
     this._displayItems = [];
     this._searchCache = {};
+    this._displayValue = VALUE_DISPLAY_NORMAL;
     this.items = [];
 }
 
@@ -172,6 +178,20 @@ MListModal.prototype._requireItem = function (n) {
         this.$items.push(itemElt);
         this.$list.addChild(itemElt);
     }
+};
+
+/***
+ *
+ * @param {Array<{value:String|Number}>} items
+ * @return {Array<{value:String|Number}>}
+ * @private
+ */
+MListModal.prototype._filterValue = function (items) {
+    if (this._displayValue === VALUE_DISPLAY_NORMAL) return items;
+    var dict = this._valueDict;
+    return items.filter(function (item) {
+        return !dict[item.value +''];
+    });
 };
 
 MListModal.prototype._assignItems = function (offset) {
@@ -342,7 +362,8 @@ MListModal.property.items = {
     set: function (items) {
         var items = items || [];
         this._items = items;
-        this._displayItems = items;
+        this._preDisplayItems = this._items;
+        this._displayItems = this._filterValue( this._preDisplayItems);
         this._itemHolderByValue = items.reduce(function (ac, cr, idx) {
             var value = typeof cr === "string" ? cr : cr.value + '';
             ac[value] = ac[value] || [];
@@ -377,12 +398,24 @@ MListModal.property.values = {
             ac[cr + ''] = true;
             return ac;
         }, {});
+        this._displayItems = this._filterValue(this._preDisplayItems);
+        this.viewListAt(this._currentOffset);
         this._updateSelectedItem();
     },
     get: function () {
         return this._values;
     }
 };
+
+MListModal.property.displayValue = {
+    set: function (value) {
+        this._displayValue = value;
+        this._displayItems = this._filterValue(this._preDisplayItems);
+    },
+    get: function () {
+        return this._displayValue;
+    }
+}
 
 MListModal.property.enableSearch = {
     set: function (value) {
@@ -412,7 +445,8 @@ MListModal.eventHandler.click = function (event) {
 MListModal.eventHandler.searchModify = function () {
     var text = this.$searchInput.value;
     var searchedItems = this.searchItemByText(text);
-    this._displayItems = searchedItems;
+    this._preDisplayItems = searchedItems;
+    this._displayItems = this._filterValue(this._preDisplayItems);
     this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
 };
