@@ -110,14 +110,6 @@
             var renderTimeText = _({
                 child: {text: 'render: ' + renderTime + "(ms)"}
             }).addTo(demoDiv);
-            var statusText = _({
-                style: {color: 'red'},
-                child: {text: 'status: LOADING'}
-            }).addTo(demoDiv);
-            sm.$selectlist.on('finishasync', function () {
-                statusText.addStyle('color', 'blue');
-                statusText.firstChild.data = 'status: COMPLETE';
-            });
         }
     )
 
