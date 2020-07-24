@@ -240,7 +240,6 @@ MListModal.prototype._findCurrentOffset = function () {
     var itemBound;
     for (var i = 0; i < this.$items.length; ++i) {
         itemBound = this.$items[i].getBoundingClientRect();
-        console.log(i, itemBound);
         if (itemBound.top + 5 >= top) {
             return this._startItemIdx + i;
         }
