@@ -14,55 +14,9 @@ export var VALUE_NORMAL = 1;
 
 
 function MListModal() {
-    this.estimateSize = { width: 0 };
-    this.$attachhook = _('attachhook').addTo(this);
-    this.$attachhook._isAttached = false;
-    this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
-    this.$attachhook.on('error', function () {
-        Dom.addToResizeSystem(this);
-        this.requestUpdateSize();
-        this._isAttached = true;
-    });
-
-    this.$closeBtn = $('.am-list-popup-close-btn', this)
-        .on('click', this.notifyPressClose.bind(this));
-
-    this.on('click', this.eventHandler.click);
-
-    this.$box = $('.am-list-popup-box', this);
-    this.$header = $('.am-list-popup-header', this);
-    this.$paging = $('.am-list-popup-paging', this);
-    this.$nextPageBtn = $('.am-list-popup-next-page-btn', this)
-        .on('click', this.nextPage.bind(this));
-    this.$prevPageBtn = $('.am-list-popup-prev-page-btn', this)
-        .on('click', this.prevPage.bind(this));
-    this.$startPageBtn = $('.am-list-popup-start-page-btn', this)
-        .on('click', this.toStartPage.bind(this));
-    this.$endPageBtn = $('.am-list-popup-end-page-btn', this)
-        .on('click', this.toEndPage.bind(this));
-    this.$searchInput = $('searchtextinput', this)
-        .on('stoptyping', this.eventHandler.searchModify);
-
-    this.$itemsLength = $('.am-list-popup-paging-content span', this);
-    this.$offsetInput = $('.am-list-popup-paging-content input', this);
-
-    this.$listScroller = $('.am-list-popup-list-scroller', this);
-    this.$list = $('.am-selectlist', this);
-    this._currentOffset = 0;
-    this._startItemIdx = 0;
-    this.$items = [];
-    this.$itemByValue = {};
-
-    this._items = [];
-    this._itemHolderByValue = {};
-    this._values = [];
-    this._valueDict = {};
-    this._preDisplayItems = [];
-    this._displayItems = [];
-    this._searchCache = {};
-    this._displayValue = VALUE_NORMAL;
-    this.displayValue = VALUE_HIDDEN
-    this.items = [];
+    this._initDomHook();
+    this._initControl();
+    this._initProperty();
 }
 
 
@@ -142,7 +96,67 @@ MListModal.render = function () {
             }
         ]
     });
-}
+};
+
+
+MListModal.prototype._initDomHook = function () {
+    this.estimateSize = { width: 0 };
+    this.$attachhook = _('attachhook').addTo(this);
+    this.$attachhook._isAttached = false;
+    this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
+    this.$attachhook.on('error', function () {
+        Dom.addToResizeSystem(this);
+        this.requestUpdateSize();
+        this._isAttached = true;
+    });
+};
+
+MListModal.prototype._initControl = function () {
+    this._currentOffset = 0;
+    this._startItemIdx = 0;
+
+    this.$closeBtn = $('.am-list-popup-close-btn', this)
+        .on('click', this.notifyPressClose.bind(this));
+
+    this.on('click', this.eventHandler.click);
+
+    this.$box = $('.am-list-popup-box', this);
+    this.$header = $('.am-list-popup-header', this);
+    this.$paging = $('.am-list-popup-paging', this);
+    this.$nextPageBtn = $('.am-list-popup-next-page-btn', this)
+        .on('click', this.nextPage.bind(this));
+    this.$prevPageBtn = $('.am-list-popup-prev-page-btn', this)
+        .on('click', this.prevPage.bind(this));
+    this.$startPageBtn = $('.am-list-popup-start-page-btn', this)
+        .on('click', this.toStartPage.bind(this));
+    this.$endPageBtn = $('.am-list-popup-end-page-btn', this)
+        .on('click', this.toEndPage.bind(this));
+    this.$searchInput = $('searchtextinput', this)
+        .on('stoptyping', this.eventHandler.searchModify);
+
+    this.$itemsLength = $('.am-list-popup-paging-content span', this);
+    this.$offsetInput = $('.am-list-popup-paging-content input', this);
+
+    this.$listScroller = $('.am-list-popup-list-scroller', this);
+    this.$list = $('.am-selectlist', this);
+};
+
+MListModal.prototype._initProperty = function(){
+    this.$items = [];
+    this.$itemByValue = {};
+
+    this._items = [];
+    this._itemHolderByValue = {};
+    this._values = [];
+    this._valueDict = {};
+    this._preDisplayItems = [];
+    this._displayItems = [];
+    this._searchCache = {};
+    this._displayValue = VALUE_NORMAL;
+    this.displayValue = VALUE_NORMAL;
+    this.items = [];
+};
+
 
 MListModal.prototype.afterAttached = function () {
     if (!this.isDescendantOf(document.body))
@@ -181,11 +195,15 @@ MListModal.prototype._requireItem = function (n) {
     }
 };
 
+
+MListModal.prototype._listToDisplay = function(items){
+    return items;
+};
+
 /***
  *
  * @param {Array<{value:String|Number}>} items
  * @return {Array<{value:String|Number}>}
- * @private
  */
 MListModal.prototype._filterValue = function (items) {
     if (this._displayValue === VALUE_NORMAL) return items;
@@ -342,7 +360,7 @@ MListModal.prototype.searchItemByText = function (text) {
 
 MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
-    this._preDisplayItems = this._items;
+    this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
     this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
@@ -370,7 +388,7 @@ MListModal.property.items = {
     set: function (items) {
         var items = items || [];
         this._items = items;
-        this._preDisplayItems = this._items;
+        this._preDisplayItems = this._listToDisplay(this._items);
         this._displayItems = this._filterValue(this._preDisplayItems);
         this._itemHolderByValue = items.reduce(function (ac, cr, idx) {
             var value = typeof cr === "string" ? cr : cr.value + '';
@@ -383,7 +401,7 @@ MListModal.property.items = {
         }, {});
         this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         this._searchCache = {};
-        var estimateSize = measureListSize(items);
+        var estimateSize = measureListSize(this._preDisplayItems);
         if (estimateSize.descWidth > 0) {
             this.$list.addStyle('--text-width', 100 * (estimateSize.textWidth + 15) / (estimateSize.width) + '%');
         }
@@ -392,7 +410,7 @@ MListModal.property.items = {
         }
         this.estimateSize = estimateSize;
         this.$list.addStyle('width', estimateSize.width / 14 + 'em');
-        this.$itemsLength.firstChild.data = '/' + items.length;
+        this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         prepareSearchForList(items);
         this.viewListAt(0);
     }
@@ -453,7 +471,7 @@ MListModal.eventHandler.click = function (event) {
 MListModal.eventHandler.searchModify = function () {
     var text = this.$searchInput.value;
     var searchedItems = this.searchItemByText(text);
-    this._preDisplayItems = searchedItems;
+    this._preDisplayItems = this._listToDisplay(searchedItems);
     this._displayItems = this._filterValue(this._preDisplayItems);
     this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
