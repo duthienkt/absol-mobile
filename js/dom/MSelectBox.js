@@ -79,6 +79,7 @@ function MSelectBox() {
         .on('pressout', this.eventHandler.pressOut)
         .on('pressclose', this.eventHandler.pressOut);
     this.on('click', this.eventHandler.click);
+    this.$attachhook = $('attachhook', this).on('error', this.eventHandler.attached);
 
     this.orderly = false;
     this.items = [];
@@ -99,8 +100,8 @@ MSelectBox.render = function () {
 };
 
 
-MSelectBox.prototype.getRecommendWith =  function () {
-    return this.$selectlist.estimateSize.width + 18;
+MSelectBox.prototype.getRecommendWith = function () {
+    return this.$selectlist.estimateSize.textWidth + 60;
 };
 
 MSelectBox.prototype._dictByValue = MSelectMenu.prototype._dictByValue;
@@ -168,7 +169,6 @@ MSelectBox.prototype._updateValues = function () {
 };
 
 
-
 MSelectBox.prototype.querySelectedItems = function () {
     return Array.prototype.map.call(this.$holderItem.childNodes, function (e) {
         return e.data;
@@ -232,7 +232,8 @@ MSelectBox.property.orderly = {
  */
 MSelectBox.eventHandler = {};
 
-MSelectBox.eventHandler.pressOut= MSelectMenu.eventHandler.pressOut;
+MSelectBox.eventHandler.pressOut = MSelectMenu.eventHandler.pressOut;
+MSelectBox.eventHandler.attached = MSelectMenu.eventHandler.attached;
 
 
 MSelectBox.eventHandler.click = function (event) {
@@ -240,7 +241,6 @@ MSelectBox.eventHandler.click = function (event) {
         this.isFocus = !this.isFocus;
     }
 };
-
 
 
 MSelectBox.eventHandler.pressItem = function (event) {
