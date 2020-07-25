@@ -2255,6 +2255,7 @@
     var list1 = _('mlistmodal').addTo(document.body);
     list1.items = cfList;
     list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
+    list1.displayValue = -1;
     list1.on('pressitem', function (event) {
         console.log(event);
         this.values = [event.value];
