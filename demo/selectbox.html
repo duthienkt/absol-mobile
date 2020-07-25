@@ -81,6 +81,9 @@
              */
             var sm = _({
                 tag: 'mselectbox',
+                style: {
+                    width: 'auto'
+                },
                 props: {
                     items: data.items,
                     values: data.values,
@@ -93,9 +96,7 @@
                     }
                 }
             }).addTo(demoDiv);
-            var w = sm.getRecommendWith();
             sm.addStyle({
-                width: w + 'px',
                 maxWidth: '90vw'
             });
             var renderTime = new Date().getTime() - now;
