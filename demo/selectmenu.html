@@ -64,9 +64,9 @@
         },
         {
             items: [
-                {text: "Nam", value: 1},
-                {text: "Nữ", value: 0},
-                {text: "Bí mật", value: 2}
+                { text: "Nam", value: 1 },
+                { text: "Nữ", value: 0 },
+                { text: "Bí mật", value: 2 }
             ],
             value: 1,
             enableSearch: false,
@@ -78,7 +78,7 @@
         function (data) {
             var desc = _({
                 tag: 'h3',
-                child: {text: data.exampleDesc}
+                child: { text: data.exampleDesc }
             }).addTo(demoDiv);
             var now = new Date().getTime();
             /***
@@ -86,6 +86,9 @@
              */
             var sm = _({
                 tag: 'mselectmenu',
+                style: {
+                    width: 'auto'
+                },
                 props: {
                     items: data.items,
                     value: data.value,
@@ -105,10 +108,10 @@
             var renderTime = new Date().getTime() - now;
 
             var valueText = _({
-                child: {text: 'value = ' + data.value}
+                child: { text: 'value = ' + data.value }
             }).addTo(demoDiv);
             var renderTimeText = _({
-                child: {text: 'render: ' + renderTime + "(ms)"}
+                child: { text: 'render: ' + renderTime + "(ms)" }
             }).addTo(demoDiv);
         }
     )

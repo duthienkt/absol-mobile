@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SelectTreeMenu</title>
+    <title>MTreeModal</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
 
     <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css">
     <link rel="stylesheet" href="https://absol.cf/css/materialdesignicons/materialdesignicons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://absol.cf/hightlight/highlight.pack.js"></script>
-    <script src="../dist/absol-mobile.js?"></script>
+    <script src="../dist/absol-mobile.js?ctime=<?php  echo stat('../dist/absol-mobile.js')['mtime'];?>"></script>
     <script>
         var $ = absol.$;
         var _ = absol._;
@@ -2237,90 +2237,36 @@
     afItems.forEach(function (item) {
         visit(item, dic);
     });
+
+    var cfList = afItems.reduce(function visit(ac, item) {
+        ac.push({
+            text: `[${ac.length + 1}]` + item.text,
+            value: item.value,
+            desc: item.desc
+        });
+        if (item.items) item.items.reduce(visit, ac);
+        return ac;
+    }, []);
+    var _ = absol._;
+    var $ = absol.$;
 </script>
 
-<h1 id="stm-demo">Select Tree Menu</h1>
-<label style="display:inline-block;vertical-align: top; line-height: 30px">Select Tree Menu</label>
-<div id="selectmenu-place-holder"></div>
-<span style="display:inline-block;vertical-align: top; line-height: 30px;margin-left: 12px" id="stm-value"> value =
-    </span>
-
 <script class="viewable">
-    var valueText = absol.$('#stm-value');
-    valueText.innerHTML = 'value = 2138';
-    absol._({
-        tag: 'mselecttreemenu',
-        props: {
-            items: afItems,
-            value: 2138,
-            enableSearch: true
-        },
-        style: {
-            width: 'auto',
-            marginLeft: '40px'
-        }
-    }).on('change', function (event, sender) {
-        valueText.innerHTML = 'value = ' + event.value;
-    }).addTo(absol.$('#selectmenu-place-holder'));
-</script>
-<br>
-<h3>Disabled</h3>
-<div id="selectmenu-place-holder-1"></div>
-<script class="viewable">
-    absol._({
-        tag: 'mselecttreemenu',
-        props: {
-            items: afItems,
-            value: 2138,
-            enableSearch: true,
-            disabled: true
-        },
-        style: {
-            marginLeft: '40px',
-            width: 'auto'
-        }
-    }).addTo(absol.$('#selectmenu-place-holder-1'));
-</script>
-<h3>Fixed size</h3>
-<div id="selectmenu-place-holder-2"></div>
-<script class="viewable">
-    var st2 = absol._({
-        tag: 'mselecttreemenu',
-        style: {
-            width: 'auto'
-        },
-        props: {
-            items: afItems,
-            value: 2138,
-            enableSearch: true
-        },
-        style: {
-            marginLeft: '40px'
-        }
+    var list1 = _('mtreemodal').addTo(document.body);
+    list1.items = afItems;
+    list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
+    list1.displayValue = -1;
+    list1.enableSearch = true;
+    list1.on('pressitem', function (event) {
+        console.log(event);
+        this.values = [event.value];
+    });
+    list1.on('pressout', function (event) {
+        console.log(event);
+        this.remove();
     });
 
-    var recommendWidth = st2.getRecommendWith();
-
-    st2.addStyle({
-        width: recommendWidth + 'px',
-        height: '40px',
-        maxWidth: 'calc(100vw - 60px)'
-    });
-    st2.addStyle('width', recommendWidth + 'px');
-    absol.$('#selectmenu-place-holder-2').addChild(st2);
-
 </script>
-<script>
-    if (!absol.BrowserDetector.isMobile) {
-        absol._({
-            tag: 'script',
-            props: {
-                src: 'https://absol.cf/absol/demo/autohightlighting.js'
-            }
-        }).addTo(document.body);
-    }
-</script>
-
 </body>
 
 </html>
