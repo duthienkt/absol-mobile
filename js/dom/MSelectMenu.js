@@ -2,7 +2,7 @@ import '../../css/mselectmenu.css';
 import Core from "./Core";
 import SelectMenu from 'absol-acomp/js/SelectMenu';
 import MListModal from "./MListModal";
-/*global absol*/
+
 var _ = Core._;
 var $ = Core.$;
 
@@ -21,6 +21,8 @@ function MSelectMenu() {
         .on('pressout', this.eventHandler.pressOut)
         .on('pressclose', this.eventHandler.pressOut);
     this.on('click', this.eventHandler.click, true);
+
+    this.$attachhook = $('attachhook', this).on('error', this.eventHandler.attached);
 }
 
 MSelectMenu.tag = 'mselectmenu';
@@ -156,6 +158,11 @@ MSelectMenu.property.hidden = SelectMenu.property.hidden;
  */
 MSelectMenu.eventHandler = {};
 
+MSelectMenu.eventHandler.attached = function () {
+    if (this.style.width === 'auto') {
+        this.addStyle('width', this.getRecommendWith() / 14 + 'em');
+    }
+};
 
 MSelectMenu.eventHandler.click = function (event) {
     this.isFocus = !this.isFocus;
