@@ -1,11 +1,7 @@
 import '../../css/mselectmenu.css';
-import EventEmitter from "absol/src/HTML5/EventEmitter";
-import {phraseMatch, wordsMatch} from "absol/src/String/stringMatching";
-import {nonAccentVietnamese} from "absol/src/String/stringFormat";
-import Dom from "absol/src/HTML5/Dom";
 import Core from "./Core";
 import SelectMenu from 'absol-acomp/js/SelectMenu';
-import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
+import MListModal from "./MListModal";
 /*global absol*/
 var _ = Core._;
 var $ = Core.$;

@@ -9,8 +9,8 @@ import {measureListSize, releaseItem, requireItem} from "./MSelectList";
 var _ = Core._;
 var $ = Core.$;
 
-export var VALUE_DISPLAY_HIDDEN = -1;
-export var VALUE_DISPLAY_NORMAL = 1;
+export var VALUE_HIDDEN = -1;
+export var VALUE_NORMAL = 1;
 
 
 function MListModal() {
@@ -60,7 +60,8 @@ function MListModal() {
     this._preDisplayItems = [];
     this._displayItems = [];
     this._searchCache = {};
-    this._displayValue = VALUE_DISPLAY_NORMAL;
+    this._displayValue = VALUE_NORMAL;
+    this.displayValue = VALUE_HIDDEN
     this.items = [];
 }
 
@@ -187,10 +188,10 @@ MListModal.prototype._requireItem = function (n) {
  * @private
  */
 MListModal.prototype._filterValue = function (items) {
-    if (this._displayValue === VALUE_DISPLAY_NORMAL) return items;
+    if (this._displayValue === VALUE_NORMAL) return items;
     var dict = this._valueDict;
     return items.filter(function (item) {
-        return !dict[item.value +''];
+        return !dict[item.value + ''];
     });
 };
 
@@ -289,14 +290,21 @@ MListModal.prototype.viewListAt = function (offset) {
 
 
 MListModal.prototype.viewListAtFirstSelected = function () {
-    if (this._values.length > 0) {
+    if (this._displayValue == VALUE_HIDDEN) {
+        return false;
+    }
+    else if (this._values.length > 0) {
         var value = this._values[0];
         var itemHolders = this._itemHolderByValue[value + ''];
         if (itemHolders) {
             var holder = itemHolders[0];
             this.viewListAt(holder.idx);
+            return true;
         }
+        else return false;
     }
+    else
+        return false;
 };
 
 
@@ -334,7 +342,8 @@ MListModal.prototype.searchItemByText = function (text) {
 
 MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
-    this._displayItems = this._items;
+    this._preDisplayItems = this._items;
+    this._displayItems = this._filterValue(this._preDisplayItems);
     this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
 };
@@ -362,7 +371,7 @@ MListModal.property.items = {
         var items = items || [];
         this._items = items;
         this._preDisplayItems = this._items;
-        this._displayItems = this._filterValue( this._preDisplayItems);
+        this._displayItems = this._filterValue(this._preDisplayItems);
         this._itemHolderByValue = items.reduce(function (ac, cr, idx) {
             var value = typeof cr === "string" ? cr : cr.value + '';
             ac[value] = ac[value] || [];
