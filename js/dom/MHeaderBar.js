@@ -239,8 +239,6 @@ MHeaderBar.property.actionIcon = {
  */
 MHeaderBar.property.commands = {
     set: function (value) {
-        console.log(value);
-
         this.$commands.forEach(function (e) {
             e.selftRemove();
         });
