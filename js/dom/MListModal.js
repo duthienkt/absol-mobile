@@ -141,7 +141,7 @@ MListModal.prototype._initControl = function () {
     this.$list = $('.am-selectlist', this);
 };
 
-MListModal.prototype._initProperty = function(){
+MListModal.prototype._initProperty = function () {
     this.$items = [];
     this.$itemByValue = {};
 
@@ -173,9 +173,8 @@ MListModal.prototype.updateSize = function () {
     var bound = this.getBoundingClientRect();
     var boxBound = this.$box.getBoundingClientRect();
     var listScrollerBound = this.$listScroller.getBoundingClientRect();
-    this.$listScroller.addStyle('max-height', bound.height - (listScrollerBound.top - boxBound.top + 50) + 'px');
+    this.$listScroller.addStyle('max-height', 'calc(' + (bound.height - listScrollerBound.top + boxBound.top) + 'px - var(--modal-margin-bottom) - var(--modal-margin-top))');
     boxBound = this.$box.getBoundingClientRect();
-    this.addStyle('padding-top', Math.max(25, (bound.height - boxBound.height) / 2) + 'px');
     setTimeout(this._updateCurrentOffset.bind(this), 4);
 
 };
@@ -196,7 +195,7 @@ MListModal.prototype._requireItem = function (n) {
 };
 
 
-MListModal.prototype._listToDisplay = function(items){
+MListModal.prototype._listToDisplay = function (items) {
     return items;
 };
 
@@ -409,7 +408,6 @@ MListModal.property.items = {
             this.$list.removeStyle('--text-width');
         }
         this.estimateSize = estimateSize;
-        this.$list.addStyle('width', estimateSize.width / 14 + 'em');
         this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         prepareSearchForList(items);
         this.viewListAt(0);

@@ -1,3 +1,11 @@
+:root {
+    --modal-margin-top: 80px;
+    --modal-margin-bottom: 80px;
+    --modal-max-width: 500px;
+    --modal-width: calc(100vw - 80px);
+    --modal-border-radius: 8px;
+}
+
 .am-list-modal {
     z-index: 100005;
     position: fixed;
@@ -7,6 +15,7 @@
     bottom: 0;
     text-align: center;
     box-sizing: border-box;
+    padding-top: var(--modal-margin-top);
 }
 
 .am-list-modal > div {
@@ -16,11 +25,12 @@
 
 
 .am-list-popup-box {
+    max-width: var(--modal-max-width);
     -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     -moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     background-color: #ffffff;
-    border-radius: 0.5em;
+    border-radius: var(--modal-border-radius);
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -135,20 +145,22 @@ input[type="number"].am-list-popup-paging-offset {
     width: 4em;
     outline: none;
     margin-right: 0.2em;
-    border: solid 1px #a9a9a9;
-    border-radius: 0.3em;
+    /*border: solid 1px #a9a9a9;*/
+    /*border-radius: 0.3em;*/
+    border:none;
     text-align: right;
     font-size: inherit;
     height: 1.25em;
     box-sizing: border-box;
+
 }
 
 .am-list-popup-list-scroller {
     overflow: hidden;
+    width: 100%;
 }
 
 
-.am-list-modal  .am-selectlist{
-    max-width: calc(100vw - 50px);
-    min-width: 100%;
+.am-list-modal .am-selectlist {
+    width: 100%;
 }
