@@ -26,6 +26,7 @@
 
 .am-list-popup-box {
     max-width: var(--modal-max-width);
+    width: var(--modal-width);
     -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     -moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
     box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
