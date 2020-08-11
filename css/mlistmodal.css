@@ -157,11 +157,29 @@ input[type="number"].am-list-popup-paging-offset {
 }
 
 .am-list-popup-list-scroller {
-    overflow: hidden;
     width: 100%;
+    overflow: auto;
+    --content-height: calc(100vh - 200px);
+}
+
+
+.am-list-popup-content {
+    display: block;
+    position: relative;
+}
+
+.am-list-popup-list-page{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -200vh;
 }
 
 
 .am-list-modal .am-selectlist {
     width: 100%;
+}
+
+.am-list-popup-list-page.am-selectlist{
+    --desc-width: inherit;
 }

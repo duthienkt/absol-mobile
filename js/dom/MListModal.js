@@ -2,12 +2,12 @@ import '../../css/mlistmodal.css'
 
 import Core from "./Core";
 import Dom from "absol/src/HTML5/Dom";
-import {measureMaxDescriptionWidth, measureMaxTextWidth} from "absol-acomp/js/SelectList";
 import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
 import {measureListSize, releaseItem, requireItem} from "./MSelectList";
 
 var _ = Core._;
 var $ = Core.$;
+var $$ = Core.$$;
 
 export var VALUE_HIDDEN = -1;
 export var VALUE_NORMAL = 1;
@@ -16,6 +16,7 @@ export var VALUE_NORMAL = 1;
 function MListModal() {
     this._initDomHook();
     this._initControl();
+    this._initScroller();
     this._initProperty();
 }
 
@@ -43,54 +44,11 @@ MListModal.render = function () {
                         ]
                     },
                     {
-                        class: 'am-list-popup-paging',
-                        child: [
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-start-page-btn',
-                                child: 'span.mdi.mdi-chevron-double-left'
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-prev-page-btn',
-                                child: 'span.mdi.mdi-chevron-left'
-                            },
-                            {
-                                class: 'am-list-popup-paging-content',
-                                child: [
-                                    {
-                                        tag: 'input',
-                                        class: 'am-list-popup-paging-offset',
-                                        attr: {
-                                            type: 'number',
-                                            min: '0',
-                                            step: "1",
-                                            readonly: 'true'
-                                        }
-                                    },
-                                    {
-                                        tag: 'span',
-                                        child: {
-                                            text: '/1000'
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-next-page-btn',
-                                child: 'span.mdi.mdi-chevron-right'
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-end-page-btn',
-                                child: 'span.mdi.mdi-chevron-double-right'
-                            }
-                        ]
-                    },
-                    {
                         class: 'am-list-popup-list-scroller',
-                        child: '.am-selectlist'
+                        child: {
+                            class: 'am-list-popup-content',
+                            child: Array(3).fill('.am-list-popup-list-page.am-selectlist')
+                        }
                     }
                 ]
             }
@@ -121,24 +79,20 @@ MListModal.prototype._initControl = function () {
     this.on('click', this.eventHandler.click);
 
     this.$box = $('.am-list-popup-box', this);
-    this.$header = $('.am-list-popup-header', this);
-    this.$paging = $('.am-list-popup-paging', this);
-    this.$nextPageBtn = $('.am-list-popup-next-page-btn', this)
-        .on('click', this.nextPage.bind(this));
-    this.$prevPageBtn = $('.am-list-popup-prev-page-btn', this)
-        .on('click', this.prevPage.bind(this));
-    this.$startPageBtn = $('.am-list-popup-start-page-btn', this)
-        .on('click', this.toStartPage.bind(this));
-    this.$endPageBtn = $('.am-list-popup-end-page-btn', this)
-        .on('click', this.toEndPage.bind(this));
+
+
     this.$searchInput = $('searchtextinput', this)
         .on('stoptyping', this.eventHandler.searchModify);
 
-    this.$itemsLength = $('.am-list-popup-paging-content span', this);
-    this.$offsetInput = $('.am-list-popup-paging-content input', this);
 
+};
+
+MListModal.prototype._initScroller = function () {
+    this._pageOffsets = [0, 0, 0, 0];
+    this._pageYs = [0, 0, 0, 0];
     this.$listScroller = $('.am-list-popup-list-scroller', this);
-    this.$list = $('.am-selectlist', this);
+    this.$content = $('.am-list-popup-content', this);
+    this.$listPages = $$('.am-list-popup-list-page', this);
 };
 
 MListModal.prototype._initProperty = function () {
@@ -180,17 +134,16 @@ MListModal.prototype.updateSize = function () {
 };
 
 
-MListModal.prototype._requireItem = function (n) {
+MListModal.prototype._requireItem = function (pageElt, n) {
     var itemElt;
-    while (this.$items.length > n) {
-        itemElt = this.$items.pop();
+    while (pageElt.childNodes.length > n) {
+        itemElt = pageElt.lastChild;
         itemElt.selfRemove();
         releaseItem(itemElt);
     }
-    while (this.$items.length < n) {
+    while (pageElt.childNodes.length < n) {
         itemElt = requireItem(this);
-        this.$items.push(itemElt);
-        this.$list.addChild(itemElt);
+        pageElt.addChild(itemElt);
     }
 };
 
@@ -212,12 +165,11 @@ MListModal.prototype._filterValue = function (items) {
     });
 };
 
-MListModal.prototype._assignItems = function (offset) {
-    this.$itemByValue = {};
-    var n = Math.min(this._displayItems.length - offset, this.$items.length);
+MListModal.prototype._assignItems = function (pageElt, offset) {
+    var n = Math.min(this._displayItems.length - offset, pageElt.childNodes.length);
     var itemElt, value;
     for (var i = 0; i < n; ++i) {
-        itemElt = this.$items[i];
+        itemElt = pageElt.childNodes[i];
         itemElt.data = this._displayItems[offset + i];
         value = itemElt.value + '';
         this.$itemByValue[value] = this.$itemByValue[value] || [];
@@ -280,73 +232,62 @@ MListModal.prototype._findPrevOffset = function () {
 
 
 MListModal.prototype._updateCurrentOffset = function () {
-    var offset = this._findCurrentOffset();
-    this.$offsetInput.value = offset + 1 + '';
+
 };
 
 
 MListModal.prototype.viewListAt = function (offset) {
-    var fontSize = this.$list.getFontSize() || 14;
+    var scrollerBound = this.$listScroller.getBoundingClientRect();
+    if (scrollerBound.height === 0) return;
+    var fontSize = this.$listScroller.getFontSize() || 14;
     offset = Math.max(0, Math.min(offset, this._displayItems.length - 1));
     var screenSize = Dom.getScreenSize();
     var maxItem = Math.ceil(screenSize.height / (fontSize * 2.25));
-    this._currentOffset = offset;
-    setTimeout(this._updateCurrentOffset.bind(this), 4);
-    var items = this._displayItems;
-    this._startItemIdx = Math.max(0, Math.min(offset - maxItem, this._displayItems.length - 2 * maxItem));
-    var n = Math.min(items.length, maxItem * 3, this._displayItems.length - this._startItemIdx);
-    this._requireItem(n);
-    this._assignItems(this._startItemIdx);
-    this._updateSelectedItem();
-    if (n > 0) {
-        var startBound = this.$items[0].getBoundingClientRect();
-        var currentBound = this.$items[this._currentOffset - this._startItemIdx].getBoundingClientRect();
-        this.$listScroller.scrollTop = currentBound.top - startBound.top + 1;
+    var contentBound = this.$content.getBoundingClientRect();
+
+    this._pageOffsets[0] = Math.max(offset - maxItem, 0);
+    this._pageOffsets[1] = Math.min(this._pageOffsets[0] + maxItem, this._displayItems.length);
+    this._pageOffsets[2] = Math.min(this._pageOffsets[1] + maxItem, this._displayItems.length);
+    this._pageOffsets[3] = Math.min(this._pageOffsets[2] + maxItem, this._displayItems.length);
+    var sIdx, nItem, pageBound;
+    var pageElt;
+    for (var pageIndex = 0; pageIndex < 3; ++pageIndex) {
+        sIdx = this._pageOffsets[pageIndex];
+        nItem = this._pageOffsets[pageIndex + 1] - sIdx;
+        pageElt = this.$listPages[pageIndex];
+
+        if (pageIndex === 0) {
+            this._pageYs[pageIndex] = sIdx / this._displayItems.length * contentBound.height;
+        }
+
+        this.$listPages[pageIndex].addStyle('top', this._pageYs[pageIndex] + 'px');
+        this._requireItem(pageElt, nItem);
+        this._assignItems(pageElt, sIdx);
+        pageBound = pageElt.getBoundingClientRect();
+        this._pageYs[pageIndex + 1] = this._pageYs[pageIndex] + pageBound.height;
     }
 };
 
 
 MListModal.prototype.viewListAtFirstSelected = function () {
-    if (this._displayValue == VALUE_HIDDEN) {
-        return false;
-    }
-    else if (this._values.length > 0) {
-        var value = this._values[0];
-        var itemHolders = this._itemHolderByValue[value + ''];
-        if (itemHolders) {
-            var holder = itemHolders[0];
-            this.viewListAt(holder.idx);
-            return true;
-        }
-        else return false;
-    }
-    else
-        return false;
+    // if (this._displayValue == VALUE_HIDDEN) {
+    //     return false;
+    // }
+    // else if (this._values.length > 0) {
+    //     var value = this._values[0];
+    //     var itemHolders = this._itemHolderByValue[value + ''];
+    //     if (itemHolders) {
+    //         var holder = itemHolders[0];
+    //         this.viewListAt(holder.idx);
+    //         return true;
+    //     }
+    //     else return false;
+    // }
+    // else
+    //     return false;
 };
 
 
-MListModal.prototype.nextPage = function () {
-    var nextOffset = this._findNextOffset();
-    if (nextOffset >= this._displayItems.length) return;
-    this.viewListAt(nextOffset);
-};
-
-
-MListModal.prototype.prevPage = function () {
-    var prevOffset = this._findPrevOffset();
-    if (prevOffset >= this._displayItems.length) return;
-    this.viewListAt(prevOffset);
-};
-
-
-MListModal.prototype.toStartPage = function () {
-    this.viewListAt(0);
-};
-
-
-MListModal.prototype.toEndPage = function () {
-    this.viewListAt(this._displayItems.length);
-};
 
 
 MListModal.prototype.searchItemByText = function (text) {
@@ -361,7 +302,6 @@ MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
     this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
-    this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
 };
 
@@ -371,6 +311,10 @@ MListModal.prototype.notifyPressOut = function () {
 
 MListModal.prototype.notifyPressClose = function () {
     this.emit('pressclose', { target: this, type: 'pressclose' }, this);
+};
+
+MListModal.prototype._findFirstPageIdx = function (){
+
 };
 
 
@@ -398,17 +342,17 @@ MListModal.property.items = {
             });
             return ac;
         }, {});
-        this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         this._searchCache = {};
         var estimateSize = measureListSize(this._preDisplayItems);
         if (estimateSize.descWidth > 0) {
-            this.$list.addStyle('--text-width', 100 * (estimateSize.textWidth + 15) / (estimateSize.width) + '%');
+            this.$listScroller.addStyle('--desc-width', 100 * (estimateSize.descWidth + 15) / (estimateSize.width) + '%');
         }
         else {
-            this.$list.removeStyle('--text-width');
+            this.$listScroller.removeStyle('--desc-width');
         }
+        var estimateHeight = items.length * 30 * estimateSize.width / Math.min(Dom.getScreenSize().width - 80, 500);
+        this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
-        this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         prepareSearchForList(items);
         this.viewListAt(0);
     }
@@ -471,10 +415,15 @@ MListModal.eventHandler.searchModify = function () {
     var searchedItems = this.searchItemByText(text);
     this._preDisplayItems = this._listToDisplay(searchedItems);
     this._displayItems = this._filterValue(this._preDisplayItems);
-    this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
     this.viewListAt(0);
 };
 
+
+
+MListModal.eventHandler.scroll = function (){
+
+    console.log('.')
+};
 
 Core.install(MListModal);
 export default MListModal;
