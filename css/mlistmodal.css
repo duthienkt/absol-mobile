@@ -173,6 +173,7 @@ input[type="number"].am-list-popup-paging-offset {
     left: 0;
     right: 0;
     top: -200vh;
+    box-sizing: border-box;
 }
 
 

@@ -4,6 +4,7 @@ import Core from "./Core";
 import Dom from "absol/src/HTML5/Dom";
 import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
 import {measureListSize, releaseItem, requireItem} from "./MSelectList";
+import AElement from "absol/src/HTML5/AElement";
 
 var _ = Core._;
 var $ = Core.$;
@@ -13,6 +14,10 @@ export var VALUE_HIDDEN = -1;
 export var VALUE_NORMAL = 1;
 
 
+/***
+ * @extends AElement
+ * @constructor
+ */
 function MListModal() {
     this._initDomHook();
     this._initControl();
@@ -90,7 +95,8 @@ MListModal.prototype._initControl = function () {
 MListModal.prototype._initScroller = function () {
     this._pageOffsets = [0, 0, 0, 0];
     this._pageYs = [0, 0, 0, 0];
-    this.$listScroller = $('.am-list-popup-list-scroller', this);
+    this.$listScroller = $('.am-list-popup-list-scroller', this)
+        .on('scroll', this.eventHandler.scroll);
     this.$content = $('.am-list-popup-content', this);
     this.$listPages = $$('.am-list-popup-list-page', this);
 };
@@ -288,8 +294,6 @@ MListModal.prototype.viewListAtFirstSelected = function () {
 };
 
 
-
-
 MListModal.prototype.searchItemByText = function (text) {
     text = text.trim();
     if (text.length == 0) return this._items;
@@ -313,8 +317,22 @@ MListModal.prototype.notifyPressClose = function () {
     this.emit('pressclose', { target: this, type: 'pressclose' }, this);
 };
 
-MListModal.prototype._findFirstPageIdx = function (){
+MListModal.prototype._findFirstPageIdx = function () {
+    for (var i = 0; i < 3; ++i) {
+        if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
+};
 
+MListModal.prototype._findLastPageIdx = function () {
+    for (var i = 2; i >= 0; --i) {
+        if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
 };
 
 
@@ -350,11 +368,11 @@ MListModal.property.items = {
         else {
             this.$listScroller.removeStyle('--desc-width');
         }
-        var estimateHeight = items.length * 30 * estimateSize.width / Math.min(Dom.getScreenSize().width - 80, 500);
+        var estimateHeight = items.length * 30 * estimateSize.width / Math.min(Dom.getScreenSize().width - 80, 500) * 1.2;
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
         prepareSearchForList(items);
-        this.viewListAt(0);
+        this.afterAttached().then(this.viewListAt.bind(this, 0));
     }
 };
 
@@ -419,11 +437,57 @@ MListModal.eventHandler.searchModify = function () {
 };
 
 
+MListModal.eventHandler.scroll = function () {
+    var scrollerBound = this.$listScroller.getBoundingClientRect();
+    var topIdx = this._findFirstPageIdx();
+    var fontSize = this.$listScroller.getFontSize() || 14;
+    var screenSize = Dom.getScreenSize();
+    var maxItem = Math.ceil(screenSize.height / (fontSize * 2.25));
+    var pageBound;
+    var topBound;
+    if (this._pageOffsets[topIdx] > 0) {
+        topBound = this.$listPages[topIdx].getBoundingClientRect();
+        if (topBound.top + 100 > scrollerBound.top) {
+            this._pageOffsets.unshift(this._pageOffsets.pop());
+            this._pageYs.unshift(this._pageYs.pop());
+            this.$listPages.unshift(this.$listPages.pop());
+            this._pageOffsets[topIdx] = Math.max(0, this._pageOffsets[topIdx + 1] - maxItem);
 
-MListModal.eventHandler.scroll = function (){
+            this._requireItem(this.$listPages[topIdx], this._pageOffsets[topIdx + 1] - this._pageOffsets[topIdx]);
+            this._assignItems(this.$listPages[topIdx], this._pageOffsets[topIdx]);
+            pageBound = this.$listPages[topIdx].getBoundingClientRect();
+            this._pageYs[topIdx] = this._pageYs[topIdx + 1] - pageBound.height;
+            this.$listPages[topIdx].addStyle('top', this._pageYs[topIdx] + 'px');
+        }
+    }
 
-    console.log('.')
+    var botIdx = this._findLastPageIdx();
+    var botBound;
+
+    if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
+        botBound = this.$listPages[botIdx].getBoundingClientRect();
+        if (botBound.bottom - 100 < scrollerBound.bottom) {
+            this._pageOffsets.push(this._pageOffsets.shift());
+            this._pageYs.push(this._pageYs.shift());
+            this.$listPages.push(this.$listPages.shift());
+            this._pageOffsets[botIdx + 1] = Math.min(this._displayItems.length, this._pageOffsets[botIdx] + maxItem);
+            this.$listPages[botIdx].addStyle('top', this._pageYs[botIdx] + 'px');
+            this._requireItem(this.$listPages[botIdx], this._pageOffsets[botIdx + 1] - this._pageOffsets[botIdx]);
+            this._assignItems(this.$listPages[botIdx], this._pageOffsets[botIdx]);
+            pageBound = this.$listPages[botIdx].getBoundingClientRect();
+            this._pageYs[botIdx + 1] = this._pageYs[botIdx] + pageBound.height;
+        }
+    }
+    else {
+        console.log('end')
+    }
+
+
+    // console.log('.')
 };
 
 Core.install(MListModal);
 export default MListModal;
+
+//773.6px 778.2
+//1560.8 + 790.4

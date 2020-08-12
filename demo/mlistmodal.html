@@ -2238,10 +2238,11 @@
         visit(item, dic);
     });
 
-    var cfList = afItems.reduce(function visit(ac, item) {
+
+    var cfList = afItems.concat(afItems).concat(afItems).concat(afItems).concat(afItems).reduce(function visit(ac, item) {
         ac.push({
             text: `[${ac.length + 1}]` + item.text,
-            value: item.value,
+            value: ac.length,
             desc: item.desc
         });
         if (item.items) item.items.reduce(visit, ac);
@@ -2254,7 +2255,7 @@
 <script class="viewable">
     var list1 = _('mlistmodal').addTo(document.body);
     list1.items = cfList;
-    list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
+    // list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
     list1.displayValue = -1;
     list1.on('pressitem', function (event) {
         console.log(event);
@@ -2264,9 +2265,9 @@
         console.log(event);
         this.remove();
     });
-        list1.afterAttached().then(function () {
-            list1.viewListAtFirstSelected();
-        });
+    list1.afterAttached().then(function () {
+        list1.viewListAtFirstSelected();
+    });
 </script>
 </body>
 
