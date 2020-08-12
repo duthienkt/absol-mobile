@@ -27,7 +27,7 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "^1.14.0",
+        "absol": "^1.14.2",
         "absol-acomp": "^0.9.12"
     },
     "devDependencies": {
