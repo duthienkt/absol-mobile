@@ -102,11 +102,7 @@ MListModal.prototype._initScroller = function () {
 };
 
 MListModal.prototype._initProperty = function () {
-    this.$items = [];
-    this.$itemByValue = {};
-
     this._items = [];
-    this._itemHolderByValue = {};
     this._values = [];
     this._valueDict = {};
     this._preDisplayItems = [];
@@ -117,26 +113,11 @@ MListModal.prototype._initProperty = function () {
     this.items = [];
 };
 
-
-MListModal.prototype.afterAttached = function () {
-    if (!this.isDescendantOf(document.body))
-        this.$attachhook._isAttached = false;
-    if (!this.$attachhook._isAttached) {
-        var ah = this.$attachhook;
-        return new Promise(function (rs) {
-            ah.once('error', rs);
-        });
-    }
-};
-
 MListModal.prototype.updateSize = function () {
     var bound = this.getBoundingClientRect();
     var boxBound = this.$box.getBoundingClientRect();
     var listScrollerBound = this.$listScroller.getBoundingClientRect();
     this.$listScroller.addStyle('max-height', 'calc(' + (bound.height - listScrollerBound.top + boxBound.top) + 'px - var(--modal-margin-bottom) - var(--modal-margin-top))');
-    boxBound = this.$box.getBoundingClientRect();
-    setTimeout(this._updateCurrentOffset.bind(this), 4);
-
 };
 
 
@@ -178,8 +159,6 @@ MListModal.prototype._assignItems = function (pageElt, offset) {
         itemElt = pageElt.childNodes[i];
         itemElt.data = this._displayItems[offset + i];
         value = itemElt.value + '';
-        this.$itemByValue[value] = this.$itemByValue[value] || [];
-        this.$itemByValue[value].push(itemElt);
     }
 };
 
@@ -197,49 +176,7 @@ MListModal.prototype._updateSelectedItem = function () {
     }
 };
 
-MListModal.prototype._findNextOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var bottom = scrollerBound.bottom;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.bottom > bottom) {
-            return this._startItemIdx + i;
-        }
-    }
-    return this._displayItems.length;
-};
 
-MListModal.prototype._findCurrentOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var top = scrollerBound.top;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.top + 5 >= top) {
-            return this._startItemIdx + i;
-        }
-    }
-    return 0;
-};
-
-MListModal.prototype._findPrevOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var top = scrollerBound.top - scrollerBound.height;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.top + 2 >= top) {
-            return this._startItemIdx + i;
-        }
-    }
-    return 0;
-};
-
-
-MListModal.prototype._updateCurrentOffset = function () {
-
-};
 
 
 MListModal.prototype.viewListAt = function (offset) {
@@ -271,6 +208,10 @@ MListModal.prototype.viewListAt = function (offset) {
         this._assignItems(pageElt, sIdx);
         pageBound = pageElt.getBoundingClientRect();
         this._pageYs[pageIndex + 1] = this._pageYs[pageIndex] + pageBound.height;
+    }
+
+    if (this._pageOffsets[3] - this._pageOffsets[0] === this._displayItems.length) {
+        this.$content.addStyle('height', this._pageYs[3] + 'px');
     }
 };
 
@@ -368,7 +309,7 @@ MListModal.property.items = {
         else {
             this.$listScroller.removeStyle('--desc-width');
         }
-        var estimateHeight = items.length * 30 * estimateSize.width / Math.min(Dom.getScreenSize().width - 80, 500) * 1.2;
+        var estimateHeight = items.length * 30 * Math.ceil(estimateSize.width * 1.2 / Math.min(Dom.getScreenSize().width - 80, 500));
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
         prepareSearchForList(items);
@@ -463,9 +404,8 @@ MListModal.eventHandler.scroll = function () {
 
     var botIdx = this._findLastPageIdx();
     var botBound;
-
+    botBound = this.$listPages[botIdx].getBoundingClientRect();
     if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
-        botBound = this.$listPages[botIdx].getBoundingClientRect();
         if (botBound.bottom - 100 < scrollerBound.bottom) {
             this._pageOffsets.push(this._pageOffsets.shift());
             this._pageYs.push(this._pageYs.shift());
@@ -479,15 +419,11 @@ MListModal.eventHandler.scroll = function () {
         }
     }
     else {
-        console.log('end')
+        if (botBound.bottom < scrollerBound.bottom) {
+            this.$listScroller.scrollTop -= scrollerBound.bottom - botBound.bottom;
+        }
     }
-
-
-    // console.log('.')
 };
 
 Core.install(MListModal);
 export default MListModal;
-
-//773.6px 778.2
-//1560.8 + 790.4
