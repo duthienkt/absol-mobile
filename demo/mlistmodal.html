@@ -16,7 +16,12 @@
         var _ = absol._;
     </script>
     <style>
-
+        body, html{
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -2247,16 +2252,17 @@
         });
         if (item.items) item.items.reduce(visit, ac);
         return ac;
-    }, []);
+    }, []).slice();
     var _ = absol._;
     var $ = absol.$;
 </script>
 
 <script class="viewable">
-    var list1 = _('mlistmodal').addTo(document.body);
-    list1.items = cfList;
-    // list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
+    var list1 = _('mlistmodal');
     list1.displayValue = -1;
+    list1.items = cfList;
+    list1.enableSearch = true;
+    list1.values = [3594, 3606, 3830, 3835, 3575, 3775];
     list1.on('pressitem', function (event) {
         console.log(event);
         this.values = [event.value];
@@ -2268,6 +2274,10 @@
     list1.afterAttached().then(function () {
         list1.viewListAtFirstSelected();
     });
+
+    setTimeout(function (){
+        list1.addTo(document.body);
+    }, 300);
 </script>
 </body>
 
