@@ -160,8 +160,14 @@ input[type="number"].am-list-popup-paging-offset {
     width: 100%;
     overflow: auto;
     --content-height: calc(100vh - 200px);
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
+
+.am-list-popup-list-scroller::-webkit-scrollbar {
+    display: none;
+}
 
 .am-list-popup-content {
     display: block;
@@ -174,6 +180,7 @@ input[type="number"].am-list-popup-paging-offset {
     right: 0;
     top: -200vh;
     box-sizing: border-box;
+    border-top:solid 1px crimson ;
 }
 
 
@@ -183,4 +190,8 @@ input[type="number"].am-list-popup-paging-offset {
 
 .am-list-popup-list-page.am-selectlist{
     --desc-width: inherit;
+}
+
+.am-value-hidden .am-selectlist-item.selected{
+    display: none;
 }

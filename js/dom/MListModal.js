@@ -5,6 +5,7 @@ import Dom from "absol/src/HTML5/Dom";
 import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
 import {measureListSize, releaseItem, requireItem} from "./MSelectList";
 import AElement from "absol/src/HTML5/AElement";
+import DomSignal from "absol/src/HTML5/DomSignal";
 
 var _ = Core._;
 var $ = Core.$;
@@ -65,6 +66,7 @@ MListModal.render = function () {
 MListModal.prototype._initDomHook = function () {
     this.estimateSize = { width: 0 };
     this.$attachhook = _('attachhook').addTo(this);
+
     this.$attachhook._isAttached = false;
     this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
     this.$attachhook.on('error', function () {
@@ -72,6 +74,8 @@ MListModal.prototype._initDomHook = function () {
         this.requestUpdateSize();
         this._isAttached = true;
     });
+    this.domSignal = new DomSignal(this.$attachhook);
+    this.domSignal.on('viewListAt', this.viewListAt.bind(this));
 };
 
 MListModal.prototype._initControl = function () {
@@ -93,6 +97,7 @@ MListModal.prototype._initControl = function () {
 };
 
 MListModal.prototype._initScroller = function () {
+    this._estimateHeight = 0;
     this._pageOffsets = [0, 0, 0, 0];
     this._pageYs = [0, 0, 0, 0];
     this.$listScroller = $('.am-list-popup-list-scroller', this)
@@ -114,6 +119,7 @@ MListModal.prototype._initProperty = function () {
 };
 
 MListModal.prototype.updateSize = function () {
+    console.log(this.isDescendantOf(document.body))
     var bound = this.getBoundingClientRect();
     var boxBound = this.$box.getBoundingClientRect();
     var listScrollerBound = this.$listScroller.getBoundingClientRect();
@@ -162,24 +168,40 @@ MListModal.prototype._assignItems = function (pageElt, offset) {
     }
 };
 
-MListModal.prototype._updateSelectedItem = function () {
-    var itemElt, value;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemElt = this.$items[i];
-        value = itemElt.value + '';
-        if (this._valueDict[value]) {
-            itemElt.addClass('selected');
-        }
-        else {
-            itemElt.removeClass('selected');
-        }
+MListModal.prototype._alignPage = function () {
+    var pageElt;
+    var pageBound;
+    for (var i = 0; i < this.$listPages.length; ++i) {
+        pageElt = this.$listPages[i];
+        pageBound = pageElt.getBoundingClientRect();
+        if (i > 0) this.$listPages[i].addStyle('top', this._pageYs[i] + 'px');
+        this._pageYs[i + 1] = this._pageYs[i] + pageBound.height;
     }
+    this.$content.addStyle('height', this._pageYs[3] + 'px');
+};
+
+MListModal.prototype._updateSelectedItem = function () {
+    var valueDict = this._valueDict;
+    this.$listPages.forEach(function (pageElt) {
+        Array.prototype.forEach.call(pageElt.childNodes, function (itemElt) {
+            var value = itemElt.value + '';
+            if (valueDict[value]) {
+                itemElt.addClass('selected');
+                console.log(itemElt)
+            }
+            else {
+                itemElt.removeClass('selected');
+            }
+        });
+    });
+    if (this._displayValue === VALUE_HIDDEN)
+        this._alignPage();
 };
 
 
-
-
 MListModal.prototype.viewListAt = function (offset) {
+    console.log('viewList',new Date().getTime());
+
     var scrollerBound = this.$listScroller.getBoundingClientRect();
     if (scrollerBound.height === 0) return;
     var fontSize = this.$listScroller.getFontSize() || 14;
@@ -209,29 +231,27 @@ MListModal.prototype.viewListAt = function (offset) {
         pageBound = pageElt.getBoundingClientRect();
         this._pageYs[pageIndex + 1] = this._pageYs[pageIndex] + pageBound.height;
     }
-
-    if (this._pageOffsets[3] - this._pageOffsets[0] === this._displayItems.length) {
-        this.$content.addStyle('height', this._pageYs[3] + 'px');
-    }
+    this.$content.addStyle('height', this._pageYs[3] + 'px');
 };
 
 
 MListModal.prototype.viewListAtFirstSelected = function () {
-    // if (this._displayValue == VALUE_HIDDEN) {
-    //     return false;
-    // }
-    // else if (this._values.length > 0) {
-    //     var value = this._values[0];
-    //     var itemHolders = this._itemHolderByValue[value + ''];
-    //     if (itemHolders) {
-    //         var holder = itemHolders[0];
-    //         this.viewListAt(holder.idx);
-    //         return true;
-    //     }
-    //     else return false;
-    // }
-    // else
-    //     return false;
+    return
+    if (this._displayValue == VALUE_HIDDEN) {
+        return false;
+    }
+    else if (this._values.length > 0) {
+        var value = this._values[0];
+        var itemHolders = this._itemHolderByValue[value + ''];
+        if (itemHolders) {
+            var holder = itemHolders[0];
+            this.viewListAt(holder.idx);
+            return true;
+        }
+        else return false;
+    }
+    else
+        return false;
 };
 
 
@@ -248,6 +268,7 @@ MListModal.prototype.resetSearchState = function () {
     this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
     this.viewListAt(0);
+    this.$listScroller.scrollTop = 0;
 };
 
 MListModal.prototype.notifyPressOut = function () {
@@ -310,10 +331,12 @@ MListModal.property.items = {
             this.$listScroller.removeStyle('--desc-width');
         }
         var estimateHeight = items.length * 30 * Math.ceil(estimateSize.width * 1.2 / Math.min(Dom.getScreenSize().width - 80, 500));
+        this._estimateHeight = estimateHeight;
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
         prepareSearchForList(items);
-        this.afterAttached().then(this.viewListAt.bind(this, 0));
+        console.log('set item',new Date().getTime());
+        this.domSignal.emit('viewListAt', 0);
     }
 };
 
@@ -325,9 +348,10 @@ MListModal.property.values = {
             ac[cr + ''] = true;
             return ac;
         }, {});
+
         this._displayItems = this._filterValue(this._preDisplayItems);
-        this.viewListAt(this._currentOffset);
-        this._updateSelectedItem();
+        //todo
+        if (this._pageOffsets[3] > this._pageOffsets[0]) this._updateSelectedItem();
     },
     get: function () {
         return this._values;
@@ -338,6 +362,12 @@ MListModal.property.displayValue = {
     set: function (value) {
         this._displayValue = value;
         this._displayItems = this._filterValue(this._preDisplayItems);
+        if (value === VALUE_HIDDEN) {
+            this.addClass('am-value-hidden');
+        }
+        else {
+            this.removeClass('am-value-hidden');
+        }
     },
     get: function () {
         return this._displayValue;
@@ -375,6 +405,7 @@ MListModal.eventHandler.searchModify = function () {
     this._preDisplayItems = this._listToDisplay(searchedItems);
     this._displayItems = this._filterValue(this._preDisplayItems);
     this.viewListAt(0);
+    this.$listScroller.scrollTop = 0;
 };
 
 
@@ -399,6 +430,7 @@ MListModal.eventHandler.scroll = function () {
             pageBound = this.$listPages[topIdx].getBoundingClientRect();
             this._pageYs[topIdx] = this._pageYs[topIdx + 1] - pageBound.height;
             this.$listPages[topIdx].addStyle('top', this._pageYs[topIdx] + 'px');
+            this._updateSelectedItem();
         }
     }
 
@@ -416,11 +448,7 @@ MListModal.eventHandler.scroll = function () {
             this._assignItems(this.$listPages[botIdx], this._pageOffsets[botIdx]);
             pageBound = this.$listPages[botIdx].getBoundingClientRect();
             this._pageYs[botIdx + 1] = this._pageYs[botIdx] + pageBound.height;
-        }
-    }
-    else {
-        if (botBound.bottom < scrollerBound.bottom) {
-            this.$listScroller.scrollTop -= scrollerBound.bottom - botBound.bottom;
+            this._updateSelectedItem();
         }
     }
 };
