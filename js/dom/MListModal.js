@@ -53,7 +53,7 @@ MListModal.render = function () {
                         class: 'am-list-popup-list-scroller',
                         child: {
                             class: 'am-list-popup-content',
-                            child: Array(3).fill('.am-list-popup-list-page.am-selectlist')
+                            child: Array(MListModal.prototype.preLoadN).fill('.am-list-popup-list-page.am-selectlist')
                         }
                     }
                 ]
@@ -62,6 +62,9 @@ MListModal.render = function () {
     });
 };
 
+MListModal.prototype.toLoadNextY = 200;
+
+MListModal.prototype.preLoadN = 5;
 
 MListModal.prototype._initDomHook = function () {
     this.estimateSize = { width: 0 };
@@ -69,13 +72,15 @@ MListModal.prototype._initDomHook = function () {
 
     this.$attachhook._isAttached = false;
     this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
-    this.$attachhook.on('error', function () {
+    this.$attachhook.on('attached', function () {
         Dom.addToResizeSystem(this);
         this.requestUpdateSize();
         this._isAttached = true;
     });
-    this.domSignal = new DomSignal(this.$attachhook);
+    this.$domSignal = _('attachhook').addTo(this);
+    this.domSignal = new DomSignal(this.$domSignal);
     this.domSignal.on('viewListAt', this.viewListAt.bind(this));
+    this.domSignal.on('viewListAtFirstSelected', this.viewListAtFirstSelected.bind(this));
 };
 
 MListModal.prototype._initControl = function () {
@@ -92,14 +97,12 @@ MListModal.prototype._initControl = function () {
 
     this.$searchInput = $('searchtextinput', this)
         .on('stoptyping', this.eventHandler.searchModify);
-
-
 };
 
 MListModal.prototype._initScroller = function () {
     this._estimateHeight = 0;
-    this._pageOffsets = [0, 0, 0, 0];
-    this._pageYs = [0, 0, 0, 0];
+    this._pageOffsets = Array(this.preLoadN + 1).fill(0);
+    this._pageYs = Array(this.preLoadN + 1).fill(0);
     this.$listScroller = $('.am-list-popup-list-scroller', this)
         .on('scroll', this.eventHandler.scroll);
     this.$content = $('.am-list-popup-content', this);
@@ -119,7 +122,6 @@ MListModal.prototype._initProperty = function () {
 };
 
 MListModal.prototype.updateSize = function () {
-    console.log(this.isDescendantOf(document.body))
     var bound = this.getBoundingClientRect();
     var boxBound = this.$box.getBoundingClientRect();
     var listScrollerBound = this.$listScroller.getBoundingClientRect();
@@ -177,7 +179,7 @@ MListModal.prototype._alignPage = function () {
         if (i > 0) this.$listPages[i].addStyle('top', this._pageYs[i] + 'px');
         this._pageYs[i + 1] = this._pageYs[i] + pageBound.height;
     }
-    this.$content.addStyle('height', this._pageYs[3] + 'px');
+    this.$content.addStyle('height', this._pageYs[this.preLoadN] + 'px');
 };
 
 MListModal.prototype._updateSelectedItem = function () {
@@ -187,7 +189,6 @@ MListModal.prototype._updateSelectedItem = function () {
             var value = itemElt.value + '';
             if (valueDict[value]) {
                 itemElt.addClass('selected');
-                console.log(itemElt)
             }
             else {
                 itemElt.removeClass('selected');
@@ -200,10 +201,10 @@ MListModal.prototype._updateSelectedItem = function () {
 
 
 MListModal.prototype.viewListAt = function (offset) {
-    console.log('viewList',new Date().getTime());
-
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    if (scrollerBound.height === 0) return;
+    if (!this.isDescendantOf(document.body)) {
+        this.domSignal.emit('viewListAt', offset);
+        return;
+    }
     var fontSize = this.$listScroller.getFontSize() || 14;
     offset = Math.max(0, Math.min(offset, this._displayItems.length - 1));
     var screenSize = Dom.getScreenSize();
@@ -211,12 +212,13 @@ MListModal.prototype.viewListAt = function (offset) {
     var contentBound = this.$content.getBoundingClientRect();
 
     this._pageOffsets[0] = Math.max(offset - maxItem, 0);
-    this._pageOffsets[1] = Math.min(this._pageOffsets[0] + maxItem, this._displayItems.length);
-    this._pageOffsets[2] = Math.min(this._pageOffsets[1] + maxItem, this._displayItems.length);
-    this._pageOffsets[3] = Math.min(this._pageOffsets[2] + maxItem, this._displayItems.length);
+    for (var i = 1; i <= this.preLoadN; ++i) {
+        this._pageOffsets[i] = Math.min(this._pageOffsets[i - 1] + maxItem, this._displayItems.length);
+    }
+
     var sIdx, nItem, pageBound;
     var pageElt;
-    for (var pageIndex = 0; pageIndex < 3; ++pageIndex) {
+    for (var pageIndex = 0; pageIndex < this.preLoadN; ++pageIndex) {
         sIdx = this._pageOffsets[pageIndex];
         nItem = this._pageOffsets[pageIndex + 1] - sIdx;
         pageElt = this.$listPages[pageIndex];
@@ -225,18 +227,28 @@ MListModal.prototype.viewListAt = function (offset) {
             this._pageYs[pageIndex] = sIdx / this._displayItems.length * contentBound.height;
         }
 
-        this.$listPages[pageIndex].addStyle('top', this._pageYs[pageIndex] + 'px');
+        pageElt.addStyle('top', this._pageYs[pageIndex] + 'px');
         this._requireItem(pageElt, nItem);
         this._assignItems(pageElt, sIdx);
         pageBound = pageElt.getBoundingClientRect();
         this._pageYs[pageIndex + 1] = this._pageYs[pageIndex] + pageBound.height;
     }
-    this.$content.addStyle('height', this._pageYs[3] + 'px');
+    if (this._pageOffsets[this.preLoadN] === this._displayItems.length) {
+        this.$content.addStyle('height', this._pageYs[this.preLoadN] + 'px');
+
+    }
+    else {
+        this.$content.addStyle('height', this._estimateHeight + 'px');
+    }
+    this._updateSelectedItem();
 };
 
 
 MListModal.prototype.viewListAtFirstSelected = function () {
-    return
+    if (!this.isDescendantOf(document.body)) {
+        this.domSignal.emit('viewListAtFirstSelected');
+        return;
+    }
     if (this._displayValue == VALUE_HIDDEN) {
         return false;
     }
@@ -244,8 +256,17 @@ MListModal.prototype.viewListAtFirstSelected = function () {
         var value = this._values[0];
         var itemHolders = this._itemHolderByValue[value + ''];
         if (itemHolders) {
-            var holder = itemHolders[0];
-            this.viewListAt(holder.idx);
+            this.domSignal.once('scrollIntoSelected', function () {
+                var holder = itemHolders[0];
+                this.viewListAt(holder.idx);
+                var itemElt = $('.selected', this.$listScroller);
+                if (itemElt) {
+                    var scrollBound = this.$listScroller.getBoundingClientRect();
+                    var itemBound = itemElt.getBoundingClientRect();
+                    this.$listScroller.scrollTop += itemBound.top - scrollBound.top;
+                }
+            }.bind(this));
+            this.domSignal.emit('scrollIntoSelected');
             return true;
         }
         else return false;
@@ -267,7 +288,7 @@ MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
     this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
-    this.viewListAt(0);
+    this.domSignal.emit('viewListAt', 0);
     this.$listScroller.scrollTop = 0;
 };
 
@@ -280,7 +301,7 @@ MListModal.prototype.notifyPressClose = function () {
 };
 
 MListModal.prototype._findFirstPageIdx = function () {
-    for (var i = 0; i < 3; ++i) {
+    for (var i = 0; i < this.preLoadN; ++i) {
         if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
             return i;
         }
@@ -289,7 +310,7 @@ MListModal.prototype._findFirstPageIdx = function () {
 };
 
 MListModal.prototype._findLastPageIdx = function () {
-    for (var i = 2; i >= 0; --i) {
+    for (var i = this.preLoadN - 1; i >= 0; --i) {
         if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
             return i;
         }
@@ -335,7 +356,6 @@ MListModal.property.items = {
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
         prepareSearchForList(items);
-        console.log('set item',new Date().getTime());
         this.domSignal.emit('viewListAt', 0);
     }
 };
@@ -351,7 +371,7 @@ MListModal.property.values = {
 
         this._displayItems = this._filterValue(this._preDisplayItems);
         //todo
-        if (this._pageOffsets[3] > this._pageOffsets[0]) this._updateSelectedItem();
+        if (this._pageOffsets[this.preLoadN] > this._pageOffsets[0]) this._updateSelectedItem();
     },
     get: function () {
         return this._values;
@@ -416,10 +436,10 @@ MListModal.eventHandler.scroll = function () {
     var screenSize = Dom.getScreenSize();
     var maxItem = Math.ceil(screenSize.height / (fontSize * 2.25));
     var pageBound;
-    var topBound;
+    var topBound = this.$listPages[topIdx].getBoundingClientRect();
+    ;
     if (this._pageOffsets[topIdx] > 0) {
-        topBound = this.$listPages[topIdx].getBoundingClientRect();
-        if (topBound.top + 100 > scrollerBound.top) {
+        if (topBound.top + this.toLoadNextY > scrollerBound.top) {
             this._pageOffsets.unshift(this._pageOffsets.pop());
             this._pageYs.unshift(this._pageYs.pop());
             this.$listPages.unshift(this.$listPages.pop());
@@ -431,6 +451,18 @@ MListModal.eventHandler.scroll = function () {
             this._pageYs[topIdx] = this._pageYs[topIdx + 1] - pageBound.height;
             this.$listPages[topIdx].addStyle('top', this._pageYs[topIdx] + 'px');
             this._updateSelectedItem();
+            if (this._pageOffsets[topIdx] === 0) {
+                this.$listPages[0].addStyle('top', '0');
+                this._pageYs[0] = 0;
+                this._alignPage();
+                this.$listScroller.scrollTop = 0;
+            }
+
+        }
+    }
+    else {
+        if (topBound.top > scrollerBound.top) {
+            this.$listScrolle.scrollTop += topBound.top - scrollerBound.top;
         }
     }
 
@@ -438,7 +470,7 @@ MListModal.eventHandler.scroll = function () {
     var botBound;
     botBound = this.$listPages[botIdx].getBoundingClientRect();
     if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
-        if (botBound.bottom - 100 < scrollerBound.bottom) {
+        if (botBound.bottom - this.toLoadNextY < scrollerBound.bottom) {
             this._pageOffsets.push(this._pageOffsets.shift());
             this._pageYs.push(this._pageYs.shift());
             this.$listPages.push(this.$listPages.shift());
@@ -449,6 +481,12 @@ MListModal.eventHandler.scroll = function () {
             pageBound = this.$listPages[botIdx].getBoundingClientRect();
             this._pageYs[botIdx + 1] = this._pageYs[botIdx] + pageBound.height;
             this._updateSelectedItem();
+            if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
+                this.$content.addStyle('height', this._estimateHeight + 'px');
+            }
+            else {
+                this.$content.addStyle('height', this._pageYs[botIdx + 1] + 'px');
+            }
         }
     }
 };
