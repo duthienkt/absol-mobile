@@ -351,7 +351,7 @@ MListModal.property.items = {
         else {
             this.$listScroller.removeStyle('--desc-width');
         }
-        var estimateHeight = items.length * 30 * Math.ceil(estimateSize.width * 1.2 / Math.min(Dom.getScreenSize().width - 80, 500));
+        var estimateHeight = this._displayItems.length * 30 * Math.ceil(estimateSize.width * 1.2 / Math.min(Dom.getScreenSize().width - 80, 500));
         this._estimateHeight = estimateHeight;
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;

@@ -9,9 +9,7 @@ import {searchTreeListByText} from "absol-acomp/js/list/search";
  * @constructor
  */
 function MTreeModal() {
-    this._initDomHook();
-    this._initControl();
-    this._initProperty();
+    MListModal.call(this);
 }
 
 
