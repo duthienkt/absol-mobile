@@ -288,6 +288,7 @@ MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
     this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
+    this._updateItemIndex();
     this.domSignal.emit('viewListAt', 0);
     this.$listScroller.scrollTop = 0;
 };
@@ -318,6 +319,18 @@ MListModal.prototype._findLastPageIdx = function () {
     return -1;
 };
 
+MListModal.prototype._updateItemIndex = function (){
+    this._itemHolderByValue = this._displayItems.reduce(function (ac, cr, idx) {
+        var value = typeof cr === "string" ? cr : cr.value + '';
+        ac[value] = ac[value] || [];
+        ac[value].push({
+            idx: idx,
+            item: cr
+        });
+        return ac;
+    }, {});
+};
+
 
 MListModal.property = {};
 
@@ -334,15 +347,7 @@ MListModal.property.items = {
         this._items = items;
         this._preDisplayItems = this._listToDisplay(this._items);
         this._displayItems = this._filterValue(this._preDisplayItems);
-        this._itemHolderByValue = items.reduce(function (ac, cr, idx) {
-            var value = typeof cr === "string" ? cr : cr.value + '';
-            ac[value] = ac[value] || [];
-            ac[value].push({
-                idx: idx,
-                item: cr
-            });
-            return ac;
-        }, {});
+        this._updateItemIndex();
         this._searchCache = {};
         var estimateSize = measureListSize(this._preDisplayItems);
         if (estimateSize.descWidth > 0) {
@@ -370,6 +375,7 @@ MListModal.property.values = {
         }, {});
 
         this._displayItems = this._filterValue(this._preDisplayItems);
+        this._updateItemIndex();
         //todo
         if (this._pageOffsets[this.preLoadN] > this._pageOffsets[0]) this._updateSelectedItem();
     },
@@ -382,6 +388,7 @@ MListModal.property.displayValue = {
     set: function (value) {
         this._displayValue = value;
         this._displayItems = this._filterValue(this._preDisplayItems);
+        this._updateItemIndex();
         if (value === VALUE_HIDDEN) {
             this.addClass('am-value-hidden');
         }
@@ -424,6 +431,7 @@ MListModal.eventHandler.searchModify = function () {
     var searchedItems = this.searchItemByText(text);
     this._preDisplayItems = this._listToDisplay(searchedItems);
     this._displayItems = this._filterValue(this._preDisplayItems);
+    this._updateItemIndex();
     this.viewListAt(0);
     this.$listScroller.scrollTop = 0;
 };
