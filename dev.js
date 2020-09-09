@@ -21,7 +21,7 @@ Object.assign(absol, {
 
 if (BrowserDetector.isMobile) Dom.documentReady.then(function () {
     document.body.classList.add('am-mobile-theme');
-    var bodySizeHookElt = _('attachhook').on('attached', function () {
+    var bodySizeHookElt = absol._('attachhook').on('attached', function () {
         ResizeSystem.add(this);
         this.requestUpdateSize();
     });
