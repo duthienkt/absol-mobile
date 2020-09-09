@@ -340,13 +340,16 @@ MenuAct.prototype.createView = function () {
     this.$view = _({
         tag: 'tabframe',
         class: 'menu-tab',
+        style:{
+            overflow:'auto'
+        },
         child: [
             {
                 tag: 'mtinyprofileblock'
             },
             {
                 style: {
-                    'margin-top': '10px'
+                    'margin-top': '10px',
                 },
                 child: [
                     {
