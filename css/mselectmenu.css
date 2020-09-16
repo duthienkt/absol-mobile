@@ -146,3 +146,9 @@
     text-overflow: ellipsis;
     width: auto;
 }
+
+
+.am-selectmenu.disabled {
+    pointer-events: none;
+    background-color: #ebebe4;
+}
