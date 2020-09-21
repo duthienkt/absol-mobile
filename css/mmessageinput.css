@@ -1,107 +1,51 @@
-.am-message-input {
-    position: relative;
-    box-sizing: border-box;
-    padding-top: 0.3125em;
-    padding-bottom: 0.3125em;
+
+.am-message-input-left {
+    position: absolute;
+    left: 10px;
+    bottom: 13px;
 }
 
-.am-message-input:not(.am-state-text) .am-message-input-plugin-send,
-.am-message-input.am-state-text .am-message-input-plugin-camera,
-.am-message-input:not(.am-mode-edit) .am-message-input-plugin-cancel,
-.am-message-input.am-edited .am-message-input-plugin-cancel {
+.am-message-input.as-message-input {
+    padding-left: 50px;
+}
+
+.am-message-input .as-message-input-emoji-btn-ctn {
+    left: unset;
+    right: 6px;
+}
+
+.am-message-input .as-message-input-pre-ctn::after {
+    height: 24px;
+}
+
+
+.am-message-input .as-message-input-plugin-file {
+    display: none;
+}
+
+.am-message-input .as-message-input-pre-ctn {
+    padding-left: 15px;
+    width: calc(100% - 49px);
+}
+
+.am-message-input .as-message-input-right {
+    bottom: 13px;
+}
+
+
+.as-message-input.as-mode-edit .am-message-input-plugin-camera,
+.as-message-input.as-has-text .am-message-input-plugin-camera {
     display: none;
 }
 
 
-.am-message-input-plugin-btn {
-    font-size: inherit;
-    width: 2.5em;
-    height: 2.5em;
-    padding: 0;
-    border: none;
-    color: rgb(122, 122, 122);
-    background-color: transparent;
-    outline: none;
-}
-
-.am-message-input-plugin-btn:active {
-    background-color: rgba(169, 169, 169, 0.2);
+.am-message-input .as-message-input-plugin-btn {
+    width: 34px;
+    height: 34px;
 }
 
 
-
-.am-message-input-plugin-btn span {
-    font-size: 1.5em;
-}
-
-
-.am-message-input-right {
-    position: absolute;
-    bottom: 0.3125em;
-    right: 0;
-    z-index: 0;
-}
-
-.am-message-input-left,
-.am-message-input-pre-ctn {
-    position: relative;
-    display: inline-block;
-    vertical-align: bottom;
-    z-index: 2;
-}
-
-.am-message-input-pre-ctn {
-    width: calc(100% - 10em);
-    min-height: 2.5em;
-    border-radius: 1.25em;
-    box-sizing: border-box;
-    background-color: rgb(235, 235, 235);
-    transition: width 0.1s;
-
-}
-
-.am-message-input.am-state-text .am-message-input-pre-ctn,
-.am-message-input.am-mode-edit .am-message-input-pre-ctn
- {
-    width: calc(100% - 5em);
-}
-
-
-.am-message-input-pre-ctn::before {
-    display: inline-block;
-    content: "";
-    height: 2.5em;
-    vertical-align: middle;
-}
-
-
-.am-message-input-pre {
-    display: inline-block;
-    width: calc(100% - 2px);
-    box-sizing: border-box;
-    padding-right: 0.625em;
-    padding-left: 0.625em;
-    font-size: inherit;
-    outline: none;
-    vertical-align: middle;
-    max-height: 6.2em;
-    overflow-y: auto;
-    margin: 0;
-    white-space: pre-wrap;
-    overflow-x: hidden; 
-}
-
-.am-message-input-camera-caller,
-.am-message-input-camera-microphone {
-    display: none;
-}
-
-.am-message-input-emoji-picker-ctn {
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    right: 0;
-    user-select: none;
-    -webkit-user-select: none;
-    background-color: white;
+.am-message-input:not(.as-has-text):not(.as-focus) .am-message-input-plugin-more {
+    background: linear-gradient(135deg, rgb(0, 120, 212), rgb(0, 188, 242));
+    color: white;
 }
