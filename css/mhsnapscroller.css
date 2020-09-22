@@ -1,0 +1,15 @@
+.am-h-snap-scroller {
+    overflow-x: auto;
+    box-shadow: 0 0 2px 2px black;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.am-h-snap-scroller-item{
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.am-h-snap-scroller.am-native-support{
+
+}
