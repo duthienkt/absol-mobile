@@ -1,0 +1,100 @@
+.am-message-tool {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100000;
+    background-color: rgba(169, 169, 169, 0.2);
+    font-size: 14px;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.am-message-tool-box {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    padding-bottom: 10px;
+}
+
+.am-message-tool-header {
+    position: relative;
+    height: calc(3em + 10px);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.am-message-tool-header::before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+
+.am-message-tool-header-close-btn-ctn {
+    position: absolute;
+    left: 5px;
+    top: calc(50% - 1.5em);
+}
+
+.am-message-tool-header-close-btn {
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    border: none;
+    color: black;
+    background-color: transparent;
+}
+
+.am-message-tool-header-close-btn span {
+    font-size: 2em;
+}
+
+.am-message-tool-title {
+    font-size: 1.5em;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: bolder;
+}
+
+.am-message-tool-plugin {
+    display: flex;
+    height: 5em;
+}
+
+.am-message-tool-plugin-icon-ctn {
+    width: 5em;
+    text-align: center;
+    padding: 0.8em;
+    box-sizing: border-box;
+}
+
+.am-message-tool-plugin-icon-ctn > span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 2em;
+    line-height: 1.7;
+    background-color: rgb(241, 241, 243);
+    border-radius: 0.3em;
+}
+
+.am-message-tool-plugin-content {
+    flex-grow: 1;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dddddd;
+}
+
+.am-message-tool-plugin-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.3em;
+}
+
+.am-message-tool-plugin-desc {
+    color: rgb(79, 79, 80);
+}
