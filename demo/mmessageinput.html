@@ -185,14 +185,16 @@
                     var files = this.files;
                     if (text) {
                         makeMessage(text);
+                        this.clearAllContent();
+
                     }
                     if (images && images.length > 0) {
                         images.forEach(function (image) {
                             var src = URL.createObjectURL(image);
                             makeImage(src);
                         });
+                        this.images = [];
                     }
-                    this.clearAllContent();
                     messageCtn.scrollTop = messageCtn.scrollHeight;
                 }
             },

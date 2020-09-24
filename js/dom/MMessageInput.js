@@ -15,12 +15,13 @@ var $ = Core.$;
 function MMessageInput() {
     this.autoSend = true;
     this.$left = _('.am-message-input-left').addTo(this);
-
     this.$moreBtn = _({
         tag: 'button',
         class: ['as-message-input-plugin-btn', 'am-message-input-plugin-more'],
         child: 'span.mdi.mdi-plus'
-    }).addTo(this.$left);
+    }).addTo(this.$left)
+        .on('click', this.eventHandler.clickMore);
+
     this.$cameraBtn = _({
         tag: 'button',
         class: ['as-message-input-plugin-btn', 'am-message-input-plugin-camera'],
@@ -68,6 +69,18 @@ MMessageInput.eventHandler.clickCameraBtn = function (event) {
             thisMi.notifyChange();
         }
     });
+};
+
+
+MMessageInput.eventHandler.clickMore = function () {
+    var thisMi = this;
+    MMessageTool.open().then(function (result) {
+        if (result.type ==='file' || result.type =='image'){
+            console.log(result.files)
+            thisMi.handleAddingFileByType(result.files);
+        }
+    }, function () {
+    })
 };
 
 Core.install(MMessageInput);

@@ -5,9 +5,19 @@
     right: 0;
     bottom: 0;
     z-index: 100000;
-    background-color: rgba(169, 169, 169, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
     font-size: 14px;
     font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    --box-height: 272px;
+    transition: background-color 0.25s;
+}
+
+.am-message-tool.am-hiding .am-message-tool-box {
+    bottom: calc(0px - var(--box-height));
+}
+
+.am-message-tool.am-hiding {
+    background-color: rgba(0, 0, 0, 0.0);
 }
 
 .am-message-tool-box {
@@ -17,6 +27,7 @@
     bottom: 0;
     background-color: white;
     padding-bottom: 10px;
+    transition: bottom 0.25s;
 }
 
 .am-message-tool-header {
@@ -47,6 +58,11 @@
     border: none;
     color: black;
     background-color: transparent;
+    outline: none;
+}
+
+.am-message-tool-header-close-btn:active {
+    background-color: rgba(169, 169, 169, 0.3);
 }
 
 .am-message-tool-header-close-btn span {
@@ -58,6 +74,11 @@
     display: inline-block;
     vertical-align: middle;
     font-weight: bolder;
+}
+
+.am-message-tool-body {
+    overflow-y: auto;
+    max-height: 60vh;
 }
 
 .am-message-tool-plugin {
@@ -86,6 +107,10 @@
     flex-grow: 1;
     padding: 5px;
     box-sizing: border-box;
+}
+
+
+.am-message-tool-plugin:not(:last-child) .am-message-tool-plugin-content {
     border-bottom: 1px solid #dddddd;
 }
 
