@@ -1,7 +1,6 @@
 import '../../css/mhsnapscroller.css'
 import Core from "./Core";
 import AElement from "absol/src/HTML5/AElement";
-import ScrollSnap, {easeInOutQuad} from "./ScrollSnap";
 
 var _ = Core._;
 var $ = Core.$;
