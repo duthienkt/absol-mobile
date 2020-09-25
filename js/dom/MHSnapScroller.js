@@ -11,6 +11,7 @@ var $ = Core.$;
  * @constructor
  */
 function MHSnapScroller() {
+    this.addClass('am-h-snap-scroller');
     this.on('touchstart', this.eventHandler.touchstart);
     this.on('touchend', this.eventHandler.touchend);
     this.on('scroll', this.eventHandler.scroll);
@@ -22,16 +23,13 @@ function MHSnapScroller() {
         homeX: 0,
         x: 0
     };
-
 }
 
 MHSnapScroller.tag = 'MHSnapScroller'.toLowerCase();
 
 
 MHSnapScroller.render = function () {
-    return _({
-        class: 'am-h-snap-scroller'
-    });
+    return _({});
 };
 
 MHSnapScroller.prototype._findHomeX = function () {
@@ -96,9 +94,9 @@ MHSnapScroller.eventHandler = {};
 
 MHSnapScroller.eventHandler.homeGoingTick = function (toFinish) {
     if (!this._scroll.homeGoing) return;
-    if (toFinish===true){
-       this.stopHomeGoing();
-        return ;
+    if (toFinish === true) {
+        this.stopHomeGoing();
+        return;
     }
     var last = this._scroll.lastEventTime;
     var now = new Date().getTime();
