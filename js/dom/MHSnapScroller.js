@@ -21,7 +21,8 @@ function MHSnapScroller() {
         homeGoing: false,
         release: true,
         homeX: 0,
-        x: 0
+        x: 0,
+        scrollEnded: true
     };
 }
 
@@ -67,7 +68,9 @@ MHSnapScroller.prototype._findHomeX = function () {
 
 
 MHSnapScroller.prototype.startHomeGoing = function () {
-    if (this._scroll.homeGoing || !this._scroll.release) return;
+    if (this._scroll.homeGoing || !this._scroll.release || !this._scroll.scrollEnded) return;
+    var homeX = this._findHomeX();
+    this._scroll.homeX = homeX;
     this._scroll.homeGoing = true;
     if (this._scroll.speed < 50 && this._scroll.speed >= 0) {
         this._scroll.speed = 50;
@@ -120,8 +123,7 @@ MHSnapScroller.eventHandler.homeGoingTick = function (toFinish) {
 }
 
 MHSnapScroller.eventHandler.stopScroll = function () {
-    var homeX = this._findHomeX();
-    this._scroll.homeX = homeX;
+    this._scroll.scrollEnded = true;
     this.startHomeGoing();
 };
 
@@ -141,12 +143,14 @@ MHSnapScroller.eventHandler.touchstart = function (event) {
 MHSnapScroller.eventHandler.touchend = function (event) {
     if (event.touches.length === 0) {
         this._scroll.release = true;
+        this.startHomeGoing();
     }
 };
 
 MHSnapScroller.eventHandler.scroll = function () {
     if (this._scroll.homeGoing) return;
     var last = this._scroll.lastEventTime;
+    this._scroll.scrollEnded = false;
     var now = new Date().getTime();
     if (now - last > 100) {
         this._scroll.speed = 0;
