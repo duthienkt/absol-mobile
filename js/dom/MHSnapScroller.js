@@ -12,9 +12,10 @@ var $ = Core.$;
  */
 function MHSnapScroller() {
     this.addClass('am-h-snap-scroller');
-    this.on('touchstart', this.eventHandler.touchstart);
-    this.on('touchend', this.eventHandler.touchend);
-    this.on('scroll', this.eventHandler.scroll);
+    //still fail on iOS, disable all
+    // this.on('touchstart', this.eventHandler.touchstart);
+    // this.on('touchend', this.eventHandler.touchend);
+    // this.on('scroll', this.eventHandler.scroll);
     this._scroll = {
         speed: 0,
         lastEventTime: 0,
