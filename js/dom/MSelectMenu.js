@@ -76,6 +76,7 @@ MSelectMenu.property = {};
 
 MSelectMenu.property.items = {
     set: function (value) {
+        this._itemIdxByValue = null;
         /**
          * verity data
          */
