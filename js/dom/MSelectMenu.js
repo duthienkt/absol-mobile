@@ -150,6 +150,8 @@ MSelectMenu.property.isFocus = {
     }
 };
 
+MSelectMenu.property.selectedIndex = SelectMenu.property.selectedIndex;
+
 MSelectMenu.property.disabled = SelectMenu.property.disabled;
 MSelectMenu.property.hidden = SelectMenu.property.hidden;
 
