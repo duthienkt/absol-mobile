@@ -64,7 +64,6 @@ MLeftNavigator.prototype.open = function (v0) {
         thisnm._state = 1;
         thisnm.$content.removeStyle('transition');
         thisnm.$modal.removeStyle('transition');
-        console.log('add');
     }, dt * 1000 + 1);
 };
 
@@ -164,8 +163,6 @@ MLeftNavigator.eventHandler.modalDrag = function (event) {
 
 
 MLeftNavigator.eventHandler.clickModal = function (event) {
-    console.log(event.target);
-
     if (event.target == this.$modal)
         this.close();
 };
