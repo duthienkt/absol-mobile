@@ -4,7 +4,7 @@
 <head>
     <title>MessageInput</title>
     <meta charset="UTF-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
     <script src="https://absol.cf/absol/dist/polyfill.js"></script>
     <!-- <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css"> -->
     <link rel="stylesheet" href="https://absol.cf/css/materialdesignicons/materialdesignicons.min.css">
@@ -14,6 +14,20 @@
     <script src="../dist/absol-mobile.js?"></script>
     <link rel="stylesheet" href="app.css?">
     <style>
+        .app {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-image: url(test.jpg);
+            background-size: cover;
+        }
+
+        .message-ctn {
+            overflow-y: auto;
+        }
+
         .input-ctn {
             position: fixed;
             bottom: 0;
@@ -52,14 +66,14 @@
             vertical-align: middle;
         }
 
-        .card-chatbox-message-me>img,
-        .card-chatbox-message-other>img {
+        .card-chatbox-message-me > img,
+        .card-chatbox-message-other > img {
             max-width: 50vw;
             max-height: 50vh;
         }
 
-        .card-chatbox-message-me>canvas,
-        .card-chatbox-message-other>canvas {
+        .card-chatbox-message-me > canvas,
+        .card-chatbox-message-other > canvas {
             display: inline-block;
             width: 60px;
             height: 60px;
@@ -72,109 +86,126 @@
 </head>
 
 <body class="app">
-    <div class="input-ctn"></div>
-    <div class="message-ctn"></div>
-    <script>
-        // runDebugTask();
-    </script>
+<div class="input-ctn"></div>
+<div class="message-ctn"></div>
+<script>
+    // runDebugTask();
+</script>
 
-    <script>
-        var _ = absol._;
-        var $ = absol.$;
-        absol.ContextCaptor.auto();
-        // var fileIconsSync = absol.XHR.getRequest(catalogiUrl).then(function (result) {
-        //     return JSON.parse(result);
-        // });
+<script>
+    var _ = absol._;
+    var $ = absol.$;
+    absol.ContextCaptor.auto();
+    // var fileIconsSync = absol.XHR.getRequest(catalogiUrl).then(function (result) {
+    //     return JSON.parse(result);
+    // });
 
-        var messageCtn = $('.message-ctn');
-        function makeMessage(text) {
-            var messageChild = absol.parseMessage(text);
-            var messageElt = _({
-                class: 'card-chatbox-message-me',
-                extendEvent: 'contextmenu',
-                child: messageChild,
-                on: {
-                    contextmenu: function (event) {
-                        event.showContextMenu({
-                            items: [
-                                { icon: 'span.mdi.mdi-file-document-edit-outline', text: "Sửa", cmd: 'edit' }
-                            ],
-                        }, function (event) {
-                            var cmd = event.menuItem.cmd;
-                            switch (cmd) {
-                                case 'edit':
-                                    mInput.text = text;
-                                    mInput.mode = 'edit';
-                                    mInput.on('send', sendCallback);
-                                    mInput.on('cancel', cancelCalback);
-                                    break;
-                                case 'del': break;
-                            }
-                            console.log(event.menuItem);
-                        })
-                    }
-                }
-            });
+    var messageCtn = $('.message-ctn');
 
-            function cancelCalback() {
-                mInput.off('send', sendCallback);
-                mInput.off('cancel', cancelCalback);
-                mInput.text = '';
-                mInput.mode = 'new';
-            }
-
-            function sendCallback() {
-                text = mInput.text;
-                messageElt.firstChild.data = text;
-                cancelCalback();
-            }
-            var lineElt = _('.card-chatbox-message-line').addChild(messageElt)
-            messageCtn.addChild(lineElt);
-            messageCtn.scrollTop = messageCtn.scrollHeight;
-            return messageElt;
-        }
-
-
-        function makeImage(src) {
-            return _({
-                class: 'card-chatbox-message-line', child: {
-                    class: 'card-chatbox-message-me',
-                    child: { tag: 'img', props: { src: src } },
-                }
-            }).addTo(messageCtn);
-        }
-
-        var mInput = _({
-            tag: 'mmessageinput',
+    function makeMessage(text) {
+        var messageChild = absol.parseMessage(text);
+        var messageElt = _({
+            class: 'card-chatbox-message-me',
+            extendEvent: 'contextmenu',
+            child: messageChild,
             on: {
-                change: function () {
-                    console.log('change');
-                },
-                send: function () {
-                    // console.log('send', this.text, this.files, this.images);
-                    if (this.mode == 'new') {
-                        var text = this.text;
-                        var images = this.images;
-                        var files = this.files;
-                        if (text) {
-                            makeMessage(text);
+                contextmenu: function (event) {
+                    event.showContextMenu({
+                        items: [
+                            { icon: 'span.mdi.mdi-file-document-edit-outline', text: "Sửa", cmd: 'edit' }
+                        ],
+                    }, function (event) {
+                        var cmd = event.menuItem.cmd;
+                        switch (cmd) {
+                            case 'edit':
+                                mInput.text = text;
+                                mInput.mode = 'edit';
+                                mInput.on('send', sendCallback);
+                                mInput.on('cancel', cancelCalback);
+                                break;
+                            case 'del':
+                                break;
                         }
-                        if (images && images.length > 0) {
-                            images.forEach(function (image) {
-                                var src = URL.createObjectURL(image);
-                                makeImage(src);
-                            });
-                        }
-                    }
-                },
-                sizechange: function (event) {
-                    console.log(event);
-                    messageCtn.addStyle('height', 'calc(100% - ' + event.bound.height + 'px)');
-
+                        console.log(event.menuItem);
+                    })
                 }
             }
-        }).addTo($('.input-ctn'));
-    </script>
+        });
+
+        function cancelCalback() {
+            mInput.off('send', sendCallback);
+            mInput.off('cancel', cancelCalback);
+            mInput.mode = 'new';
+            this.clearAllContent();
+        }
+
+        function sendCallback() {
+            text = mInput.text;
+            messageElt.firstChild.data = text;
+            cancelCalback();
+            this.clearAllContent();
+        }
+
+        var lineElt = _('.card-chatbox-message-line').addChild(messageElt)
+        messageCtn.addChild(lineElt);
+        messageCtn.scrollTop = messageCtn.scrollHeight;
+        return messageElt;
+    }
+
+
+    function makeImage(src) {
+        return _({
+            class: 'card-chatbox-message-line', child: {
+                class: 'card-chatbox-message-me',
+                child: {
+                    tag: 'img', props: { src: src }, on: {
+                        load: function () {
+                            messageCtn.scrollTop = messageCtn.scrollHeight;
+                            console.log('load')
+
+                        }
+                    }
+                }
+
+            }
+        }).addTo(messageCtn);
+    }
+
+    var mInput = _({
+        tag: 'mmessageinput',
+        on: {
+            change: function () {
+                console.log('change');
+            },
+            send: function () {
+                // console.log('send', this.text, this.files, this.images);
+                if (this.mode == 'new') {
+                    var text = this.text;
+                    var images = this.images;
+                    var files = this.files;
+                    if (text) {
+                        makeMessage(text);
+                        this.clearAllContent();
+
+                    }
+                    if (images && images.length > 0) {
+                        images.forEach(function (image) {
+                            var src = URL.createObjectURL(image);
+                            makeImage(src);
+                        });
+                        this.images = [];
+                    }
+                    messageCtn.scrollTop = messageCtn.scrollHeight;
+                }
+            },
+            sizechange: function (event) {
+                console.log(event);
+                messageCtn.addStyle('height', 'calc(100% - ' + event.bound.height + 'px)');
+
+            }
+        }
+    }).addTo($('.input-ctn'));
+</script>
 </body>
 
 </html>

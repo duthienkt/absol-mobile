@@ -5,3 +5,10 @@
 .am-select-box-modal .am-selectlist-item.selected{
     display: none;
 }
+
+.am-select-box.disabled,
+.am-select-box.as-disabled
+{
+    pointer-events: none;
+    background-color: #ebebe4;
+}

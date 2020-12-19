@@ -76,6 +76,7 @@ MSelectMenu.property = {};
 
 MSelectMenu.property.items = {
     set: function (value) {
+        this._itemIdxByValue = null;
         /**
          * verity data
          */
@@ -149,6 +150,8 @@ MSelectMenu.property.isFocus = {
         return this._isFocus;
     }
 };
+
+MSelectMenu.property.selectedIndex = SelectMenu.property.selectedIndex;
 
 MSelectMenu.property.disabled = SelectMenu.property.disabled;
 MSelectMenu.property.hidden = SelectMenu.property.hidden;

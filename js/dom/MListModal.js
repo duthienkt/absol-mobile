@@ -2,20 +2,27 @@ import '../../css/mlistmodal.css'
 
 import Core from "./Core";
 import Dom from "absol/src/HTML5/Dom";
-import {measureMaxDescriptionWidth, measureMaxTextWidth} from "absol-acomp/js/SelectList";
 import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
 import {measureListSize, releaseItem, requireItem} from "./MSelectList";
+import AElement from "absol/src/HTML5/AElement";
+import DomSignal from "absol/src/HTML5/DomSignal";
 
 var _ = Core._;
 var $ = Core.$;
+var $$ = Core.$$;
 
 export var VALUE_HIDDEN = -1;
 export var VALUE_NORMAL = 1;
 
 
+/***
+ * @extends AElement
+ * @constructor
+ */
 function MListModal() {
     this._initDomHook();
     this._initControl();
+    this._initScroller();
     this._initProperty();
 }
 
@@ -43,54 +50,11 @@ MListModal.render = function () {
                         ]
                     },
                     {
-                        class: 'am-list-popup-paging',
-                        child: [
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-start-page-btn',
-                                child: 'span.mdi.mdi-chevron-double-left'
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-prev-page-btn',
-                                child: 'span.mdi.mdi-chevron-left'
-                            },
-                            {
-                                class: 'am-list-popup-paging-content',
-                                child: [
-                                    {
-                                        tag: 'input',
-                                        class: 'am-list-popup-paging-offset',
-                                        attr: {
-                                            type: 'number',
-                                            min: '0',
-                                            step: "1",
-                                            readonly: 'true'
-                                        }
-                                    },
-                                    {
-                                        tag: 'span',
-                                        child: {
-                                            text: '/1000'
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-next-page-btn',
-                                child: 'span.mdi.mdi-chevron-right'
-                            },
-                            {
-                                tag: 'button',
-                                class: 'am-list-popup-end-page-btn',
-                                child: 'span.mdi.mdi-chevron-double-right'
-                            }
-                        ]
-                    },
-                    {
                         class: 'am-list-popup-list-scroller',
-                        child: '.am-selectlist'
+                        child: {
+                            class: 'am-list-popup-content',
+                            child: Array(MListModal.prototype.preLoadN).fill('.am-list-popup-list-page.am-selectlist')
+                        }
                     }
                 ]
             }
@@ -98,17 +62,25 @@ MListModal.render = function () {
     });
 };
 
+MListModal.prototype.toLoadNextY = 200;
+
+MListModal.prototype.preLoadN = 5;
 
 MListModal.prototype._initDomHook = function () {
     this.estimateSize = { width: 0 };
     this.$attachhook = _('attachhook').addTo(this);
+
     this.$attachhook._isAttached = false;
     this.$attachhook.requestUpdateSize = this.updateSize.bind(this);
-    this.$attachhook.on('error', function () {
+    this.$attachhook.on('attached', function () {
         Dom.addToResizeSystem(this);
         this.requestUpdateSize();
         this._isAttached = true;
     });
+    this.$domSignal = _('attachhook').addTo(this);
+    this.domSignal = new DomSignal(this.$domSignal);
+    this.domSignal.on('viewListAt', this.viewListAt.bind(this));
+    this.domSignal.on('viewListAtFirstSelected', this.viewListAtFirstSelected.bind(this));
 };
 
 MListModal.prototype._initControl = function () {
@@ -121,32 +93,24 @@ MListModal.prototype._initControl = function () {
     this.on('click', this.eventHandler.click);
 
     this.$box = $('.am-list-popup-box', this);
-    this.$header = $('.am-list-popup-header', this);
-    this.$paging = $('.am-list-popup-paging', this);
-    this.$nextPageBtn = $('.am-list-popup-next-page-btn', this)
-        .on('click', this.nextPage.bind(this));
-    this.$prevPageBtn = $('.am-list-popup-prev-page-btn', this)
-        .on('click', this.prevPage.bind(this));
-    this.$startPageBtn = $('.am-list-popup-start-page-btn', this)
-        .on('click', this.toStartPage.bind(this));
-    this.$endPageBtn = $('.am-list-popup-end-page-btn', this)
-        .on('click', this.toEndPage.bind(this));
+
+
     this.$searchInput = $('searchtextinput', this)
         .on('stoptyping', this.eventHandler.searchModify);
-
-    this.$itemsLength = $('.am-list-popup-paging-content span', this);
-    this.$offsetInput = $('.am-list-popup-paging-content input', this);
-
-    this.$listScroller = $('.am-list-popup-list-scroller', this);
-    this.$list = $('.am-selectlist', this);
 };
 
-MListModal.prototype._initProperty = function(){
-    this.$items = [];
-    this.$itemByValue = {};
+MListModal.prototype._initScroller = function () {
+    this._estimateHeight = 0;
+    this._pageOffsets = Array(this.preLoadN + 1).fill(0);
+    this._pageYs = Array(this.preLoadN + 1).fill(0);
+    this.$listScroller = $('.am-list-popup-list-scroller', this)
+        .on('scroll', this.eventHandler.scroll);
+    this.$content = $('.am-list-popup-content', this);
+    this.$listPages = $$('.am-list-popup-list-page', this);
+};
 
+MListModal.prototype._initProperty = function () {
     this._items = [];
-    this._itemHolderByValue = {};
     this._values = [];
     this._valueDict = {};
     this._preDisplayItems = [];
@@ -157,46 +121,29 @@ MListModal.prototype._initProperty = function(){
     this.items = [];
 };
 
-
-MListModal.prototype.afterAttached = function () {
-    if (!this.isDescendantOf(document.body))
-        this.$attachhook._isAttached = false;
-    if (!this.$attachhook._isAttached) {
-        var ah = this.$attachhook;
-        return new Promise(function (rs) {
-            ah.once('error', rs);
-        });
-    }
-};
-
 MListModal.prototype.updateSize = function () {
     var bound = this.getBoundingClientRect();
     var boxBound = this.$box.getBoundingClientRect();
     var listScrollerBound = this.$listScroller.getBoundingClientRect();
-    this.$listScroller.addStyle('max-height', bound.height - (listScrollerBound.top - boxBound.top + 50) + 'px');
-    boxBound = this.$box.getBoundingClientRect();
-    this.addStyle('padding-top', Math.max(25, (bound.height - boxBound.height) / 2) + 'px');
-    setTimeout(this._updateCurrentOffset.bind(this), 4);
-
+    this.$listScroller.addStyle('max-height', 'calc(' + (bound.height - listScrollerBound.top + boxBound.top) + 'px - var(--modal-margin-bottom) - var(--modal-margin-top))');
 };
 
 
-MListModal.prototype._requireItem = function (n) {
+MListModal.prototype._requireItem = function (pageElt, n) {
     var itemElt;
-    while (this.$items.length > n) {
-        itemElt = this.$items.pop();
+    while (pageElt.childNodes.length > n) {
+        itemElt = pageElt.lastChild;
         itemElt.selfRemove();
         releaseItem(itemElt);
     }
-    while (this.$items.length < n) {
+    while (pageElt.childNodes.length < n) {
         itemElt = requireItem(this);
-        this.$items.push(itemElt);
-        this.$list.addChild(itemElt);
+        pageElt.addChild(itemElt);
     }
 };
 
 
-MListModal.prototype._listToDisplay = function(items){
+MListModal.prototype._listToDisplay = function (items) {
     return items;
 };
 
@@ -213,101 +160,95 @@ MListModal.prototype._filterValue = function (items) {
     });
 };
 
-MListModal.prototype._assignItems = function (offset) {
-    this.$itemByValue = {};
-    var n = Math.min(this._displayItems.length - offset, this.$items.length);
+MListModal.prototype._assignItems = function (pageElt, offset) {
+    var n = Math.min(this._displayItems.length - offset, pageElt.childNodes.length);
     var itemElt, value;
     for (var i = 0; i < n; ++i) {
-        itemElt = this.$items[i];
+        itemElt = pageElt.childNodes[i];
         itemElt.data = this._displayItems[offset + i];
         value = itemElt.value + '';
-        this.$itemByValue[value] = this.$itemByValue[value] || [];
-        this.$itemByValue[value].push(itemElt);
     }
+};
+
+MListModal.prototype._alignPage = function () {
+    var pageElt;
+    var pageBound;
+    for (var i = 0; i < this.$listPages.length; ++i) {
+        pageElt = this.$listPages[i];
+        pageBound = pageElt.getBoundingClientRect();
+        if (i > 0) this.$listPages[i].addStyle('top', this._pageYs[i] + 'px');
+        this._pageYs[i + 1] = this._pageYs[i] + pageBound.height;
+    }
+    this.$content.addStyle('height', this._pageYs[this.preLoadN] + 'px');
 };
 
 MListModal.prototype._updateSelectedItem = function () {
-    var itemElt, value;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemElt = this.$items[i];
-        value = itemElt.value + '';
-        if (this._valueDict[value]) {
-            itemElt.addClass('selected');
-        }
-        else {
-            itemElt.removeClass('selected');
-        }
-    }
-};
-
-MListModal.prototype._findNextOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var bottom = scrollerBound.bottom;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.bottom > bottom) {
-            return this._startItemIdx + i;
-        }
-    }
-    return this._displayItems.length;
-};
-
-MListModal.prototype._findCurrentOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var top = scrollerBound.top;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.top + 5 >= top) {
-            return this._startItemIdx + i;
-        }
-    }
-    return 0;
-};
-
-MListModal.prototype._findPrevOffset = function () {
-    var scrollerBound = this.$listScroller.getBoundingClientRect();
-    var top = scrollerBound.top - scrollerBound.height;
-    var itemBound;
-    for (var i = 0; i < this.$items.length; ++i) {
-        itemBound = this.$items[i].getBoundingClientRect();
-        if (itemBound.top + 2 >= top) {
-            return this._startItemIdx + i;
-        }
-    }
-    return 0;
-};
-
-
-MListModal.prototype._updateCurrentOffset = function () {
-    var offset = this._findCurrentOffset();
-    this.$offsetInput.value = offset + 1 + '';
+    var valueDict = this._valueDict;
+    this.$listPages.forEach(function (pageElt) {
+        Array.prototype.forEach.call(pageElt.childNodes, function (itemElt) {
+            var value = itemElt.value + '';
+            if (valueDict[value]) {
+                itemElt.addClass('selected');
+            }
+            else {
+                itemElt.removeClass('selected');
+            }
+        });
+    });
+    if (this._displayValue === VALUE_HIDDEN)
+        this._alignPage();
 };
 
 
 MListModal.prototype.viewListAt = function (offset) {
-    var fontSize = this.$list.getFontSize() || 14;
+    if (!this.isDescendantOf(document.body)) {
+        this.domSignal.emit('viewListAt', offset);
+        return;
+    }
+    var fontSize = this.$listScroller.getFontSize() || 14;
     offset = Math.max(0, Math.min(offset, this._displayItems.length - 1));
     var screenSize = Dom.getScreenSize();
     var maxItem = Math.ceil(screenSize.height / (fontSize * 2.25));
-    this._currentOffset = offset;
-    setTimeout(this._updateCurrentOffset.bind(this), 4);
-    var items = this._displayItems;
-    this._startItemIdx = Math.max(0, Math.min(offset - maxItem, this._displayItems.length - 2 * maxItem));
-    var n = Math.min(items.length, maxItem * 3, this._displayItems.length - this._startItemIdx);
-    this._requireItem(n);
-    this._assignItems(this._startItemIdx);
-    this._updateSelectedItem();
-    if (n > 0) {
-        var startBound = this.$items[0].getBoundingClientRect();
-        var currentBound = this.$items[this._currentOffset - this._startItemIdx].getBoundingClientRect();
-        this.$listScroller.scrollTop = currentBound.top - startBound.top + 1;
+    var contentBound = this.$content.getBoundingClientRect();
+
+    this._pageOffsets[0] = Math.max(offset - maxItem, 0);
+    for (var i = 1; i <= this.preLoadN; ++i) {
+        this._pageOffsets[i] = Math.min(this._pageOffsets[i - 1] + maxItem, this._displayItems.length);
     }
+
+    var sIdx, nItem, pageBound;
+    var pageElt;
+    for (var pageIndex = 0; pageIndex < this.preLoadN; ++pageIndex) {
+        sIdx = this._pageOffsets[pageIndex];
+        nItem = this._pageOffsets[pageIndex + 1] - sIdx;
+        pageElt = this.$listPages[pageIndex];
+
+        if (pageIndex === 0) {
+            this._pageYs[pageIndex] = sIdx / this._displayItems.length * contentBound.height;
+        }
+
+        pageElt.addStyle('top', this._pageYs[pageIndex] + 'px');
+        this._requireItem(pageElt, nItem);
+        this._assignItems(pageElt, sIdx);
+        pageBound = pageElt.getBoundingClientRect();
+        this._pageYs[pageIndex + 1] = this._pageYs[pageIndex] + pageBound.height;
+    }
+    if (this._pageOffsets[this.preLoadN] === this._displayItems.length) {
+        this.$content.addStyle('height', this._pageYs[this.preLoadN] + 'px');
+
+    }
+    else {
+        this.$content.addStyle('height', this._estimateHeight + 'px');
+    }
+    this._updateSelectedItem();
 };
 
 
 MListModal.prototype.viewListAtFirstSelected = function () {
+    if (!this.isDescendantOf(document.body)) {
+        this.domSignal.emit('viewListAtFirstSelected');
+        return;
+    }
     if (this._displayValue == VALUE_HIDDEN) {
         return false;
     }
@@ -315,38 +256,23 @@ MListModal.prototype.viewListAtFirstSelected = function () {
         var value = this._values[0];
         var itemHolders = this._itemHolderByValue[value + ''];
         if (itemHolders) {
-            var holder = itemHolders[0];
-            this.viewListAt(holder.idx);
+            this.domSignal.once('scrollIntoSelected', function () {
+                var holder = itemHolders[0];
+                this.viewListAt(holder.idx);
+                var itemElt = $('.selected', this.$listScroller);
+                if (itemElt) {
+                    var scrollBound = this.$listScroller.getBoundingClientRect();
+                    var itemBound = itemElt.getBoundingClientRect();
+                    this.$listScroller.scrollTop += itemBound.top - scrollBound.top;
+                }
+            }.bind(this));
+            this.domSignal.emit('scrollIntoSelected');
             return true;
         }
         else return false;
     }
     else
         return false;
-};
-
-
-MListModal.prototype.nextPage = function () {
-    var nextOffset = this._findNextOffset();
-    if (nextOffset >= this._displayItems.length) return;
-    this.viewListAt(nextOffset);
-};
-
-
-MListModal.prototype.prevPage = function () {
-    var prevOffset = this._findPrevOffset();
-    if (prevOffset >= this._displayItems.length) return;
-    this.viewListAt(prevOffset);
-};
-
-
-MListModal.prototype.toStartPage = function () {
-    this.viewListAt(0);
-};
-
-
-MListModal.prototype.toEndPage = function () {
-    this.viewListAt(this._displayItems.length);
 };
 
 
@@ -362,8 +288,9 @@ MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
     this._preDisplayItems = this._listToDisplay(this._items);
     this._displayItems = this._filterValue(this._preDisplayItems);
-    this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
-    this.viewListAt(0);
+    this._updateItemIndex();
+    this.domSignal.emit('viewListAt', 0);
+    this.$listScroller.scrollTop = 0;
 };
 
 MListModal.prototype.notifyPressOut = function () {
@@ -372,6 +299,36 @@ MListModal.prototype.notifyPressOut = function () {
 
 MListModal.prototype.notifyPressClose = function () {
     this.emit('pressclose', { target: this, type: 'pressclose' }, this);
+};
+
+MListModal.prototype._findFirstPageIdx = function () {
+    for (var i = 0; i < this.preLoadN; ++i) {
+        if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+MListModal.prototype._findLastPageIdx = function () {
+    for (var i = this.preLoadN - 1; i >= 0; --i) {
+        if (this._pageOffsets[i + 1] - this._pageOffsets[i] > 0) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+MListModal.prototype._updateItemIndex = function (){
+    this._itemHolderByValue = this._displayItems.reduce(function (ac, cr, idx) {
+        var value = typeof cr === "string" ? cr : cr.value + '';
+        ac[value] = ac[value] || [];
+        ac[value].push({
+            idx: idx,
+            item: cr
+        });
+        return ac;
+    }, {});
 };
 
 
@@ -390,29 +347,21 @@ MListModal.property.items = {
         this._items = items;
         this._preDisplayItems = this._listToDisplay(this._items);
         this._displayItems = this._filterValue(this._preDisplayItems);
-        this._itemHolderByValue = items.reduce(function (ac, cr, idx) {
-            var value = typeof cr === "string" ? cr : cr.value + '';
-            ac[value] = ac[value] || [];
-            ac[value].push({
-                idx: idx,
-                item: cr
-            });
-            return ac;
-        }, {});
-        this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
+        this._updateItemIndex();
         this._searchCache = {};
         var estimateSize = measureListSize(this._preDisplayItems);
         if (estimateSize.descWidth > 0) {
-            this.$list.addStyle('--text-width', 100 * (estimateSize.textWidth + 15) / (estimateSize.width) + '%');
+            this.$listScroller.addStyle('--desc-width', 100 * (estimateSize.descWidth + 15) / (estimateSize.width) + '%');
         }
         else {
-            this.$list.removeStyle('--text-width');
+            this.$listScroller.removeStyle('--desc-width');
         }
+        var estimateHeight = this._displayItems.length * 30 * Math.ceil(estimateSize.width * 1.2 / Math.min(Dom.getScreenSize().width - 80, 500));
+        this._estimateHeight = estimateHeight;
+        this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
-        this.$list.addStyle('width', estimateSize.width / 14 + 'em');
-        this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
         prepareSearchForList(items);
-        this.viewListAt(0);
+        this.domSignal.emit('viewListAt', 0);
     }
 };
 
@@ -424,9 +373,11 @@ MListModal.property.values = {
             ac[cr + ''] = true;
             return ac;
         }, {});
+
         this._displayItems = this._filterValue(this._preDisplayItems);
-        this.viewListAt(this._currentOffset);
-        this._updateSelectedItem();
+        this._updateItemIndex();
+        //todo
+        if (this._pageOffsets[this.preLoadN] > this._pageOffsets[0]) this._updateSelectedItem();
     },
     get: function () {
         return this._values;
@@ -437,6 +388,13 @@ MListModal.property.displayValue = {
     set: function (value) {
         this._displayValue = value;
         this._displayItems = this._filterValue(this._preDisplayItems);
+        this._updateItemIndex();
+        if (value === VALUE_HIDDEN) {
+            this.addClass('am-value-hidden');
+        }
+        else {
+            this.removeClass('am-value-hidden');
+        }
     },
     get: function () {
         return this._displayValue;
@@ -473,10 +431,73 @@ MListModal.eventHandler.searchModify = function () {
     var searchedItems = this.searchItemByText(text);
     this._preDisplayItems = this._listToDisplay(searchedItems);
     this._displayItems = this._filterValue(this._preDisplayItems);
-    this.$itemsLength.firstChild.data = '/' + this._displayItems.length;
+    this._updateItemIndex();
     this.viewListAt(0);
+    this.$listScroller.scrollTop = 0;
 };
 
+
+MListModal.eventHandler.scroll = function () {
+    var scrollerBound = this.$listScroller.getBoundingClientRect();
+    var topIdx = this._findFirstPageIdx();
+    var fontSize = this.$listScroller.getFontSize() || 14;
+    var screenSize = Dom.getScreenSize();
+    var maxItem = Math.ceil(screenSize.height / (fontSize * 2.25));
+    var pageBound;
+    var topBound = this.$listPages[topIdx].getBoundingClientRect();
+    ;
+    if (this._pageOffsets[topIdx] > 0) {
+        if (topBound.top + this.toLoadNextY > scrollerBound.top) {
+            this._pageOffsets.unshift(this._pageOffsets.pop());
+            this._pageYs.unshift(this._pageYs.pop());
+            this.$listPages.unshift(this.$listPages.pop());
+            this._pageOffsets[topIdx] = Math.max(0, this._pageOffsets[topIdx + 1] - maxItem);
+
+            this._requireItem(this.$listPages[topIdx], this._pageOffsets[topIdx + 1] - this._pageOffsets[topIdx]);
+            this._assignItems(this.$listPages[topIdx], this._pageOffsets[topIdx]);
+            pageBound = this.$listPages[topIdx].getBoundingClientRect();
+            this._pageYs[topIdx] = this._pageYs[topIdx + 1] - pageBound.height;
+            this.$listPages[topIdx].addStyle('top', this._pageYs[topIdx] + 'px');
+            this._updateSelectedItem();
+            if (this._pageOffsets[topIdx] === 0) {
+                this.$listPages[0].addStyle('top', '0');
+                this._pageYs[0] = 0;
+                this._alignPage();
+                this.$listScroller.scrollTop = 0;
+            }
+
+        }
+    }
+    else {
+        if (topBound.top > scrollerBound.top) {
+            this.$listScrolle.scrollTop += topBound.top - scrollerBound.top;
+        }
+    }
+
+    var botIdx = this._findLastPageIdx();
+    var botBound;
+    botBound = this.$listPages[botIdx].getBoundingClientRect();
+    if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
+        if (botBound.bottom - this.toLoadNextY < scrollerBound.bottom) {
+            this._pageOffsets.push(this._pageOffsets.shift());
+            this._pageYs.push(this._pageYs.shift());
+            this.$listPages.push(this.$listPages.shift());
+            this._pageOffsets[botIdx + 1] = Math.min(this._displayItems.length, this._pageOffsets[botIdx] + maxItem);
+            this.$listPages[botIdx].addStyle('top', this._pageYs[botIdx] + 'px');
+            this._requireItem(this.$listPages[botIdx], this._pageOffsets[botIdx + 1] - this._pageOffsets[botIdx]);
+            this._assignItems(this.$listPages[botIdx], this._pageOffsets[botIdx]);
+            pageBound = this.$listPages[botIdx].getBoundingClientRect();
+            this._pageYs[botIdx + 1] = this._pageYs[botIdx] + pageBound.height;
+            this._updateSelectedItem();
+            if (this._pageOffsets[botIdx + 1] < this._displayItems.length) {
+                this.$content.addStyle('height', this._estimateHeight + 'px');
+            }
+            else {
+                this.$content.addStyle('height', this._pageYs[botIdx + 1] + 'px');
+            }
+        }
+    }
+};
 
 Core.install(MListModal);
 export default MListModal;

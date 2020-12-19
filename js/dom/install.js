@@ -16,6 +16,7 @@ import MSelectBox from "./MSelectBox";
 import MBlinkModal from "./MBlinkModal";
 import MListModal from "./MListModal";
 import MTreeModal from "./MTreeModal";
+import MHSnapScroller from "./MHSnapScroller";
 
 export default function install(core) {
     core.install([
@@ -29,6 +30,7 @@ export default function install(core) {
         MSelectBox,
         MBlinkModal,
         MListModal,
-        MTreeModal
+        MTreeModal,
+        MHSnapScroller
     ]);
 }
