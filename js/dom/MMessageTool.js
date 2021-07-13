@@ -127,7 +127,6 @@ MMessageTool.prototype.titleText = "Nội dung và công cụ";
 MMessageTool.prototype.openImages = function () {
     var thisMT = this;
     return openFileDialog({ multiple: true, accept: "image/*" }).then(function (files) {
-        console.log(files)
         if (files && files.length > 0) {
             thisMT.notifyResolve({ type: 'image', files: files });
         }

@@ -47,39 +47,22 @@ MMessageInput.eventHandler.clickCameraBtn = function (event) {
     var thisMi = this;
     openFileDialog('camera').then(function (files) {
         if (files.length > 0) {
-            var imageFiles = [];
-            var otherFiles = [];
-            var file;
-            for (var i = 0; i < files.length; ++i) {
-                file = files[i];
-                if (!!file.type && file.type.match && file.type.match(/^image\//)) {
-                    imageFiles.push(file);
-                }
-                else {
-                    otherFiles.push(file);
-                }
-            }
-            if (imageFiles.length > 0) {
-                thisMi.addImageFiles(imageFiles);
-                thisMi.images = imageFiles;
-            }
-            if (otherFiles.length > 0) {
-                thisMi.addFiles(otherFiles);
-            }
-            thisMi.notifyChange();
+            this.notifyAddFiles(files).then(function (files){
+                this.handleAddingFileByType(files);
+            }.bind(this));
         }
-    });
+    }.bind(this));
 };
 
 
 MMessageInput.eventHandler.clickMore = function () {
-    var thisMi = this;
     MMessageTool.open().then(function (result) {
         if (result.type ==='file' || result.type =='image'){
-            console.log(result.files)
-            thisMi.handleAddingFileByType(result.files);
+            this.notifyAddFiles(result.files).then(function (files){
+                this.handleAddingFileByType(files);
+            }.bind(this));
         }
-    }, function () {
+    }.bind(this), function () {
     })
 };
 
