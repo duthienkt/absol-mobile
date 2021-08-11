@@ -96,7 +96,7 @@ MBlinkModal.newInstance = function (instanceData) {
     }
 
     modal.addTo(document.body);
-    modal.$attachhook.on('error', function () {
+    modal.$attachhook.once('attached', function () {
         state = 1;//attached
         waitToShow();
     });
