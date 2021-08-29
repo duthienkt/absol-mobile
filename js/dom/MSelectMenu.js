@@ -133,10 +133,8 @@ MSelectMenu.property.isFocus = {
         if (value === this._isFocus) return;
         this._isFocus = value;
         if (value) {
-            this.$selectlist.afterAttached().then(function () {
-                thisSM.$selectlist.viewListAtFirstSelected();
-            });
             thisSM.$selectlist.viewListAt(0);
+            thisSM.$selectlist.viewListAtFirstSelected();
             this.$selectlist.addTo(document.body);
         }
         else {

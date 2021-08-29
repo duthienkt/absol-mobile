@@ -470,7 +470,7 @@ MListModal.eventHandler.scroll = function () {
     }
     else {
         if (topBound.top > scrollerBound.top) {
-            this.$listScrolle.scrollTop += topBound.top - scrollerBound.top;
+            this.$listScroller.scrollTop += topBound.top - scrollerBound.top;
         }
     }
 
