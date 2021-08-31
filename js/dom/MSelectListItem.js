@@ -6,7 +6,11 @@ import SelectListItem from 'absol-acomp/js/SelectListItem';
 var _ = Core._;
 var $ = Core.$;
 
-
+/***
+ *
+ * @extends {AElement}
+ * @constructor
+ */
 function MSelectListItem() {
     this.$textCtn = $('.am-selectlist-item-text-ctn', this);
     this.$text = $('span.am-selectlist-item-text', this);
@@ -18,7 +22,6 @@ function MSelectListItem() {
     this._extendStyle = {};
     this._data = "";
     this._level = 0;
-    return this;
 }
 
 MSelectListItem.tag = 'MSelectListItem'.toLowerCase();

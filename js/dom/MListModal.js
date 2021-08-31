@@ -188,10 +188,10 @@ MListModal.prototype._updateSelectedItem = function () {
         Array.prototype.forEach.call(pageElt.childNodes, function (itemElt) {
             var value = itemElt.value + '';
             if (valueDict[value]) {
-                itemElt.addClass('selected');
+                itemElt.selected = true;
             }
             else {
-                itemElt.removeClass('selected');
+                itemElt.selected = false;
             }
         });
     });
@@ -259,7 +259,7 @@ MListModal.prototype.viewListAtFirstSelected = function () {
             this.domSignal.once('scrollIntoSelected', function () {
                 var holder = itemHolders[0];
                 this.viewListAt(holder.idx);
-                var itemElt = $('.selected', this.$listScroller);
+                var itemElt = $('.as-selected', this.$listScroller);
                 if (itemElt) {
                     var scrollBound = this.$listScroller.getBoundingClientRect();
                     var itemBound = itemElt.getBoundingClientRect();

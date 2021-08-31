@@ -61,6 +61,7 @@ export function requireItem($parent) {
 export function releaseItem(item) {
     item.$parent = null;
     item.attr('class', 'am-selectlist-item');
+    item.selected = false;
     itemPool.push(item);
 }
 
@@ -146,12 +147,12 @@ MSelectList.prototype._assignItems = function (from, to) {
         else {
             this.$itemByValue[item.value + ''] = itemElt;
             if (this._selectValue == item.value) {
-                itemElt.addClass('selected');
+                itemElt.selected = true;
                 this.$selectedItem = itemElt;
                 foundSelected = true;
             }
             else {
-                itemElt.removeClass('selected');
+                itemElt.selected = false;
             }
         }
     }

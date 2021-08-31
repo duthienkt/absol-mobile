@@ -191,6 +191,6 @@ input[type="number"].am-list-popup-paging-offset {
     --desc-width: inherit;
 }
 
-.am-value-hidden .am-selectlist-item.selected{
+.am-value-hidden .am-selectlist-item.as-selected{
     display: none;
 }
