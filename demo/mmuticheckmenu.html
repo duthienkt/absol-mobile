@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MCheckListModal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://absol.cf/absol/dist/polyfill.js"></script>
+    <!-- <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css"> -->
+    <link rel="stylesheet" href="https://pictogrammers.github.io/@mdi/font/5.3.45/css/materialdesignicons.min.css"
+          media="all" rel="stylesheet">
+
+    <!-- <script src="https://absol.cf/hightlight/highlight.pack.js"></script> -->
+    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+    <script src="../dist/absol-mobile.js?"></script>
+    <style>
+        body {
+            --multi-select-menu-max-height: 90px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    (function () {
+        var _ = absol._;
+        var $ = absol.$;
+
+        _('<h3>MMultiCheckMenu</h3>').addTo(document.body);
+
+
+        var menu = _({
+            tag: 'MMultiCheckMenu'.toLowerCase(),
+            props: {
+                orderly: true,
+                enableSearch: true,
+                items: Array(2000).fill(null).map(function (u, i) {
+                    return {
+                        text: `[${i}] ${absol.string.randomPhrase(50)}`,
+                        desc: absol.string.randomPhrase(50),
+                        value: i
+                    }
+                })
+            },
+            on: {
+                change: function () {
+                    console.log('change', this.values);
+                    text.innerHTML = this.values.join(', ');
+                }
+            }
+        }).addTo(document.body);
+
+        var text = _('div').addTo(document.body);
+    })();
+
+
+</script>
+
+</body>
+</html>

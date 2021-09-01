@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MCheckListModal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://absol.cf/absol/dist/polyfill.js"></script>
+    <!-- <link rel="stylesheet" href="https://absol.cf/hightlight/styles/default.css"> -->
+    <link rel="stylesheet" href="https://pictogrammers.github.io/@mdi/font/5.3.45/css/materialdesignicons.min.css"
+          media="all" rel="stylesheet">
+
+    <!-- <script src="https://absol.cf/hightlight/highlight.pack.js"></script> -->
+    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+    <script src="../dist/absol-mobile.js?"></script>
+</head>
+<body>
+<script>
+    (function () {
+        var _ = absol._;
+        var $ = absol.$;
+
+        _('<h3>MCheckListItem</h3>').addTo(document.body);
+        var itemCtn = _({
+            tag: 'div',
+            class: ['am-list-popup-list-page', 'am-selectlist', 'am-check-list'],
+            style: {
+                position: 'relative',
+                left: 'unset',
+                top: 'unset',
+                bottom: 'unset',
+                height: 'auto',
+                width: '90%',
+                '--desc-width': '46.6622%',
+                'max-height': 'calc(369px - var(--modal-margin-bottom) - var(--modal-margin-top))',
+                border: '1px solid #ddd'
+            },
+            child: Array(10).fill(null).map(function (u, i) {
+                return {
+                    tag: 'mchecklistitem',
+                    props: {
+                        level: i % 4,
+                        data: {
+                            text: `[${i}] ${absol.string.randomPhrase(30)}`,
+                            desc: Math.random() > 0.5 ? absol.string.randomPhrase(30) : undefined
+                        }
+                    }
+                }
+            })
+        }).addTo(document.body);
+
+        var modal = _({
+            tag: 'MChecklistModal'.toLowerCase(),
+            props: {
+                enableSearch: true,
+                items: Array(2000).fill(null).map(function (u, i) {
+                    return {
+                        text: `[${i}] ${absol.string.randomPhrase(50)}`,
+                        desc: absol.string.randomPhrase(50),
+                        value: i
+                    }
+                }),
+                values: Array(200).fill(0).map(function (u, i) {
+                    return i * 10;
+                })
+            },
+            on: {
+                change: function () {
+                    console.log('change', this.values);
+                },
+                pressclose: function () {
+                    console.log('pressclose');
+                },
+                pressout: function () {
+                    console.log('pressout');
+                }
+            }
+        }).addTo(document.body);
+    })();
+
+
+</script>
+
+</body>
+</html>
