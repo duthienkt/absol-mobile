@@ -17,6 +17,9 @@ import MBlinkModal from "./MBlinkModal";
 import MListModal from "./MListModal";
 import MTreeModal from "./MTreeModal";
 import MHSnapScroller from "./MHSnapScroller";
+import MChecklistModal from "./MChecklistModal";
+import MChecklistItem from "./MChecklistItem";
+import MMultiCheckMenu from "./MMultiCheckMenu";
 
 export default function install(core) {
     core.install([
@@ -31,6 +34,9 @@ export default function install(core) {
         MBlinkModal,
         MListModal,
         MTreeModal,
-        MHSnapScroller
+        MHSnapScroller,
+        MChecklistItem,
+        MChecklistModal,
+        MMultiCheckMenu
     ]);
 }
