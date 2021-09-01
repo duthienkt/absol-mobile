@@ -26,7 +26,7 @@ function closeBoxItem(event) {
             value: this.value,
             itemData: this.data
         }, thisSB);
-        thisSB.emit('change', { type: 'change', values: thisSB.values, target: thisSB }, thisSB);
+        thisSB.emit('change', {type: 'change', values: thisSB.values, target: thisSB}, thisSB);
     }
 }
 
@@ -46,8 +46,7 @@ export function requireBoxItem($parent) {
     var item;
     if (boxItemPool.length > 0) {
         item = boxItemPool.pop();
-    }
-    else {
+    } else {
         item = makeItem();
     }
     item.$parent = $parent;
@@ -80,7 +79,7 @@ function MSelectBox() {
         .on('pressclose', this.eventHandler.pressOut);
     this.on('click', this.eventHandler.click);
     this.$attachhook = $('attachhook', this).on('error', this.eventHandler.attached);
-
+    this._values = [];
     this.orderly = false;
     this.items = [];
     this.values = [];
@@ -122,8 +121,7 @@ MSelectBox.prototype.init = function (props) {
 };
 
 
-MSelectBox.prototype._requireBoxItems = function () {
-    var n = this._values.length;
+MSelectBox.prototype._requireBoxItems = function (n) {
     var boxItemElt;
     while (this.$boxItems.length < n) {
         boxItemElt = requireBoxItem(this);
@@ -137,10 +135,10 @@ MSelectBox.prototype._requireBoxItems = function () {
     }
 };
 
-MSelectBox.prototype._sortValuesIfNeed = function () {
+MSelectBox.prototype._sortValuesIfNeed = function (values) {
     if (this._orderly) {
         var thisMB = this;
-        this.values.sort(function (a, b) {
+        values.sort(function (a, b) {
             var aItem = thisMB._itemsByValue[a];
             var bItem = thisMB._itemsByValue[b];
             if (!aItem) return 1;
@@ -151,22 +149,26 @@ MSelectBox.prototype._sortValuesIfNeed = function () {
 };
 
 
-MSelectBox.prototype._assignBoxItems = function () {
-    var n = this._values.length;
+MSelectBox.prototype._assignBoxItems = function (values) {
+    var n = values.length;
     var item;
     var value;
     for (var i = 0; i < n; ++i) {
-        value = this._values[i];
+        value = values[i];
         item = this._itemsByValue[value];
-        this.$boxItems[i].data = item || { text: 'error' };
+        this.$boxItems[i].data = item || {text: 'error'};
     }
 };
 
 
 MSelectBox.prototype._updateValues = function () {
-    this._requireBoxItems();
-    this._assignBoxItems();
+    this.viewItemsByValues(this._values);
 };
+
+MSelectBox.prototype.viewItemsByValues = function (values) {
+    this._requireBoxItems(values.length);
+    this._assignBoxItems(values);
+}
 
 
 MSelectBox.prototype.querySelectedItems = function () {
@@ -192,7 +194,8 @@ MSelectBox.property.items = {
         this._items = items;
         this._itemsByValue = this._dictByValue(items);
         this.$selectlist.items = items;
-        this._sortValuesIfNeed();
+        this.addStyle('--item-min-width', this.$selectlist.estimateSize.textWidth + 60 + 'px');
+        this._sortValuesIfNeed(this._values);
         this._updateValues();
     },
     get: function () {
@@ -204,9 +207,10 @@ MSelectBox.property.values = {
     set: function (values) {
         values = values || [];
         values = (values instanceof Array) ? values : [values];
+        values = values.slice();
         this._values = values;
         this.$selectlist.values = values;
-        this._sortValuesIfNeed();
+        this._sortValuesIfNeed(this._values);
         this._updateValues();
     },
     get: function () {
@@ -217,7 +221,7 @@ MSelectBox.property.values = {
 MSelectBox.property.orderly = {
     set: function (value) {
         this._orderly = !!value;
-        this._sortValuesIfNeed();
+        this._sortValuesIfNeed(this._values);
         this._updateValues();
     },
     get: function () {
@@ -245,11 +249,11 @@ MSelectBox.eventHandler.click = function (event) {
 
 MSelectBox.eventHandler.pressItem = function (event) {
     this.values.push(event.value);
-    this._sortValuesIfNeed();
+    this._sortValuesIfNeed(this._values);
     this._updateValues();
     this.$selectlist.values = this.values;
-    this.emit('add', { type: 'add', itemData: event.itemElt.data, value: event.value, values: this.values }, this);
-    this.emit('change', { type: 'change', values: self.values, target: self }, self);
+    this.emit('add', {type: 'add', itemData: event.itemElt.data, value: event.value, values: this.values}, this);
+    this.emit('change', {type: 'change', values: this.values, target: this}, this);
     this.isFocus = false;
 };
 

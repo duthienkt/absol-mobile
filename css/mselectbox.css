@@ -1,14 +1,13 @@
-.am-select-box{
+.am-select-box {
 
 }
 
-.am-select-box-modal .am-selectlist-item.selected{
+.am-select-box-modal .am-selectlist-item.as-selected {
     display: none;
 }
 
 .am-select-box.disabled,
-.am-select-box.as-disabled
-{
+.am-select-box.as-disabled {
     pointer-events: none;
     background-color: #ebebe4;
 }
