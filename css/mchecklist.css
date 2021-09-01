@@ -1,0 +1,14 @@
+.am-selectlist.am-check-list {
+
+}
+
+.am-selectlist.am-check-list > .am-selectlist-item > .am-selectlist-item-text-ctn {
+    padding-left: 0;
+}
+
+.am-check-list .am-selectlist-item-check-ctn {
+    padding-left: 10px;
+    width: calc(28px + 0.35em);
+    box-sizing: border-box;
+    vertical-align: middle;
+}
