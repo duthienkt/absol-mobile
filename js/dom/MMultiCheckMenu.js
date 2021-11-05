@@ -198,5 +198,6 @@ MMultiCheckMenu.eventHandler.modalCancel = function (event) {
 
 
 Core.install('MSelectBox'.toLowerCase(), MMultiCheckMenu);
+Core.install(MMultiCheckMenu);
 
 export default MMultiCheckMenu;
