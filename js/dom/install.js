@@ -20,6 +20,8 @@ import MHSnapScroller from "./MHSnapScroller";
 import MChecklistModal from "./MChecklistModal";
 import MChecklistItem from "./MChecklistItem";
 import MMultiCheckMenu from "./MMultiCheckMenu";
+import MCabinetList from "./MCabinetList";
+import MCabinetItem from "./MCabinetItem";
 
 export default function install(core) {
     core.install([
@@ -37,6 +39,8 @@ export default function install(core) {
         MHSnapScroller,
         MChecklistItem,
         MChecklistModal,
-        MMultiCheckMenu
+        MMultiCheckMenu,
+        MCabinetItem,
+        MCabinetList
     ]);
 }

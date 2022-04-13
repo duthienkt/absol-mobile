@@ -1,0 +1,119 @@
+.am-cabinet-list {
+
+}
+
+.am-cabinet-item {
+    position: relative;
+}
+
+.am-cabinet-item {
+    border-bottom: 1px solid #d6d6d6;
+}
+
+.am-cabinet-item:first-child {
+    border-top: 1px solid #d6d6d6;
+}
+
+
+.am-cabinet-item-drag {
+    width: 40px;
+    text-align: center;
+    display: none;
+}
+
+.am-cabinet-list.am-draggable .am-cabinet-item-drag {
+    display: block;
+}
+
+.am-cabinet-item-body {
+    min-height: 39px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    left: 0;
+    transition: left 0.1s;
+    position: relative;
+    background-color: white;
+    z-index: 3;
+
+}
+
+.am-cabinet-item.as-dragging .am-cabinet-item-body {
+    transition: none;
+}
+
+.am-cabinet-item-content {
+    flex-grow: 1;
+}
+
+.am-cabinet-item-quick-menu-btn {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    box-sizing: border-box;
+    transition: opacity 0.1s;
+    opacity: 1;
+}
+
+.am-cabinet-item-quick-menu-btn i {
+    font-size: 20px;
+}
+
+
+.am-cabinet-item.as-board-moving {
+    transform: none;
+    left: var(--mk-navigator-bound-left) !important;
+}
+
+.am-cabinet-item.as-board-moving .am-cabinet-item-body {
+    background-color: rgb(169, 169, 172, 0.3);
+}
+
+.am-cabinet-item.as-board-moving .am-cabinet-item-right-action-ctn {
+    display: none;
+}
+
+.am-cabinet-item:not(.am-has-quick-menu) .am-cabinet-item-quick-menu-ctn {
+    display: none;
+}
+
+
+.am-cabinet-item-right-action-ctn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+    transition: width 0.1s;
+    background-color: #ebebeb;
+    /*border-radius: 4px;*/
+    /*overflow: hidden;*/
+}
+
+.am-cabinet-item-right-action-ctn:empty {
+    display: none;
+}
+
+.am-cabinet-item.as-dragging .am-cabinet-item-right-action-ctn {
+    transition: none;
+}
+
+.am-cabinet-item-action {
+    min-width: 60px;
+    padding: 0 8px;
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+}
+
+.am-cabinet-item-action:not(:first-child) {
+    border-left: 1px solid #dddddd;
+}
+
+.am-cabinet-item-action:active {
+    -webkit-box-shadow: inset 0 0.2em 0.25em rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 0.2em 0.25em rgba(0, 0, 0, 0.125);
+}
