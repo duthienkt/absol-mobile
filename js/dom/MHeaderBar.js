@@ -1,6 +1,7 @@
 import '../../css/mheaderbar.css';
 import Core from './Core';
 import QuickMenu from 'absol-acomp/js/QuickMenu';
+
 var _ = Core._;
 var $ = Core.$;
 
@@ -52,7 +53,6 @@ MHeaderBar.prototype.showTitle = function (flag) {
             child: [
                 {
                     class: 'am-header-bar-title',
-                    child: { text: 'Phạm Hùng Quốc' }
                 },
                 {
                     class: 'am-header-bar-title-desc'
@@ -113,7 +113,6 @@ MHeaderBar.prototype.showQuickMenu = function (flag) {
 };
 
 
-
 MHeaderBar.prototype._makeCommandBtn = function (item) {
     return _({
         tag: 'button',
@@ -154,6 +153,11 @@ MHeaderBar.property.quickmenu = {
                     return [2];
                 }
             }
+            if (!value.getMenuProps && value.props){
+                value.getMenuProps = function (){
+                    return value.props;
+                }
+            }
             this._quickmenuHolder = QuickMenu.toggleWhenClick(this.$quickmenuBtn, value);
         }
         else {
@@ -174,9 +178,13 @@ MHeaderBar.property.quickmenu = {
 MHeaderBar.property.title = {
     set: function (value) {
         if (value) {
-            value = value + '';
             this.showTitle(true);
-            this.$title.firstChild.data = value;
+            if (typeof value === 'string') {
+                this.$title.innerHTML = value;
+            }
+            else {
+                this.$title.clearChild().addChild(_(value));
+            }
         }
         else {
             this.showTitle(false);
@@ -231,7 +239,6 @@ MHeaderBar.property.actionIcon = {
         return this._actionIcon;
     }
 };
-
 
 
 /**
