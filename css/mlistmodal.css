@@ -3,7 +3,8 @@
     --modal-margin-bottom: 80px;
     --modal-max-width: 500px;
     --modal-width: calc(100vw - 80px);
-    --modal-border-radius: 8px;
+    /*--modal-border-radius: 8px;*/
+    --modal-border-radius: 0px;
 }
 
 .am-list-modal {
@@ -16,6 +17,7 @@
     text-align: center;
     box-sizing: border-box;
     padding-top: var(--modal-margin-top);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .am-list-modal > div {
@@ -27,17 +29,18 @@
 .am-list-popup-box {
     max-width: var(--modal-max-width);
     width: var(--modal-width);
-    -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
-    -moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
-    box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);
+    /*-webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);*/
+    /*-moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);*/
+    /*box-shadow: 2px 2px 6px 0px rgba(0, 0, 90, 0.55);*/
+    box-shadow: 2px 2px 2px 0px #908787;
+    -webkit-box-shadow: 2px 2px 2px 0px #908787;
     background-color: #ffffff;
     border-radius: var(--modal-border-radius);
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .am-list-popup-box.am-enable-search .absol-search-text-input {
-    display: inline-block;
-    vertical-align: middle;
+    visibility: visible;
 }
 
 
@@ -50,12 +53,12 @@
     padding-bottom: 5px;
     padding-left: 10px;
     border-bottom: solid 1px #dddddd;
-    background-color: rgba(169, 169, 169, 0.2);
+    /*background-color: rgba(169, 169, 169, 0.2);*/
 }
 
 .am-list-popup-header .absol-search-text-input {
     display: inline-block;
-    width: calc(100% - 2em - 25px);
+    width: calc(100% - 2em - 18px);
     vertical-align: middle;
     box-sizing: border-box;
     background-color: white;
@@ -71,9 +74,10 @@
     font-size: inherit;
     border: none;
     outline: none;
-    margin-right: 10px;
+    margin-left: 10px;
     background-color: rgb(255, 255, 255);
-    color: rgb(190, 30, 30);
+    color: #7a7a7a;
+    white-space: nowrap;
 }
 
 .am-list-popup-close-btn:active {
@@ -89,14 +93,14 @@
 }
 
 .am-list-popup-close-btn span {
-    font-size: 1.5em;
+    font-size: 24px;
     display: inline-block;
     vertical-align: middle;
     line-height: 1;
 }
 
 .am-list-popup-box .absol-search-text-input {
-    display: none;
+    visibility: hidden;
 }
 
 .am-list-popup-paging {

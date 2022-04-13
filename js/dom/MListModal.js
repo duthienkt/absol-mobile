@@ -40,12 +40,12 @@ MListModal.render = function () {
                         class: 'am-list-popup-header',
                         child: [
                             {
+                                tag: 'searchtextinput'
+                            },
+                            {
                                 tag: 'button',
                                 class: 'am-list-popup-close-btn',
                                 child: 'span.mdi.mdi-close'
-                            },
-                            {
-                                tag: 'searchtextinput'
                             }
                         ]
                     },
