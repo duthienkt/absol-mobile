@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CabinetList</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="../dist/absol-mobile.js?"></script>
+    <script>
+        var $ = absol.$;
+        var _ = absol._;
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        html {
+            overflow-y: hidden;
+        }
+
+        body {
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<script>
+    (function () {
+        if (!absol.BrowserDetector.isMobile) {
+            alert("Hãy mở bằng chế độ mobile và tải lại");
+            return;
+        }
+
+
+        var _ = absol._;
+        var $ = absol.$;
+        var list = _({
+            tag: 'mcabinetlist',
+            props:{
+                draggable: true
+            },
+            on: {
+                orderchange: function () {
+                    var newIdOrder = this.getChildren().map(function (itemElt) {
+                        return itemElt.somethingLikeId;
+                    })
+                    console.log(newIdOrder);
+                }
+            },
+            child: Array(30).fill(null).map(function (u, i) {
+                return {
+                    tag: 'mcabinetitem',
+                    child: [
+                        {
+                            style: { fontSize: '18px' },
+                            child: { text: 'item ' + i }
+                        }
+                    ],
+                    props: {
+                        somethingLikeId: i,
+                        rightActions: [
+                            { text: 'Xoá', otherPropertiesYouNeed: "Some data..." },
+                            { text: 'Sửa', otherPropertiesYouNeed: "Some data..." },
+                        ],
+                        quickmenu: {
+                            props: {
+                                extendClasses: 'cd-context-menu',
+                                items: [
+                                    {
+                                        text: 'Trạng thái',
+                                        extendClasses: "bsc-quickmenu",
+                                        icon: {
+                                            tag: "i",
+                                            class: "material-icons",
+                                            child: { text: "info" }
+                                        },
+                                        cmd: 'status'
+                                    },
+                                    {
+                                        text: 'Di chuyển',
+                                        extendClasses: "bsc-quickmenu",
+                                        icon: {
+                                            tag: "i",
+                                            class: "material-icons",
+                                            child: { text: "open_with" }
+                                        },
+                                        cmd: 'move'
+                                    },
+                                    {
+                                        text: 'Sửa',
+                                        extendClasses: "bsc-quickmenu",
+                                        icon: {
+                                            tag: "i",
+                                            class: "material-icons",
+                                            child: { text: "mode_edit" }
+                                        },
+                                        cmd: 'edit'
+                                    },
+                                    {
+                                        text: 'Xóa',
+                                        extendClasses: "bsc-quickmenu red",
+                                        icon: {
+                                            tag: "i",
+                                            class: "material-icons",
+                                            child: { text: "delete" }
+                                        },
+                                        cmd: 'delete'
+                                    },
+                                    {
+                                        text: 'Lưu trữ',
+                                        extendClasses: "bsc-quickmenu",
+                                        icon: {
+                                            tag: "i",
+                                            class: "material-icons",
+                                            child: { text: "turned_in_not" }
+                                        },
+                                        cmd: 'store'
+                                    }
+                                ]
+                            },
+                            onSelect: function (item) {
+                                console.log(item)
+                                // console.log('cmd: ', item.cmd);
+                            }
+                        }
+                    },
+                    on: {
+                        action: function (event) {
+                            console.log(event.action);
+                        },
+                        click: function (event) {
+                            console.log(absol.require('snackbar').show)
+                            absol.require('snackbar').show(this.somethingLikeId + '')
+                        }
+                    }
+                }
+            })
+        });
+        document.body.appendChild(list);
+    })();
+
+</script>
+</body>
+</html>

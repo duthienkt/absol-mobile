@@ -86,7 +86,7 @@ LoadingAct.prototype.onResume = function () {
         thisAct._loading += Math.random() * 30;
         thisAct._loading = Math.min(thisAct._loading, 100);
         thisAct.$progressBar.value = thisAct._loading / 100;
-    }, 400);
+    }, 50);
 };
 
 function CardAct() {
