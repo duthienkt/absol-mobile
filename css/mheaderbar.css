@@ -1,4 +1,6 @@
 .am-header-bar {
+    display: flex;
+    align-items: center;
     background-color: rgb(29, 138, 241);
     -webkit-box-shadow: 0px 1px 10px 2px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0px 1px 10px 2px rgba(0, 0, 0, 0.5);
@@ -7,15 +9,8 @@
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
-}
-
-.am-header-bar::before {
-    content: "";
     height: 3em;
-    display: inline-block;
-    vertical-align: middle;
 }
-
 
 .am-header-bar-left-btn,
 button.am-header-bar-command {
@@ -38,32 +33,59 @@ button.am-header-bar-command span {
     font-size: 2em;
 }
 
-button.am-header-bar-command:not(:last-child){
+button.am-header-bar-command:not(:last-child) {
     margin-right: 0.6256em;
 }
 
 
-
- .am-header-bar-left-btn:active,
+.am-header-bar-left-btn:active,
 button.am-header-bar-action:active,
 button.am-header-bar-command:active {
     color: rgb(220, 220, 222);
 }
 
 .am-header-bar-title-ctn {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: inherit;
+    position: relative;
+    height: 3em;
+}
+
+.am-header-bar-no-size-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    white-space: nowrap;
+}
+
+.am-header-bar-no-size-wrapper::before {
+    content: "";
+    height: 100%;
     display: inline-block;
     vertical-align: middle;
 }
 
-.am-header-bar-title-ctn:first-child {
-    padding-left: 1.25em;
-    box-sizing: border-box;
+.am-header-bar-title-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+
+}
+
+.am-header-bar-title-ctn:first-child .am-header-bar-title {
+    padding-left: 1.2em;
 }
 
 
 .am-header-bar-title {
     font-size: 1.2em;
     color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .am-header-bar-title-desc {
@@ -77,10 +99,7 @@ button.am-header-bar-command:active {
 
 
 .am-header-bar-right {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
+
 }
 
 .am-header-bar-right::after {
@@ -125,3 +144,4 @@ button.am-header-bar-action {
     font-size: 1.6em;
     line-height: 1.25em;
 }
+

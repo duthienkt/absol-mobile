@@ -52,10 +52,19 @@ MHeaderBar.prototype.showTitle = function (flag) {
             class: 'am-header-bar-title-ctn',
             child: [
                 {
-                    class: 'am-header-bar-title',
-                },
-                {
-                    class: 'am-header-bar-title-desc'
+                    class: 'am-header-bar-no-size-wrapper',
+                    child: {
+                        class: 'am-header-bar-title-wrapper',
+                        child: [
+                            {
+                                class: 'am-header-bar-title',
+                            },
+                            {
+                                class: 'am-header-bar-title-desc'
+                            }
+                        ]
+                    }
+
                 }
             ]
         });
@@ -153,8 +162,8 @@ MHeaderBar.property.quickmenu = {
                     return [2];
                 }
             }
-            if (!value.getMenuProps && value.props){
-                value.getMenuProps = function (){
+            if (!value.getMenuProps && value.props) {
+                value.getMenuProps = function () {
                     return value.props;
                 }
             }
