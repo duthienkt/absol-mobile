@@ -21,6 +21,10 @@
     display: none;
 }
 
+.am-cabinet-item-drag > i {
+    color: inherit;
+}
+
 .am-cabinet-list.am-draggable .am-cabinet-item-drag {
     display: block;
 }
@@ -55,10 +59,12 @@
     box-sizing: border-box;
     transition: opacity 0.1s;
     opacity: 1;
+    color: black;
 }
 
 .am-cabinet-item-quick-menu-btn i {
     font-size: 20px;
+    color: inherit;
 }
 
 

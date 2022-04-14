@@ -15,6 +15,7 @@
     user-select: none;
     -webkit-user-select: none;
     background-color: transparent;
+    color: black;
 }
 
 .am-mat-menu-button-level {
