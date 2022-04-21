@@ -10,7 +10,9 @@
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     height: 3em;
+    font-size: 1rem;
 }
+
 
 .am-header-bar-left-btn,
 button.am-header-bar-command {
@@ -29,7 +31,9 @@ button.am-header-bar-command {
 }
 
 .am-header-bar-left-btn span,
-button.am-header-bar-command span {
+button.am-header-bar-command span,
+.am-header-bar-left-btn i,
+button.am-header-bar-command i {
     font-size: 2em;
 }
 
@@ -145,3 +149,19 @@ button.am-header-bar-action {
     line-height: 1.25em;
 }
 
+
+.am-header-bar.am-light-weight,
+.am-header-bar.am-light-weight .am-header-bar-title-ctn,
+.am-header-bar.am-light-weight .am-header-bar-left-btn,
+.am-header-bar.am-light-weight button.am-header-bar-command,
+.am-header-bar.am-light-weight button.am-header-bar-action {
+    height: calc(2rem + 2px);
+}
+
+
+.am-header-bar.am-light-weight .am-header-bar-left-btn span,
+.am-header-bar.am-light-weight button.am-header-bar-command span,
+.am-header-bar-left-btn i,
+.am-header-bar.am-light-weight button.am-header-bar-command i {
+    font-size: 1.6em;
+}
