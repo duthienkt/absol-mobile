@@ -28,6 +28,7 @@ function MCabinetItem() {
                 MCabinetItem.$openingItem = null;
             }
         });
+    this.$searchInput = null;
     this._quickmenu = null;
     this.commandViewState = 0;
     var self = this;
@@ -131,6 +132,35 @@ MCabinetItem.prototype.resetView = function () {
         .removeStyle('pointer-events');
 };
 
+MCabinetItem.prototype.getSearchingText = function () {
+    var parts = [];
+
+    function visit(node) {
+        if (node.nodeType === 3) {
+            parts.push(node.data);
+        }
+        else if (node.nodeType === 1) {
+            if (node.tagName === 'BUTTON') return '';
+            Array.prototype.forEach.call(node.childNodes, visit);
+        }
+
+    }
+
+    visit(this.$content);
+    parts = parts.filter(function (p) {
+        return !!p;
+    });
+    return parts.join(' ');
+};
+
+MCabinetItem.prototype.selfRemove = function () {
+    var parent = this.parentElement;
+    if (!parent) return;
+    if (parent.hasClass('am-cabinet-list-searching-items-ctn')) {
+        parent = parent.parentElement;
+    }
+    parent.removeChild(this);
+};
 
 MCabinetItem.property = {};
 MCabinetItem.property.quickmenu = {
@@ -160,7 +190,24 @@ MCabinetItem.property.rightActions = {
     get: function () {
         return this._rightActions;
     }
-}
+};
+
+MCabinetItem.property.draggable = {
+    set: function (value) {
+        if (this.parentElement && this.parentElement.classList.contains('as-board-table')) {
+            console.warn("Don't set draggable after MCabinetItem attached!");
+        }
+        if (value) {
+            this.addClass('as-board');
+        }
+        else {
+            this.removeClass('as-board');
+        }
+    },
+    get: function () {
+        return this.hasClass('as-board');
+    }
+};
 
 
 /***
