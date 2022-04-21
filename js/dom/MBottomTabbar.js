@@ -1,6 +1,8 @@
 import '../../css/mbottomtabbar.css';
 import Core from './Core';
 import Dom from 'absol/src/HTML5/Dom';
+import { randomIdent } from "absol/src/String/stringGenerate";
+
 var _ = Core._;
 var $ = Core.$;
 
@@ -15,6 +17,7 @@ function MBottomTabbar() {
         Dom.addToResizeSystem(this);
     });
     this.$activeItem = null;
+    this.$subActiveItem = null;
 }
 
 
@@ -30,6 +33,15 @@ MBottomTabbar.render = function () {
                 child: '.am-bottom-tabbar-content-row'
             }]
     });
+};
+
+MBottomTabbar.prototype.getItemEltByValue = function (value) {
+    return this.$itemDict[value];
+};
+
+MBottomTabbar.prototype.modifyItem = function (itemValue, propertyName, newValue) {
+    if (this.$itemDict[itemValue])
+        this.$itemDict[itemValue].data[propertyName] = newValue;
 };
 
 MBottomTabbar.prototype.updateSize = function () {
@@ -56,8 +68,75 @@ MBottomTabbar.prototype.updateLinePosition = function () {
 
 };
 
+MBottomTabbar.prototype._makeSubItem = function (data, parentElt) {
+    var self = this;
+    var itemElt = _({
+        class: 'am-bottom-tabbar-item',
+        child: [
+            data.icon,
+            '.am-bottom-tabbar-item-counter'
+        ],
+        props: {
+            parentItemElt: parentElt
+        }
+    });
+    this.$itemDict[data.value] = itemElt;
+    var counterElt = $('.am-bottom-tabbar-item-counter', itemElt);
+    var counter = data.counter;
+    if (!data.__bindCounter__) {
+        Object.defineProperties(data, {
+            __dataBinding__: {
+                value: true,
+                writable: false
+            },
+            counter: {
+                set: function (value) {
+                    if (value >= 0) {
+                        if (value > 9) {
+                            counterElt.innerHTML = '9+';
+                        }
+                        else if (value > 0) {
+                            counterElt.innerHTML = value;
+                        }
+                        else {
+                            counterElt.innerHTML = '';
+                        }
+                    }
+                    else {
+                        if (value)
+                            counterElt.innerHTML = value + "";
+                        else
+                            counterElt.innerHTML = '';
+                    }
+                    if (parentElt.$subItems && parentElt.data) {
+                        parentElt.data.counter = parentElt.data.items.reduce(function (ac, cr) {
+                            return ac + (cr.counter || 0);
+                        }, 0);
+                    }
+                    this._counter = value;
+                },
+                get: function () {
+                    return this._counter;
+                }
+            }
+        });
+    }
+    data.counter = counter;
+    itemElt.data = data;
+    function onPress () {
+        if (self._value !== data.value) {
+            parentElt.lastSubValue = data.value;
+            self.value = data.value;
+            self.notifyChange();
+        }
+    }
+    itemElt.on('touchstart', onPress, true);
+    itemElt.on('pointerdown', onPress, true);
+    return itemElt;
+};
+
 MBottomTabbar.prototype._makeItem = function (data) {
-    var thisbt = this;
+    var self = this;
     var itemElt = _({
         class: 'am-bottom-tabbar-item',
         child: [
@@ -65,8 +144,48 @@ MBottomTabbar.prototype._makeItem = function (data) {
             '.am-bottom-tabbar-item-counter'
         ]
     });
+    if (!('value' in data)) data.value = randomIdent();
+    this.$itemDict[data.value] = itemElt;
+    var subItemCtn;
     var counterElt = $('.am-bottom-tabbar-item-counter', itemElt);
     var counter = data.counter;
+    if (data.items && data.items.length > 0) {
+        itemElt.lastSubValue = data.items[0].value;
+        itemElt.$subItems = data.items.map(function (sItem) {
+            return this._makeSubItem(sItem, itemElt);
+        }.bind(this));
+        counter = data.items.reduce(function (ac, cr) {
+            return ac + (cr.counter || 0);
+        }, 0);
+        subItemCtn = _({
+            class: 'am-bottom-tabbar-sub-item-ctn',
+            child: {
+                class: 'am-bottom-tabbar-sub-item-box',
+                child: itemElt.$subItems
+            }
+        });
+        itemElt.attr('tabindex', 1);
+        itemElt.on('focus', function () {
+            subItemCtn.addClass('am-prepare-appear')
+                .addTo(document.body);
+
+            setTimeout(function () {
+                subItemCtn.removeClass('am-prepare-appear')
+                    .addClass('am-appear');
+            }, 3);
+        })
+            .on('blur', function () {
+                subItemCtn.removeClass('am-appear')
+                    .addClass('am-prepare-disappear')
+                setTimeout(function () {
+                    subItemCtn.removeClass('am-prepare-disappear')
+                        .remove()
+                }, 205);
+            })
+    }
+    else {
+
+    }
     if (!data.__bindCounter__) {
         Object.defineProperties(data, {
             __dataBinding__: {
@@ -100,12 +219,19 @@ MBottomTabbar.prototype._makeItem = function (data) {
             }
         });
     }
-    data.counter = counter;
 
+    data.counter = counter;
+    itemElt.data = data;
     itemElt.on('click', function () {
-        if (thisbt._value !== data.value) {
-            thisbt.value = data.value;
-            thisbt.notifyChange();
+        if (data.items && data.items.length > 0) {
+            if (self.$itemDict[self._value] && self.$itemDict[self._value].parentItemElt !== itemElt) {
+                self.value = itemElt.lastSubValue;
+                self.notifyChange();
+            }
+        }
+        else if (self._value !== data.value) {
+            self.value = data.value;
+            self.notifyChange();
         }
     });
 
@@ -124,8 +250,9 @@ MBottomTabbar.property.items = {
         this.$row.clearChild();
         this.$itemDict = {};
         this.$activeItem = null;
+        this.$itemDict = {};
         for (var i = 0; i < items.length; ++i) {
-            this.$itemDict[items[i].value] = this._makeItem(items[i]).addTo(this.$row);
+            this._makeItem(items[i]).addTo(this.$row);
         }
         if (items && items.length > 0) {
             if (this.$itemDict[this._value]) {
@@ -150,10 +277,26 @@ MBottomTabbar.property.value = {
 
         if (this.$activeItem) {
             this.$activeItem.removeClass('am-active');
+            this.$activeItem = null;
         }
+
+
+        if (this.$subActiveItem) {
+            this.$subActiveItem.removeClass('am-active');
+            this.$subActiveItem = null;
+        }
+
         this.$activeItem = this.$itemDict[value];
+        if (this.$activeItem && this.$activeItem.parentItemElt) {
+            this.$subActiveItem = this.$activeItem;
+            this.$activeItem = this.$activeItem.parentItemElt;
+        }
+
         if (this.$activeItem) {
             this.$activeItem.addClass('am-active');
+        }
+        if (this.$subActiveItem) {
+            this.$subActiveItem.addClass('am-active');
         }
         this.updateLinePosition();
     },
