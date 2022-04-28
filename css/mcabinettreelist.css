@@ -1,0 +1,116 @@
+.am-cabinet-tree-list {
+
+}
+
+
+.am-cabinet-tree-list > .am-cabinet-tree:first-child > .am-cabinet-tree-node,
+.am-cabinet-tree-list.am-searching .am-cabinet-tree.am-first-result>.am-cabinet-tree-node{
+    border-top: 1px solid #d6d6d6;
+}
+
+.am-cabinet-tree {
+
+}
+
+.am-cabinet-tree:not(.am-has-children) > .am-cabinet-tree-node .am-cabinet-tree-node-toggle-ctn,
+.am-cabinet-tree:not(.am-opened) > .am-cabinet-tree-children,
+.am-cabinet-tree-children:empty {
+    display: none;
+}
+
+.am-cabinet-tree-node {
+    border-bottom: 1px solid #d6d6d6;
+}
+
+
+.am-cabinet-tree-node-body {
+    position: relative;
+    box-sizing: border-box;
+    --level-padding: 0px;
+    padding-left: calc(40px + var(--level-padding));
+    /*padding-left: 1em;*/
+}
+
+.am-cabinet-tree-node-toggle-ctn {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: calc(40px + var(--level-padding));
+    text-align: right;
+    padding-right: 0.5em;
+    font-size: 20px;
+}
+
+.am-cabinet-tree-node-toggle-ctn > span,
+.am-cabinet-tree-node-toggle-ctn::before {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+ .am-cabinet-tree-node-toggle-ctn .mdi::before{
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    transition: transform 0.1s;
+}
+.am-cabinet-tree.am-opened > .am-cabinet-tree-node .am-cabinet-tree-node-toggle-ctn .mdi::before{
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.am-cabinet-tree-node-toggle-ctn::before {
+    content: "";
+    height: 100%;
+}
+
+
+.am-cabinet-tree-node-content {
+    min-height: 39px;
+}
+
+
+.am-cabinet-tree.am-flex-content > .am-cabinet-tree-node .am-cabinet-tree-node-content {
+    display: flex;
+    align-items: center;
+}
+
+
+.am-cabinet-tree-node:not(.am-has-quick-menu) .am-cabinet-tree-node-quick-menu-ctn {
+    display: none;
+}
+
+.am-cabinet-tree-node-quick-menu-ctn {
+    position: absolute;
+    right: 5px;
+    top: calc(50% - 15px);
+
+}
+
+
+.am-cabinet-tree-node.am-has-quick-menu .am-cabinet-tree-node-body {
+    padding-right: 40px;
+    box-sizing: border-box;
+}
+
+.am-cabinet-tree-list.am-searching .am-cabinet-tree:not(.am-in-search-result){
+    display: none;
+}
+
+.am-cabinet-tree-list.am-searching>.am-cabinet-tree:first-child .am-cabinet-tree-node{
+    border-top: none;
+}
+
+
+
+
+
+.am-cabinet-tree-list.am-searching,
+.am-cabinet-tree-list.am-searching .am-cabinet-tree.am-opened>.am-cabinet-tree-children {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}

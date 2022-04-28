@@ -22,6 +22,8 @@ import MChecklistItem from "./MChecklistItem";
 import MMultiCheckMenu from "./MMultiCheckMenu";
 import MCabinetList from "./MCabinetList";
 import MCabinetItem from "./MCabinetItem";
+import MCabinetTreeList from "./MCabinetTreeList";
+import MCabinetTree from "./MCabinetTree";
 
 export default function install(core) {
     core.install([
@@ -41,6 +43,8 @@ export default function install(core) {
         MChecklistModal,
         MMultiCheckMenu,
         MCabinetItem,
-        MCabinetList
+        MCabinetList,
+        MCabinetTreeList,
+        MCabinetTree
     ]);
 }
