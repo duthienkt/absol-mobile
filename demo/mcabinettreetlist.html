@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CabinetList</title>
+    <title>CabinetTreeList</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -16,7 +16,6 @@
             overflow-x: hidden;
             width: 100%;
             height: 100%;
-            padding: 0;
             margin: 0;
         }
 
@@ -26,6 +25,8 @@
 
         body {
             overflow-y: auto;
+            padding: 5px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -45,7 +46,7 @@
             return _(o).addTo(document.body);
         }
 
-        function makeQuickMenu() {
+        function makeQuickMenu(treeElt) {
             return {
                 props: {
                     extendClasses: 'cd-context-menu',
@@ -103,12 +104,62 @@
                     ]
                 },
                 onSelect: function (item) {
-                    console.log(item)
+                    console.log(item, treeElt)
                     // console.log('cmd: ', item.cmd);
                 }
             }
         }
 
+
+        function makeTree(props) {
+            var tree = _({
+                tag: 'mcabinettree',
+                class: 'am-flex-content',
+                props: {
+                    content: [
+                        {
+                            style: { fontSize: '18px', flexGrow: 1 },
+                            child: { text: absol.string.randomPhrase(30) }
+                        },
+                        {
+                            child: {
+                                tag: 'flexiconbutton',
+                                style: {
+                                    height: '30px'
+                                },
+                                props: {
+                                    text: 'Edit',
+                                    icon: 'span.mdi.mdi-pencil'
+                                }
+                            }
+                        }
+
+                    ],
+                    draggable: true,
+                    rightActions: [
+                        { text: 'Xoá', otherPropertiesYouNeed: "Some data...", cmd: 'delete' },
+                        { text: 'Sửa', otherPropertiesYouNeed: "Some data..." },
+                    ],
+                    quickmenuX: makeQuickMenu()
+                },
+                on: {
+                    action: function (event) {
+                        console.log(event.action)
+                        if (event.action.cmd === 'delete') {
+                            this.selfRemove();
+                        }
+                        console.log(event.action);
+                    },
+                    click: function (event) {
+                        absol.require('snackbar').show(this.somethingLikeId + '')
+                    }
+                }
+            });
+            tree.quickmenu = makeQuickMenu(tree);
+
+            Object.assign(tree, props);
+            return tree;
+        }
 
         var addBtn = render({
             tag: 'button',
@@ -116,46 +167,16 @@
             on: {
                 click: function () {
                     var i = Math.random() * 1000 + 1000 >> 0;
-                    var newItem = _({
-                        tag: 'mcabinetitem',
-                        class: 'am-flex-content',
-                        child: [
-                            {
-                                style: { fontSize: '18px', flexGrow: 1 },
-                                child: { text: ('item ' + i + ' ').repeat((Math.random() * 5 + 1) >> 0) }
-                            }
-                        ],
-                        props: {
-                            draggable: true,
-                            somethingLikeId: i,
-                            rightActions: [
-                                { text: 'Xoá', otherPropertiesYouNeed: "Some data...", cmd: 'delete' },
-                                { text: 'Sửa', otherPropertiesYouNeed: "Some data..." },
-                            ],
-                            quickmenuX: makeQuickMenu()
-                        },
-                        on: {
-                            action: function (event) {
-                                console.log(event.action)
-                                if (event.action.cmd === 'delete') {
-                                    this.selfRemove();
-                                }
-                                console.log(event.action);
-                            },
-                            click: function (event) {
-                                absol.require('snackbar').show(this.somethingLikeId + '')
-                            }
-                        }
-                    });
+                    var newItem = makeTree({ somethingLikeId: i });
                     list.addChildBefore(newItem, list.getChildren()[6]);
                     newItem.scrollIntoView();
                 }
             }
         });
-        var searchInput = _('searchtextinput').addStyle('margin', '10px');
+        var searchInput = _('searchtextinput');
 
         var list = _({
-            tag: 'mcabinetlist',
+            tag: 'mcabinettreelist',
             style: {
                 height: '80vh',
                 overflowY: 'auto'
@@ -172,37 +193,12 @@
                 }
             },
             child: Array(30).fill(null).map(function (u, i) {
-                return {
-                    tag: 'mcabinetitem',
-                    class: 'am-flex-content',
-                    props: {
-                        content: [
-                            {
-                                style: { fontSize: '18px', flexGrow: 1 },
-                                child: { text: 'item ' + i }
-                            }
-                        ],
-                        draggable: i > 5,
-                        somethingLikeId: i,
-                        rightActions: [
-                            { text: 'Xoá', otherPropertiesYouNeed: "Some data...", cmd: 'delete' },
-                            { text: 'Sửa', otherPropertiesYouNeed: "Some data..." },
-                        ],
-                        quickmenuX: makeQuickMenu()
-                    },
-                    on: {
-                        action: function (event) {
-                            console.log(event.action)
-                            if (event.action.cmd === 'delete') {
-                                this.selfRemove();
-                            }
-                            console.log(event.action);
-                        },
-                        click: function (event) {
-                            absol.require('snackbar').show(this.somethingLikeId + '')
-                        }
-                    }
-                }
+                var tree = makeTree({ somethingLikeId: i });
+                var children = Array(Math.random() * 5 + 2 >> 0).fill(0).map(function (uu, j) {
+                    return makeTree({ somethingLikeId: i * 100 + j });
+                });
+                tree.addChild(children);
+                return tree;
             })
         });
         document.body.appendChild(searchInput);
