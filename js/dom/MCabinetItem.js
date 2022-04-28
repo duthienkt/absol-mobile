@@ -11,6 +11,7 @@ import { hitElement } from "absol/src/HTML5/EventEmitter";
  * @constructor
  */
 function MCabinetItem() {
+    this._content = null;
     this.$content = $('.am-cabinet-item-content', this);
     this.$body = $('.am-cabinet-item-body', this)
         .on('predrag', this.eventHandler.bodyPredrag)
@@ -31,26 +32,7 @@ function MCabinetItem() {
     this.$searchInput = null;
     this._quickmenu = null;
     this.commandViewState = 0;
-    var self = this;
-    this.quickmenuHolder = QuickMenu.toggleWhenClick(this.$quickmenuBtn,
-        {
-            getAnchor: function () {
-                return [3, 4, 13, 14];
-            },
-            getMenuProps: function () {
-                return self._quickmenu && self._quickmenu.props;
-            },
-            onOpen: function () {
-                self.resetView();
-            },
-            onClose: function () {
-            },
-            onSelect: function (item) {
-                if (self._quickmenu.onSelect) {
-                    self._quickmenu.onSelect.call(this, item);
-                }
-            }
-        });
+    this._makeQuickMenu();
 }
 
 MCabinetItem.tag = 'MCabinetItem'.toLowerCase();
@@ -100,6 +82,29 @@ MCabinetItem.render = function () {
         }
     });
 
+MCabinetItem.prototype._makeQuickMenu = function (){
+    var self = this;
+    this.quickmenuHolder = QuickMenu.toggleWhenClick(this.$quickmenuBtn,
+        {
+            getAnchor: function () {
+                return [3, 4, 13, 14];
+            },
+            getMenuProps: function () {
+                return self._quickmenu && self._quickmenu.props;
+            },
+            onOpen: function () {
+                self.resetView();
+            },
+            onClose: function () {
+            },
+            onSelect: function (item) {
+                if (self._quickmenu.onSelect) {
+                    self._quickmenu.onSelect.call(this, item);
+                }
+            }
+        });
+}
+
 MCabinetItem.prototype._makeActionBtn = function (data) {
     var btn = _({
         tag: 'button',
@@ -140,7 +145,10 @@ MCabinetItem.prototype.getSearchingText = function () {
             parts.push(node.data);
         }
         else if (node.nodeType === 1) {
-            if (node.tagName === 'BUTTON') return '';
+            if (node.tagName === 'BUTTON') return;
+            if (node.tagName === 'INPUT') {
+                parts.push(node.value);
+            }
             Array.prototype.forEach.call(node.childNodes, visit);
         }
 
@@ -209,6 +217,25 @@ MCabinetItem.property.draggable = {
     }
 };
 
+MCabinetItem.property.content = {
+    set: function (value) {
+        value = value || null;
+        this._content = value;
+        this.$content.clearChild();
+        if (!value) return;
+        if (value instanceof Array) {
+            this.$content.addChild(value.map(function (c) {
+                return _(c);
+            }))
+        }
+        else {
+            this.$content.addChild(_(value));
+        }
+    },
+    get: function () {
+        return this._content;
+    }
+};
 
 /***
  * @memberOf MCabinetItem#
