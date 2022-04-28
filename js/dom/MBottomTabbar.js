@@ -44,6 +44,12 @@ MBottomTabbar.prototype.modifyItem = function (itemValue, propertyName, newValue
         this.$itemDict[itemValue].data[propertyName] = newValue;
 };
 
+MBottomTabbar.prototype.getItem = function (itemValue) {
+    if (this.$itemDict[itemValue])
+        return this.$itemDict[itemValue].data;
+    return null;
+};
+
 MBottomTabbar.prototype.updateSize = function () {
     this.updateLinePosition();
 };
@@ -80,6 +86,7 @@ MBottomTabbar.prototype._makeSubItem = function (data, parentElt) {
             parentItemElt: parentElt
         }
     });
+    itemElt.attr('tabindex', 1);
     this.$itemDict[data.value] = itemElt;
     var counterElt = $('.am-bottom-tabbar-item-counter', itemElt);
     var counter = data.counter;
@@ -87,10 +94,12 @@ MBottomTabbar.prototype._makeSubItem = function (data, parentElt) {
         Object.defineProperties(data, {
             __dataBinding__: {
                 value: true,
-                writable: false
+                writable: false,
+                enumerable: false
             },
             counter: {
                 set: function (value) {
+                    counter = value;
                     if (value >= 0) {
                         if (value > 9) {
                             counterElt.innerHTML = '9+';
@@ -113,23 +122,24 @@ MBottomTabbar.prototype._makeSubItem = function (data, parentElt) {
                             return ac + (cr.counter || 0);
                         }, 0);
                     }
-                    this._counter = value;
                 },
                 get: function () {
-                    return this._counter;
+                    return counter;
                 }
             }
         });
     }
     data.counter = counter;
     itemElt.data = data;
-    function onPress () {
+
+    function onPress() {
         if (self._value !== data.value) {
             parentElt.lastSubValue = data.value;
             self.value = data.value;
             self.notifyChange();
         }
     }
+
     itemElt.on('touchstart', onPress, true);
     itemElt.on('pointerdown', onPress, true);
     return itemElt;
@@ -144,6 +154,8 @@ MBottomTabbar.prototype._makeItem = function (data) {
             '.am-bottom-tabbar-item-counter'
         ]
     });
+    itemElt.attr('tabindex', 1);
+
     if (!('value' in data)) data.value = randomIdent();
     this.$itemDict[data.value] = itemElt;
     var subItemCtn;
@@ -164,36 +176,65 @@ MBottomTabbar.prototype._makeItem = function (data) {
                 child: itemElt.$subItems
             }
         });
-        itemElt.attr('tabindex', 1);
-        itemElt.on('focus', function () {
-            subItemCtn.addClass('am-prepare-appear')
-                .addTo(document.body);
+        var lastTimeFocus = 0;
+
+        var isTouch;
+
+        function onPress(event) {
+            isTouch = event.type === 'touchstart';
+            lastTimeFocus = new Date().getTime();
+            subItemCtn.addClass('am-prepare-appear');
+            // self.addChildAfter(subItemCtn, null);
+            document.body.appendChild(subItemCtn);
 
             setTimeout(function () {
                 subItemCtn.removeClass('am-prepare-appear')
                     .addClass('am-appear');
             }, 3);
-        })
-            .on('blur', function () {
-                subItemCtn.removeClass('am-appear')
-                    .addClass('am-prepare-disappear')
-                setTimeout(function () {
-                    subItemCtn.removeClass('am-prepare-disappear')
-                        .remove()
-                }, 205);
-            })
-    }
-    else {
 
+            itemElt.off('touchstart', onPress)
+                .off('mousedown', onPress);
+            setTimeout(function () {
+
+                itemElt.on('touchstart', onRepress)
+                    // .on('mousedown', onRepress)
+                    .on('blur', onRepress);
+            }, 100);
+        }
+
+        function onRepress(event) {
+            if (isTouch && event.type === 'mousedown') return;
+
+            subItemCtn.removeClass('am-appear')
+                .addClass('am-prepare-disappear')
+            setTimeout(function () {
+                subItemCtn.removeClass('am-prepare-disappear')
+                    .remove()
+            }, 205);
+
+            itemElt.off('touchstart', onRepress)
+                // .off('mousedown', onRepress)
+                .off('blur', onRepress);
+
+            setTimeout(function () {
+                itemElt.on('touchstart', onPress)
+                // .on('mousedown', onPress);
+            }, 100);
+        }
+
+        itemElt.on('touchstart', onPress);
+        // .on('mousedown', onPress);
     }
     if (!data.__bindCounter__) {
         Object.defineProperties(data, {
             __dataBinding__: {
                 value: true,
-                writable: false
+                writable: false,
+                enumerable: false
             },
             counter: {
                 set: function (value) {
+                    counter = value;
                     if (value >= 0) {
                         if (value > 9) {
                             counterElt.innerHTML = '9+';
@@ -211,10 +252,9 @@ MBottomTabbar.prototype._makeItem = function (data) {
                         else
                             counterElt.innerHTML = '';
                     }
-                    this._counter = value;
                 },
                 get: function () {
-                    return this._counter;
+                    return counter;
                 }
             }
         });
