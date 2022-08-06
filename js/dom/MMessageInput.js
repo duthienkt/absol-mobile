@@ -1,6 +1,5 @@
 import '../../css/mmessageinput.css';
 import Core from './Core';
-import MessageInput from 'absol-acomp/js/MessageInput';
 import {openFileDialog} from 'absol-acomp/js/utils';
 import MMessageTool from "./MMessageTool";
 
