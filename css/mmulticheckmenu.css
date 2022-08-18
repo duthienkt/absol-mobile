@@ -1,5 +1,12 @@
 .am-multi-check-menu{
     --item-min-width: 60px;
     max-height: var(--multi-select-menu-max-height);
-    width: calc(var(--item-min-width) + 32px + 22px + 7px);
+    max-width: calc(95vw - 60px);
 }
+
+.am-multi-check-menu .absol-selectbox-item-text span{
+    max-width: calc(95vw - 60px - 5em);
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+

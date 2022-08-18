@@ -91,7 +91,7 @@ MSelectMenu.property.items = {
         this._items = value;
         this._itemsByValue = this._dictByValue(value);
 
-        if (!this._itemsByValue[this.value] && value.length > 0) {
+        if (!this._itemsByValue[this.value] && value.length > 0 && false) {//todo
             this.value = value[0].value;
         }
         else
