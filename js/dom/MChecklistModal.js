@@ -101,7 +101,7 @@ MChecklistModal.render = function () {
                         }
                     },
                     {
-                        class: 'as-select-list-box-footer',
+                        class: 'as-dropdown-box-footer',
                         child: [
                             {
                                 tag: 'checkbox',
@@ -112,7 +112,7 @@ MChecklistModal.render = function () {
                                 }
                             },
                             {
-                                class: 'as-select-list-box-footer-right',
+                                class: 'as-dropdown-box-footer-right',
                                 child: {
                                     tag: 'a',
                                     class: 'as-select-list-box-cancel-btn',
