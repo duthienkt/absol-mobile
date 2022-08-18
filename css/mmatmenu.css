@@ -29,7 +29,6 @@
 }
 
 
-
 .am-mat-menu-button .am-mat-menu-button-toggle-icon-ctn {
     visibility: hidden;
 }
@@ -37,6 +36,10 @@
 .am-mat-menu-button.am-status-close .am-mat-menu-button-toggle-icon-ctn,
 .am-mat-menu-button.am-status-open .am-mat-menu-button-toggle-icon-ctn {
     visibility: visible;
+}
+
+.am-mat-menu-button[data-level="1"] .am-mat-menu-button-icon-ctn .am-mdi-rect {
+    background: rgb(136, 136, 136);
 }
 
 .am-mat-menu-button-icon-ctn {
@@ -47,14 +50,14 @@
     vertical-align: middle;
 }
 
-.am-mat-menu-button-icon-ctn>img {
+.am-mat-menu-button-icon-ctn > img {
     display: inline-block;
     font-size: inherit;
     width: 2em;
     height: 2em;
 }
 
-.am-mat-menu-button-icon-ctn>span {
+.am-mat-menu-button-icon-ctn > span {
     font-size: 2em;
     line-height: 1;
 }
@@ -75,17 +78,17 @@
     text-align: center;
 }
 
-.am-mat-menu-button-toggle-icon-ctn>span {
+.am-mat-menu-button-toggle-icon-ctn > span {
     font-size: 1.5em;
     line-height: 1.3333333;
     color: rgb(191, 191, 191);
 }
 
-.am-mat-menu-button-toggle-icon-ctn>span:before {
+.am-mat-menu-button-toggle-icon-ctn > span:before {
     transition: transform 0.2s;
 }
 
-.am-mat-menu-item>.am-mat-menu-button {
+.am-mat-menu-item > .am-mat-menu-button {
     width: 100%;
 }
 
@@ -98,7 +101,6 @@
     transition: max-height 0.2s ease-out;
     max-height: 0;
 }
-
 
 
 .am-mat-menu {

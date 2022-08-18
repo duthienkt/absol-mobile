@@ -54,6 +54,7 @@ MMatMenuButton.property.level = {
     set: function (value) {
         value = Math.max(0, value || 0);
         this.$level.innerHTML = '&nbsp;'.repeat(value * 4);
+        this.attr('data-level', value);
     },
     get: function () {
         return this._level;
