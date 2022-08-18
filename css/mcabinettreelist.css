@@ -40,13 +40,13 @@
     width: calc(40px + var(--level-padding));
     text-align: right;
     padding-right: 0.5em;
-    font-size: 20px;
 }
 
 .am-cabinet-tree-node-toggle-ctn > span,
 .am-cabinet-tree-node-toggle-ctn::before {
     display: inline-block;
     vertical-align: middle;
+    font-size: 20px;
 }
 
 
