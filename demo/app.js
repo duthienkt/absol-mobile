@@ -380,7 +380,13 @@ MenuAct.prototype.createView = function () {
                                         }
                                     },
                                     items: [
-                                        { text: 'Kiểu dữ liệu', icon: 'span.mdi.mdi-alpha-t-box-outline' },
+                                        { text: 'Kiểu dữ liệu', icon: {
+                                                tag: 'mmdirect',
+
+                                                props: {
+                                                    iconName: 'alpha-t-box-outline'
+                                                }
+                                            } },
                                         { text: 'Bảng', icon: 'span.mdi.mdi-file-table-outline' },
                                         { text: 'Trạng thái', icon: 'span.mdi.mdi-check' },
                                         { text: 'Nhóm đối tượng', icon: 'span.mdi.mdi-google-circles-communities' },
