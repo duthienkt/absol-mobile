@@ -149,6 +149,11 @@ button.am-header-bar-action {
     line-height: 1.25em;
 }
 
+.am-header-bar-quickmenu-btn.as-active  .mdi-dots-horizontal-circle-outline,
+.am-header-bar-quickmenu-btn:not(.as-active)  .mdi-dots-horizontal-circle {
+    display: none;
+}
+
 
 .am-header-bar.am-light-weight,
 .am-header-bar.am-light-weight .am-header-bar-title-ctn,

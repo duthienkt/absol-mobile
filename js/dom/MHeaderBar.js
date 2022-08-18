@@ -107,7 +107,7 @@ MHeaderBar.prototype.showQuickMenu = function (flag) {
             class: ['am-header-bar-action', 'am-header-bar-quickmenu-btn'],
             child: {
                 class: 'am-header-bar-quickmenu-btn-circle',
-                child: 'span.mdi.mdi-dots-horizontal'
+                child: ['span.mdi.mdi-dots-horizontal-circle-outline', 'span.mdi.mdi-dots-horizontal-circle']
             },
         });
     }
@@ -164,7 +164,11 @@ MHeaderBar.property.quickmenu = {
             }
             if (!value.getMenuProps && value.props) {
                 value.getMenuProps = function () {
-                    return value.props;
+                    var res = Object.assign({}, value.props);
+                    if (typeof res.items === "function") {
+                        res.items = res.items();
+                    }
+                    return res;
                 }
             }
             this._quickmenuHolder = QuickMenu.toggleWhenClick(this.$quickmenuBtn, value);
