@@ -7,7 +7,7 @@
         "test": "test"
     },
     "scripts": {
-        "dev": "webpack-dev-server --config webpack.config.js --publicx absol.cf:9000",
+        "dev": "webpack-dev-server --config webpack.config.js",
         "dist": "webpack --config webpack.config.js --progress --profile --colors --mode production "
     },
     "repository": {
@@ -27,8 +27,8 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "^1.16.3",
-        "absol-acomp": "^0.9.57"
+        "absol": "github:duthienkt/absol",
+        "absol-acomp": "github:duthienkt/absol-acomp"
     },
     "devDependencies": {
         "@babel/core": "^7.10.2",

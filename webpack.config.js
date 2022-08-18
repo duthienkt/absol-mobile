@@ -17,7 +17,8 @@ module.exports = {
     entry: packages[PACKAGE].entry,
     output: {
         path: path.join(__dirname, "."),
-        filename: packages[PACKAGE].filename
+        filename: packages[PACKAGE].filename,
+        // publicPath: 'https://www.absol.cf/' // host from /etc/hosts (note // at beginning)
     },
     resolve: {
         modules: [
