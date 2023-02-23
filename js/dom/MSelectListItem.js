@@ -51,10 +51,23 @@ MSelectListItem.render = function () {
 
 MSelectListItem.property = Object.assign({}, SelectListItem.property);
 
+MSelectListItem.property.icon = {
+    set: function (icon) {
+        if (this.$icon) {
+            this.$icon.remove();
+            this.$icon = null;
 
-MSelectListItem.property.extendClasses = SelectListItem.property.extendClasses;
-MSelectListItem.property.extendStyle = SelectListItem.property.extendStyle;
-
+        }
+        this._icon = icon || null;
+        if (this._icon) {
+            this.$icon = _(this._icon).addClass('am-selectlist-item-icon');
+            this.$textCtn.addChildAfter(this.$icon, null);
+        }
+    },
+    get: function () {
+        return this._icon;
+    }
+};
 
 
 MSelectListItem.property.level = {

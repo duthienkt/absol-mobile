@@ -18,3 +18,10 @@
     line-height: 20px;
     color: rgb(80, 80, 82);
 }
+
+
+.am-selectlist-item-icon {
+    font-size: 1.5em;
+    display: inline-block;
+    vertical-align: middle;
+}
