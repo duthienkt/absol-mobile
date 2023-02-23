@@ -25,9 +25,10 @@
 
 </div>
 <script>
-    function genItems(n, withDesc) {
+    function genItems(n, withDesc, withIcon) {
         return Array(n).fill(null).map(function (u, i) {
             return {
+                icon: withIcon? 'span.mdi.mdi-account': null,
                 text: '[' + i + ']' + absol.string.randomPhrase(0),
                 value: i,
                 desc: withDesc ? absol.string.randomPhrase(30) : null
@@ -43,6 +44,12 @@
             value: 1,
             enableSearch: true,
             exampleDesc: "Rất rất nhiều item(6000), có chú thích, có tìm kiếm"
+        },
+        {
+            items: genItems(6000, true, true),
+            value: 1,
+            enableSearch: true,
+            exampleDesc: "Rất rất nhiều item(6000), có chú thích, có tìm kiếm, icon"
         },
         {
             items: genItems(1000, false),
