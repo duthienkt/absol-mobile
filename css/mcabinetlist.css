@@ -83,6 +83,10 @@
     color: inherit;
 }
 
+.am-cabinet-item-quick-menu-btn i{
+    font-size: var(--icon-fontsize);
+}
+
 
 .am-cabinet-item.as-board-moving {
     transform: none;

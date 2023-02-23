@@ -1,4 +1,5 @@
 .am-mat-menu-button {
+    font-size: inherit;
     position: relative;
     display: block;
     padding: 0;
