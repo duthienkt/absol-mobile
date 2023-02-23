@@ -1,4 +1,5 @@
 .am-selectlist-item {
+    --level: 0;
 }
 
 .am-selectlist-item-text-ctn {

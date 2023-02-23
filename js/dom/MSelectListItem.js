@@ -70,16 +70,6 @@ MSelectListItem.property.icon = {
 };
 
 
-MSelectListItem.property.level = {
-    set: function (value) {
-        value = value || 0;
-        this._level = value;
-        this.$text.addStyle('margin-left', value * 0.9 + 'em');
-    },
-    get: function () {
-        return this._level;
-    }
-};
 
 
 Core.install(MSelectListItem);

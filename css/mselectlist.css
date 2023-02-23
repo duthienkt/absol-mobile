@@ -35,7 +35,7 @@
 
 .am-selectlist > .am-selectlist-item > .am-selectlist-item-text-ctn {
     padding-right: 5px;
-    padding-left: 10px;
+    padding-left: calc(10px + 0.9em * var(--level));
 }
 
 .am-selectlist > .am-selectlist-item > .am-selectlist-item-desc-ctn {
