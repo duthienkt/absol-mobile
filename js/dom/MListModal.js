@@ -2,10 +2,13 @@ import '../../css/mlistmodal.css'
 
 import Core from "./Core";
 import Dom from "absol/src/HTML5/Dom";
-import {prepareSearchForList, searchListByText} from "absol-acomp/js/list/search";
-import {measureListSize, releaseItem, requireItem} from "./MSelectList";
+import { prepareSearchForList, searchListByText } from "absol-acomp/js/list/search";
+import { measureListSize, releaseItem, requireItem } from "./MSelectList";
 import AElement from "absol/src/HTML5/AElement";
 import DomSignal from "absol/src/HTML5/DomSignal";
+import SelectListBox from "absol-acomp/js/SelectListBox";
+import ListSearchMaster from "absol-acomp/js/list/ListSearchMaster";
+import { keyStringOf } from "absol-acomp/js/utils";
 
 var _ = Core._;
 var $ = Core.$;
@@ -81,6 +84,7 @@ MListModal.prototype._initDomHook = function () {
     this.domSignal = new DomSignal(this.$domSignal);
     this.domSignal.on('viewListAt', this.viewListAt.bind(this));
     this.domSignal.on('viewListAtFirstSelected', this.viewListAtFirstSelected.bind(this));
+    this.searchMaster = new ListSearchMaster();
 };
 
 MListModal.prototype._initControl = function () {
@@ -276,13 +280,7 @@ MListModal.prototype.viewListAtFirstSelected = function () {
 };
 
 
-MListModal.prototype.searchItemByText = function (text) {
-    text = text.trim();
-    if (text.length == 0) return this._items;
-    if (this._searchCache[text]) return this._searchCache[text];
-    this._searchCache[text] = searchListByText(text, this._items);
-    return this._searchCache[text];
-};
+MListModal.prototype.searchItemByText = SelectListBox.prototype.searchItemByText;
 
 MListModal.prototype.resetSearchState = function () {
     this.$searchInput.value = '';
@@ -319,7 +317,7 @@ MListModal.prototype._findLastPageIdx = function () {
     return -1;
 };
 
-MListModal.prototype._updateItemIndex = function (){
+MListModal.prototype._updateItemIndex = function () {
     this._itemHolderByValue = this._displayItems.reduce(function (ac, cr, idx) {
         var value = typeof cr === "string" ? cr : cr.value + '';
         ac[value] = ac[value] || [];
@@ -347,7 +345,33 @@ MListModal.property.items = {
         this._items = items;
         this._preDisplayItems = this._listToDisplay(this._items);
         this._displayItems = this._filterValue(this._preDisplayItems);
+
         this._updateItemIndex();
+
+        /*****************/
+        this.idx2key = [];
+        var makeSearchItem = it => {
+            var res = { value: this.idx2key.length };
+            var valueKey;
+            res.text = it.text + '';
+            if (it.desc) res.text += it.desc;
+            valueKey = keyStringOf(it.value);
+            it.valueKey = valueKey;
+            this.idx2key.push(valueKey);
+            if (it.items && it.items.length > 0 && it.items.map) {
+                res.items = it.items.map(makeSearchItem);
+            }
+            return res;
+        };
+
+        this.searchingItems = this._items.map(makeSearchItem);
+        this.key2idx = this.idx2key.reduce((ac, cr, i) => {
+            ac[cr] = i;
+            return ac;
+        }, {});
+        this.searchMaster.transfer(this.searchingItems);
+        /*****************/
+
         this._searchCache = {};
         var estimateSize = measureListSize(this._preDisplayItems);
         if (estimateSize.descWidth > 0) {
@@ -360,7 +384,6 @@ MListModal.property.items = {
         this._estimateHeight = estimateHeight;
         this.$content.addStyle('height', estimateHeight + 'px');
         this.estimateSize = estimateSize;
-        prepareSearchForList(items);
         this.domSignal.emit('viewListAt', 0);
     }
 };
@@ -429,12 +452,16 @@ MListModal.eventHandler.click = function (event) {
 
 MListModal.eventHandler.searchModify = function () {
     var text = this.$searchInput.value;
-    var searchedItems = this.searchItemByText(text);
-    this._preDisplayItems = this._listToDisplay(searchedItems);
-    this._displayItems = this._filterValue(this._preDisplayItems);
-    this._updateItemIndex();
-    this.viewListAt(0);
-    this.$listScroller.scrollTop = 0;
+    var searchSession = Math.random() + '';
+    this._seachSession = searchSession;
+    this.searchItemByText(text).then(searchedItems => {
+        if (this._seachSession !== searchSession)  return;
+        this._preDisplayItems = this._listToDisplay(searchedItems);
+        this._displayItems = this._filterValue(this._preDisplayItems);
+        this._updateItemIndex();
+        this.viewListAt(0);
+        this.$listScroller.scrollTop = 0;
+    });
 };
 
 

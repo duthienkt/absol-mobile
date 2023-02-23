@@ -6,7 +6,10 @@ import MListModal from "./MListModal";
 var _ = Core._;
 var $ = Core.$;
 
-
+/***
+ * @extends AElement
+ * @constructor
+ */
 function MSelectMenu() {
     this._isFocus = false;
     this._itemsByValue = {};
@@ -16,6 +19,17 @@ function MSelectMenu() {
      * @type {MListModal}
      */
     this.$selectlist = _('mlistmodal');
+
+    var checkView = () => {
+        if (this.isDescendantOf(document.body)) {
+            setTimeout(checkView, 10000);
+        }
+        else {
+            if (this.$selectlist.searchMaster)
+                this.$selectlist.searchMaster.destroy();
+        }
+    }
+    setTimeout(checkView, 30000);
 
     this.$selectlist.on('pressitem', this.eventHandler.pressItem, true)
         .on('pressout', this.eventHandler.pressOut)
