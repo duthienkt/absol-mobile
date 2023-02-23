@@ -26,13 +26,6 @@ MTreeModal.prototype._listToDisplay = function (items) {
     return treeListToList(items);
 };
 
-MTreeModal.prototype.searchItemByText = function (text) {
-    text = text.trim();
-    if (text.length == 0) return this._items;
-    if (this._searchCache[text]) return this._searchCache[text];
-    this._searchCache[text] = searchTreeListByText(text, this._items);
-    return this._searchCache[text];
-};
 
 MTreeModal.property = Object.assign({}, MListModal.property);
 
