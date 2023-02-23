@@ -23,8 +23,8 @@
 }
 
 .am-message-input .as-message-input-pre-ctn {
-    padding-left: 15px;
-    padding-right: 38px;
+    padding-left: 40px;
+    padding-right: 15px;
     width: calc(100% - 49px);
 }
 
