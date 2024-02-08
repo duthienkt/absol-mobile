@@ -6,7 +6,7 @@ var _ = Core._;
 var $ = Core.$;
 
 /***
- * extends {Element}
+ * extends {AElement}
  * @constructor
  */
 function MBlinkModal() {
