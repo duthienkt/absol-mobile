@@ -90,6 +90,7 @@ MCabinetItem.prototype._makeQuickMenu = function (){
                 return [3, 4, 13, 14];
             },
             getMenuProps: function () {
+                var res = self._quickmenu && self._quickmenu.props;
                 return self._quickmenu && self._quickmenu.props;
             },
             onOpen: function () {
@@ -258,8 +259,13 @@ MCabinetItem.eventHandler.bodyMouseUp = function (event) {
  * @param event
  */
 MCabinetItem.eventHandler.bodyMouseDown = function (event) {
-    if (hitElement(this.$quickmenuBtn, event)) return;
-    this._waitClick = true;
+    if (hitElement(this.$quickmenuBtn, event)) {
+        this._waitClick = false;
+    }
+    else {
+        this._waitClick = true;
+    }
+
 };
 
 /**
