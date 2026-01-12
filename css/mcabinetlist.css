@@ -10,6 +10,7 @@
 .am-cabinet-item {
     position: relative;
     border-bottom: 1px solid #d6d6d6;
+    overflow: hidden;
 }
 
 
@@ -44,13 +45,18 @@
     min-height: 39px;
     white-space: nowrap;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    left: 0;
+    /*left: 0;*/
     transition: left 0.1s;
     position: relative;
     background-color: white;
     z-index: 3;
-
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .am-cabinet-item.as-dragging .am-cabinet-item-body {
@@ -59,6 +65,7 @@
 
 .am-cabinet-item-content {
     flex-grow: 1;
+    overflow: hidden;
 }
 
 .am-cabinet-item.am-flex-content .am-cabinet-item-content{
