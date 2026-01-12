@@ -27,8 +27,7 @@
     },
     "homepage": "https://github.com/duthienkt/absol-mobile",
     "dependencies": {
-        "absol": "github:duthienkt/absol",
-        "absol-acomp": "github:duthienkt/absol-acomp"
+        "absol": "github:duthienkt/absol"
     },
     "devDependencies": {
         "@babel/core": "^7.10.2",
