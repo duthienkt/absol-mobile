@@ -45,6 +45,10 @@ MCabinetList.prototype.getChildren = function () {
     return Array.prototype.slice.call(this.childNodes);
 };
 
+MCabinetList.prototype.getChildNodes = function () {
+  return this.getChildren();
+};
+
 
 MCabinetList.prototype.clearChild = function () {
     if (this.searching) {
@@ -162,7 +166,7 @@ MCabinetList.prototype.addChildAfter = function (elt, at) {
         this.eventHandler.searchModify(null);
     }
     else {
-        BoardTable.prototype.addChildBefore.call(this, elt, at);
+        BoardTable.prototype.addChildAfter.call(this, elt, at);
     }
 };
 
